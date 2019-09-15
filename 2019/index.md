@@ -14,14 +14,14 @@
 | CM 1     | 20/09 | Informatique Ubiquitaire   | [pdf](cours/cm1-introUbicomp.pdf) | A. Tabard |
 | CM 1 bis | 20/09 | Stack                      | [pdf](cours/cm1-stack.pdf)        | A. Tabard |
 | CM 2     | 11/10 | Programmation Réactive     | [pdf](cours/cm2-reactivity.pdf)   | A. Tabard |
-|          | 18/10 | — |  |  |
+|          | 18/10 | * séance de TP supplémentaire * |  |  |
 | CM 3     | 08/11 | Design adaptatif & Gestes  |          | A. Tabard |
-|          | 15/11 | — |  |  |
+|          | 15/11 | * séance de TP supplémentaire * |  |  |
 | CM 4     | 06/12 | Temps réel & Collaboration |          | A. Tabard |
 | CM 5     | 13/12 | Algorithmes de synchronisation |      | A. Tabard |
 | CM 6     | 10/01 | Web of Things              |          | L. Medini |
 |          | 17/01 | — |  |  |
-| CM 7     | 07/02 | — |  |  |
+| CM 7     | 07/02 | * séance de TP supplémentaire * |  |  |
 
 
 
