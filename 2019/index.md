@@ -1,4 +1,5 @@
-## M1IF13 - Programmation Web avancée et mobile
+## TIW8 - Ubicomp Web
+### Technologies Web synchrones et multi-dispositifs
 
 #### Encadrants
 - Aurélien Tabard (responsable)
@@ -7,12 +8,12 @@
 
 ## Plan du cours
 
-|          | Date  | Cours                      | Supports | Intervenant |
-| -------- | ----- | -------------------------- | -------- | ----------- |
-| CM 0     | 20/09 | Présentation de l'UE       | [pdf](cours/cm0-intro.pdf) | A. Tabard |
-| CM 1     | 20/09 | Informatique Ubiquitaire   |          | A. Tabard |
-| CM 1 bis | 20/09 | Stack                      |          | A. Tabard |
-| CM 2     | 11/10 | Programmation Réactive     | [pdf](cours/cm2-reactivity.pdf) | A. Tabard |
+|          | Date  | Cours                      | Supports     | Intervenant |
+| -------- | ----- | -------------------------- | ------------ | ----------- |
+| CM 0     | 20/09 | Présentation de l'UE       | [pdf](cours/cm0-intro.pdf)        | A. Tabard |
+| CM 1     | 20/09 | Informatique Ubiquitaire   | [pdf](cours/cm1-introUbicomp.pdf) | A. Tabard |
+| CM 1 bis | 20/09 | Stack                      | [pdf](cours/cm1-stack.pdf)        | A. Tabard |
+| CM 2     | 11/10 | Programmation Réactive     | [pdf](cours/cm2-reactivity.pdf)   | A. Tabard |
 |          | 18/10 | — |  |  |
 | CM 3     | 08/11 | Design adaptatif & Gestes  |          | A. Tabard |
 |          | 15/11 | — |  |  |
@@ -52,7 +53,10 @@
 - [Mozilla Developer Network (Documentation)](https://developer.mozilla.org/)
 
 
-<!-- ## Calendrier
-Le planning est disponible sur cet [agenda partagé Google](https://calendar.google.com/calendar?cid=ZWZoNmg0ZWplaXBncjdtaTgzNjEwaXRmNm9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ), il est possible de l'importer dans vos propres systèmes d'agenda.
+## Calendrier
+Le planning est disponible sur cet [agenda partagé Google](https://calendar.google.com/calendar/embed?src=rtlfsq23dgbtshi8lghu5qi7o6oihk0j%40import.calendar.google.com&ctz=Europe%2FBerlin), il est possible de l'importer dans vos propres systèmes d'agenda.
 
-<iframe src="https://calendar.google.com/calendar/embed?title=M1IF13&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;height=500&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=efh6h4ejeipgr7mi83610itf6o%40group.calendar.google.com&amp;color=%238C500B&amp;ctz=Europe%2FBerlin" style="border-width:0" width="600" height="500" frameborder="0" scrolling="no"></iframe> -->
+Vérifiez l'agenda régulièrement, les salles et les horaires de TP risquent
+d'être modifiés en fonction de la disponibilité des salles du batiment Nautibus.
+
+<iframe src="https://calendar.google.com/calendar/embed?title=TIW8&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;height=500&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=rtlfsq23dgbtshi8lghu5qi7o6oihk0j%40group.calendar.google.com&amp;color=%238C500B&amp;ctz=Europe%2FBerlin" style="border-width:0" width="600" height="500" frameborder="0" scrolling="no"></iframe>
