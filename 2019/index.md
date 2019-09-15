@@ -29,16 +29,16 @@
 
 | Sujet                | Date  | Thème  | Rendu  |
 | -------------------- | ----- | ------ | ------ |
-| [TP 1](TP1)          | 23/01 | Mise en place d'une Stack JavaScript  | rendu 0 |
-| [TP 1](TP1/#2-suite) | 13/02 | Introduction à React                  |         |
-| [TP 1](TP1/#3-suite) | 20/02 | Redux + websockets / multi-dispositif |         |
-| [TP 1](TP1/#4-suite) | 27/03 | Distribution d'interface multi-dispositif |     |
-| [TP 1](TP1/#5-suite) | 03/04 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
-| [TP 2](TP2)          | 22/05 | WebRTC: video    	                   |         |
-| [TP 2](TP2/#2-suite) | 29/05 | Texte synchrone (WebRTC + CRDT)       | rendu 2 |
-| [TP 3](TP3)          | 31/05 | WoT et capteurs Arduino               |         |
-| [TP 3](TP3/#2-suite) | 19/06 | WoT et CrowdSensing                   |         |
-| [TP 3](TP3/#3-suite) | 26/06 | WoT et Performance                    | rendu 3 |
+| [TP 1](TP1)          | 20/09 | Mise en place d'une Stack JavaScript  | rendu 0 |
+| [TP 1](TP1/#2-suite) | 11/10 | Introduction à React                  |         |
+| [TP 1](TP1/#3-suite) | 18/10 | Redux + websockets / multi-dispositif |         |
+| [TP 1](TP1/#4-suite) | 08/11 | Distribution d'interface multi-dispositif |     |
+| [TP 1](TP1/#5-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
+| [TP 2](TP2)          | 06/12 | WebRTC: video    	                   |         |
+| [TP 2](TP2/#2-suite) | 13/12 | Texte synchrone (WebRTC + CRDT)       | rendu 2 |
+| [TP 3](TP3)          | 10/01 | WoT et capteurs Arduino               |         |
+| [TP 3](TP3/#2-suite) | 17/01 | WoT et CrowdSensing                   |         |
+| [TP 3](TP3/#3-suite) | 07/02 | WoT et Performance                    | rendu 3 |
 
 
 ## Evaluation
