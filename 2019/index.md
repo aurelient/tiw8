@@ -59,4 +59,4 @@ Le planning est disponible sur cet [agenda partagé Google](https://calendar.goo
 Vérifiez l'agenda régulièrement, les salles et les horaires de TP risquent
 d'être modifiés en fonction de la disponibilité des salles du batiment Nautibus.
 
-<iframe src="https://calendar.google.com/calendar/embed?title=TIW8&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;height=500&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=rtlfsq23dgbtshi8lghu5qi7o6oihk0j%40group.calendar.google.com&amp;color=%238C500B&amp;ctz=Europe%2FBerlin" style="border-width:0" width="600" height="500" frameborder="0" scrolling="no"></iframe>
+<iframe src="https://calendar.google.com/calendar/embed?title=TIW8&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;height=500&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=rtlfsq23dgbtshi8lghu5qi7o6oihk0j%40import.calendar.google.com&amp;color=%238C500B&amp;ctz=Europe%2FBerlin" style="border-width:0" width="600" height="500" frameborder="0" scrolling="no"></iframe>
