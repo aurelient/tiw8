@@ -277,7 +277,7 @@ ReactDOM.render(<Index />, document.getElementById('app'));
 
 ### Rendu et évaluation
 
-Le TP est évalué sur une base binaire PASS/FAIL et compte pour 5% de l'UE.
+Le TP est évalué sur une base binaire PASS/FAIL et compte pour 10% de la note de TP totale.
 
 Les critères d'évaluation sont les suivants pour avoir un PASS:
 

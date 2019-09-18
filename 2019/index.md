@@ -31,21 +31,25 @@ Ubicomp Web
 | Sujet                | Date  | Thème  | Rendu  |
 | -------------------- | ----- | ------ | ------ |
 | [TP 1](TP1)          | 20/09 | Mise en place d'une Stack JavaScript  | rendu 0 |
-| [TP 1](TP1/#2-suite) | 11/10 | Introduction à React                  |         |
-| [TP 1](TP1/#3-suite) | 18/10 | Redux + websockets / multi-dispositif |         |
-| [TP 1](TP1/#4-suite) | 08/11 | Distribution d'interface multi-dispositif |     |
-| [TP 1](TP1/#5-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
-| [TP 2](TP2)          | 06/12 | WebRTC: video    	                   |         |
-| [TP 2](TP2/#2-suite) | 13/12 | Texte synchrone (WebRTC + CRDT)       | rendu 2 |
-| [TP 3](TP3)          | 10/01 | WoT et capteurs Arduino               |         |
-| [TP 3](TP3/#2-suite) | 17/01 | WoT et CrowdSensing                   |         |
-| [TP 3](TP3/#3-suite) | 07/02 | WoT et Performance                    | rendu 3 |
+| [TP 2](TP2/)         | 11/10 | Introduction à React                  |         |
+| [TP 2](TP2/#2-suite) | 18/10 | Redux + websockets / multi-dispositif |         |
+| [TP 2](TP2/#3-suite) | 08/11 | Distribution d'interface multi-dispositif |     |
+| [TP 2](TP2/#4-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
+| [TP 3](TP3)          | 06/12 | WebRTC: video    	                   |         |
+| [TP 3](TP3/#2-suite) | 13/12 | Texte synchrone (WebRTC + CRDT)       | rendu 2 |
+| [TP 4](TP4)          | 10/01 | WoT et capteurs Arduino               |         |
+| [TP 4](TP4/#2-suite) | 17/01 | WoT et CrowdSensing                   |         |
+| [TP 4](TP4/#3-suite) | 07/02 | WoT et Performance                    | rendu 3 |
 
 
 ## Evaluation
 
-- 3 TPs notés (70%)
-- 1 examen (30%)
+- 4 TPs notés (70%)
+    - TP1 : 10% (PASS/FAIL)
+    - TP2 : 40%
+    - TP3 : 20%
+    - TP3 : 30%
+- 1 controle écrit (30%)
 
 # Références
 
