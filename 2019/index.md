@@ -1,5 +1,6 @@
-## TIW8 - Ubicomp Web
-Technologies Web synchrones et multi-dispositifs
+## TIW8 - Technologies Web synchrones et multi-dispositifs
+Ubicomp Web
+
 
 #### Encadrants
 - Aurélien Tabard (responsable)
