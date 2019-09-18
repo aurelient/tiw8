@@ -130,11 +130,160 @@ module.exports = {
 
 ### Projet React
 
+Nous verrons plus en détail le fonctionnement de React lors de la prochaine séance. 
+Pour le moment nous allons créer un projet simple. 
+
+Installons react et react-dom
+
+```
+npm i react react-dom
+```
+
+Dans votre dossier client (`src`), créer un `index.html`. 
+Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par React. 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>React Boilerplate</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+```
+
+Dans le même dossier nous allons créer un premier élément React:
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+const Index = () => {
+  return <div>TIW 8 TP1!</div>;
+};
+ReactDOM.render(<Index />, document.getElementById('root'));
+```
+
 
 ### Générer un bundle
 
+Il faut maintenant transpiler ce code pour qu'il soit compréhensible par un 
+navigateur. Le résultat ira dans le dossier `dist``
+
+On installe le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
+
+On point vers le point d'entée React (le fichier index.js) et ou l'appliquer (`template: "./src/index.html"`).
+
+```javascript
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const htmlPlugin = new HtmlWebPackPlugin({
+  template: "./src/index.html", 
+  filename: "./index.html"
+});
+module.exports = {
+  entry: "./src/index.js",
+  output: { // NEW
+    path: path.join(__dirname, 'dist'),
+    filename: "[name].js"
+  }, // NEW Ends
+  plugins: [htmlPlugin],
+  module: {
+    rules: [
+      {
+        ...
+      }
+    ]
+  }
+};
+```
 
 ### Assembler et servir le contenu
 
+Il faut maintenant dire à Express ou aller chercher le contenu. 
+Pour cela il faut lui dire que sa route '/' est maintenant `dist/index.html`
+
+Rajouter les constantes suivantes (selon vos noms de fichiers et de dossier):
+```js
+const path = require('path');
+
+const DIST_DIR = path.join(__dirname, '../dist'); 
+const HTML_FILE = path.join(DIST_DIR, 'index.html'); 
+
+// La route '/' pointe sur HTML_FILE
+```
+
+Nous allons aussi rajouter la commande suivante `package.json` pour distinguer un build de dev et un de production.
+
+```
+  "dev": "webpack --mode development && node server/index.js",
+```
+
+
+### Gérer les fichier statiques
+
+Pour que Express trouve plus tard son chemin "de base" et les fichiers statiques générés par React (images, css...) rajouter la ligne suivante:
+
+```js
+app.use(express.static(DIST_DIR));
+```
+
+Il faut aussi installer le module `file-loader` (toujours en dev).
+
+Et rajouter la règle suivante dans `webpack.config.js:` pour que webpack place les images dans `/static/`.
+```js
+{
+  test: /\.(png|svg|jpg|gif)$/,
+  loader: "file-loader",
+  options: { name: '/static/[name].[ext]' }
+}
+```
+
+Pour que Webpack bundle ces images (ou autres ressources), il faudra les importer dans vos composants.
+
+```js
+// Import de l'image
+import LOGO from '<path-to-file>/logo.png';
+
+// Utilisation
+<img src={LOGO} alt="Logo" />
+```
+
+### Bonus
+
+Créer deux composants. Le premier affichera un titre. Le deuxième affichera des images prises dans un dossier statique.
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Header from './components/Header/index.jsx';
+import Content from './components/Content/index.jsx';
+const Index = () => {
+  return (
+    <div className="container">
+      <Header />
+      <Content />
+    </div>
+  );
+};
+ReactDOM.render(<Index />, document.getElementById('app'));
+```
+
+
 
 ### Rendu et évaluation
+
+Le TP est évalué sur une base binaire PASS/FAIL et compte pour 5% de l'UE.
+
+Les critères d'évaluation sont les suivants pour avoir un PASS:
+
+- Le rendu est effectué avant ce soir minuit.
+- Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
+- Le projet ne contient que des éléments nécessaire (.gitignore est bien définit)
+- Les dépendances de *développement* et de *déploiement* dans package.json sont bien définies
+- `npm build` construit le projet
+- `npm run start` le serveur et permet de tester le projet.
