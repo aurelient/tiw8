@@ -22,20 +22,20 @@ L'objectif du TP est de mettre en place une Single Page Application (SPA), déve
 
 Ce TP fera l'objet d'un premier rendu et d'une note. Voir les critères d'évaluation à la fin du TP.
 
-Vous ferez le rendu sur la forge, créez un projet git dès maintenant.
+Vous ferez le rendu sur la forge, créez un projet git dès maintenant, puis un projet npm.
 
 ### Mise en place du serveur
 
-Structurez votre projet pour avoir un dossier serveur et un dossier client clairement nommés.
+Structurer votre projet pour avoir un dossier serveur et un dossier client clairement nommés.
 
-Installez [Node](https://nodejs.org/) et [Express](https://expressjs.com/) si ce n'est pas déjà fait.
+Installer [Node](https://nodejs.org/) et [Express](https://expressjs.com/) si ce n'est pas déjà fait. Si c'est le cas, pensez à les mettre à jour.
 
 
-__Penser à bien ajouter les fichiers qui n'ont pas à être versionnés à .gitignore (node_modules)__
+__Pensez à bien ajouter les fichiers qui n'ont pas à être versionnés à .gitignore__ (ex: node_modules, dist, ...)
 
 Voici le coeur d'un serveur Express.
 
-```js
+```javascript
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -54,7 +54,7 @@ app.listen(port, function () {
 });
 ```
 
-Ajoutez un script à package.json qui permette de lancer votre serveur.avec la commande 
+Ajouter un script à package.json qui permette de lancer votre serveur.avec la commande 
 `npm run start`
 
 ```json
@@ -70,8 +70,71 @@ Vérifier que le serveur fonctionne et versionnez.
 
 ### Mise en place de Webpack
 
+Installer [Webpack](https://webpack.js.org/) en dev (pas la peine d'avoir les dépendances pour le déploiement)  :
+
+- `webpack` (Le bundler)
+- `webpack-cli` (Command Line Interface pour lancer les commandes webpack)
+
+Dans `package.json` ajouter une commande `build` (dans `scripts`)
+
+```json
+"scripts": {
+  "build": "webpack --mode production"
+}
+```
+
+Tentez un build, regarder les fichiers/dossiers générés. 
+
+### Configuration de Babel 
+
+React s'appuie sur [JSX](https://reactjs.org/docs/introducing-jsx.html) pour 
+lier la logique de rendu, la gestion d'évènement et les changements d'états 
+pour un élément donné. Ces éléments seraient normalement séparés entre langages 
+et technos différentes. Babel permet de traduire ce code (et au passage de transformer du ES6 en ES6).
+
+Installer les dépendances (de développement) suivantes:
+
+- `@babel/core` (ES6+ vers ES5)
+- `@babel/preset-env` (Preset pour les polyfills)
+- `@babel/preset-react` (Preset pour React et JSX)
+- `babel-loader` (pour l'intégration avec Webpack)
+
+Configurer Babel à l'aide d'un fichier `.babelrc` à la racine de votre projet, 
+en indiquant les pré-configurations utilisées pour le reste du projet.
+
+```json
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
+}
+```
+
+Il faut spécifier à Webpack la transpilation Babel des fichiers .js et .jsx du projet lors du build. 
+Cela se fait le fichier `webpack.config.js` :
+
+```javascript
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      }
+    ]
+  }
+};
+```
 
 
+### Projet React
 
 
-### Mise en place du client React
+### Générer un bundle
+
+
+### Assembler et servir le contenu
+
+
+### Rendu et évaluation
