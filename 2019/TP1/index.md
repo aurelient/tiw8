@@ -9,7 +9,7 @@
 
 ### Présentation du TP
 
-L'objectif du TP est de mettre en place une Single Page Application (SPA), développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en JavaScript. Nous allons voir
+L'objectif du TP est de mettre en place une Single Page Application (SPA), développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en JavaScript. Nous allons voir:
 
 - La mise en place d'un serveur Express très basique
 - L'automatisation et le bundling avec Webpack
@@ -20,9 +20,11 @@ L'objectif du TP est de mettre en place une Single Page Application (SPA), déve
 - Assembler et servir le contenu
 
 
-Ce TP fera l'objet d'un premier rendu et d'une note. Voir les critères d'évaluation à la fin du TP.
+Ce TP fera l'objet d'un premier rendu __individuel__ et d'une note. Voir les critères d'évaluation en bas de la page.
 
-Vous ferez le rendu sur la forge, créez un projet git dès maintenant, puis un projet npm.
+Vous ferez le rendu sur la forge, créez un projet git dès maintenant, puis un projet (npm init).
+
+Pensez à remplir le <a href="https://airtable.com/shr65AEGKsjsQ9r94">formulaire de rendu</a>.
 
 ### Mise en place du serveur
 
@@ -253,9 +255,15 @@ import LOGO from '<path-to-file>/logo.png';
 <img src={LOGO} alt="Logo" />
 ```
 
+### CSS 
+
+Intégrez à votre application un framework front-end responsif pour améliorer le rendu, de type [Bootstrap](https://getbootstrap.com/), [Foundation](https://foundation.zurb.com/) ou [autre](https://www.keycdn.com/blog/front-end-frameworks).
+
+
 ### Bonus
 
-Créer deux composants. Le premier affichera un titre. Le deuxième affichera des images prises dans un dossier statique.
+Créer deux composants basiques sans aucune logique. Le premier affichera un titre. Le deuxième affichera des images prises dans un dossier statique.
+On placera ces composants dans un dossier `components`.
 
 ```js
 import React from 'react';
@@ -270,20 +278,25 @@ const Index = () => {
     </div>
   );
 };
-ReactDOM.render(<Index />, document.getElementById('app'));
+ReactDOM.render(<Index />, document.getElementById('root'));
 ```
 
+
+### React Developer Tools
+
+Installez l'extension [React Developer Tools](https://addons.mozilla.org/en-US/firefox/addon/react-devtools/) dans votre navigateur préféré.
+Inspectez l'application. 
 
 
 ### Rendu et évaluation
 
-Le TP est évalué sur une base binaire PASS/FAIL et compte pour 10% de la note de TP totale.
+Le TP est individuel. Il est évalué sur une base binaire PASS/FAIL et compte pour 10% de la note de TP totale.
 
 Les critères d'évaluation sont les suivants pour avoir un PASS:
 
-- Le rendu est effectué avant ce soir minuit.
+- Le rendu est effectué avant ce soir minuit. Pensez à remplir le <a href="https://airtable.com/shr65AEGKsjsQ9r94">formulaire</a>.
 - Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
-- Le projet ne contient que des éléments nécessaire (.gitignore est bien définit)
+- Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
 - Les dépendances de *développement* et de *déploiement* dans package.json sont bien définies
 - `npm build` construit le projet
-- `npm run start` le serveur et permet de tester le projet.
+- `npm run start` lance le serveur et permet de tester le projet.
