@@ -260,7 +260,7 @@ import LOGO from '<path-to-file>/logo.png';
 Intégrez à votre application un framework front-end responsif pour améliorer le rendu, de type [Bootstrap](https://getbootstrap.com/), [Foundation](https://foundation.zurb.com/) ou [autre](https://www.keycdn.com/blog/front-end-frameworks).
 
 
-### Bonus
+### Des compsants Reacts
 
 Créer deux composants basiques sans aucune logique. Le premier affichera un titre. Le deuxième affichera des images prises dans un dossier statique.
 On placera ces composants dans un dossier `components`.
