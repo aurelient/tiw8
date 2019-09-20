@@ -257,7 +257,7 @@ import LOGO from '<path-to-file>/logo.png';
 
 ### CSS 
 
-Intégrez à votre application un framework front-end responsif pour améliorer le rendu, de type [Bootstrap](https://getbootstrap.com/), [Foundation](https://foundation.zurb.com/) ou [autre](https://www.keycdn.com/blog/front-end-frameworks).
+Intégrez à votre application un framework front-end responsif pour améliorer le rendu, de type [Bootstrap](https://react-bootstrap.github.io/getting-started/introduction), [Foundation](https://foundation.zurb.com/) ou [autre](https://www.keycdn.com/blog/front-end-frameworks).
 
 
 ### Des compsants Reacts
