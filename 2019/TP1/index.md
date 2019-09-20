@@ -85,7 +85,7 @@ Dans `package.json` ajouter une commande `build` (dans `scripts`)
 }
 ```
 
-Tentez un build, regarder les fichiers/dossiers générés. 
+Tentez un build, regarder les fichiers/dossiers générés. Corriger votre arborescence de fichier si nécessaire.
 
 ### Configuration de Babel 
 
@@ -260,7 +260,7 @@ import LOGO from '<path-to-file>/logo.png';
 Intégrez à votre application un framework front-end responsif pour améliorer le rendu, de type [Bootstrap](https://getbootstrap.com/), [Foundation](https://foundation.zurb.com/) ou [autre](https://www.keycdn.com/blog/front-end-frameworks).
 
 
-### Des compsants Reacts
+### Des composants Reacts
 
 Créer deux composants basiques sans aucune logique. Le premier affichera un titre. Le deuxième affichera des images prises dans un dossier statique.
 On placera ces composants dans un dossier `components`.
@@ -298,5 +298,5 @@ Les critères d'évaluation sont les suivants pour avoir un PASS:
 - Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
 - Les dépendances de *développement* et de *déploiement* dans package.json sont bien définies
-- `npm build` construit le projet
+- `npm run build` construit le projet
 - `npm run start` lance le serveur et permet de tester le projet.
