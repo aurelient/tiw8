@@ -38,13 +38,14 @@ Créer et structure des composants statiques correspondant à une application de
 <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2FUntitled%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
 
 
-Les transparents auront (à minima) deux modèles: titre (le transparent ne contient qu'un grand titre centré) et contenu qui peut avoir les éléments suivants :
-
-- Titre,
-- Image (url vers imgur ou autre fournisseur d'image),
-- Contenu (texte libre ou liste).
-- Notes pour l'orateur
-- Visibilité (afficher/cacher le transparent)
+Les transparents auront (à minima) deux modèles: 
+- titre (le transparent ne contient qu'un grand titre centré), et 
+- contenu qui peut avoir les éléments suivants :
+    - Titre,
+    - Image (url vers imgur ou autre fournisseur d'image),
+    - Texte (texte libre ou liste).
+    - Notes pour l'orateur
+    - Visibilité (afficher/cacher le transparent)
 
 ### Gérer la logique de l'application
 
