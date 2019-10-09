@@ -27,16 +27,17 @@ Pensez à remplir le <a href="">formulaire de rendu</a>.
 
 Nous allons repartir du TP1 pour ce projet, vous pouvez donc le cloner, puis le pousser dans un nouveau repo dédié au TP2 (pour les 4 séances du TP).
 
-
+Si vous n'avez pas utilisé [react-bootstrap](https://react-bootstrap.github.io/) dans le TP précédent. Installez le.
 
 ### Structurer une application React en composants
 
 Lire l'[introduction à la structuration d'application React](https://reactjs.org/docs/thinking-in-react.html). 
 
-Créer et structure des composants statiques correspondant à une application de présentation. L'application est composée de transparents, d'outils d'édition, d'outils de navigation, et d'outils de présentations (notes, timer, ...).
+Nous allons commencer par créer un squelette d'application statique, nous rajouterons les parties dynamiques par la suite.
+
+Créez la structure des composants correspondant à une application de présentation. L'application est composée de transparents, d'outils d'édition, d'outils de navigation, et d'outils de présentations (notes, timer, ...)
 
 <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2FUntitled%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
-
 
 Les transparents auront (à minima) deux modèles: 
 - titre (le transparent ne contient qu'un grand titre centré), et 
@@ -46,6 +47,11 @@ Les transparents auront (à minima) deux modèles:
     - Texte (texte libre ou liste).
     - Notes pour l'orateur
     - Visibilité (afficher/cacher le transparent)
+
+ 
+ <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A15" allowfullscreen></iframe>
+
+<iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A3" allowfullscreen></iframe>
 
 ### Gérer la logique de l'application
 
