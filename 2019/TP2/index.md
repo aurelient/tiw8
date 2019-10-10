@@ -142,7 +142,22 @@ Ce code est donné à titre indicatif. Commencez progressivement et testez régu
 
 ### Gérer la logique de l'application
 
+La toolbar doit contenir deux boutons avant/arrière pour naviguer entre les transparents. Faites en sorte que l'état du slideshow change lorsque vous pressez un bouton, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le bouton parle à des composants parents). Suivez les instructions et l'exemple de [Thinking in React][https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow] sur les "Inverse Data Flow".
+
+
 ### React Router
+
+Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu'il soit possible d'avoir un lien dédié pour chaque transparent.
+Au lieu d'avoir un état interne à l'application pour savoir quel transparent afficher, nous allons utiliser une route qui pointe vers le transparent en question.
+
+Nous allons utiliser [react-router](https://reacttraining.com/react-router/). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à lire [cette page](https://reacttraining.com/react-router/web/guides/philosophy).
+
+[React router](https://reacttraining.com/react-router/web/guides/primary-components) requiert d'envelopper votre application dans un composant `Router`.
+
+En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur).
+
+En utilisant le hook `useParams();` vous pouvez récupérer la valeur de la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params).
+
 
 
 
@@ -156,8 +171,6 @@ Ce code est donné à titre indicatif. Commencez progressivement et testez régu
 
 
 
-
-
 ## TP2.3 Distribution d’interface multi-dispositif
 
 
@@ -165,5 +178,3 @@ Ce code est donné à titre indicatif. Commencez progressivement et testez régu
 ## TP2.4 Modalité d’entrée (gestes, stylet)
 
 
-
-### Rendu et évaluation
