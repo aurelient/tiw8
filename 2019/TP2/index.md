@@ -13,7 +13,13 @@ L'objectif du TP est de mettre en place une Single Page Application (SPA) permet
 
 Les points suivants seront abordés
 
-- **TODO**
+- Composants React 
+- Gestion des états et flux de données
+- Gestion de routes React
+- Redux pour la gestion avancée des états 
+- Middleware pour gérer des effets de bord
+- Design responsive et adaptatif
+- Reconnaissance de gestes 
 
 
 Ce TP s'étalera sur 4 séances et fera l'objet d'un rendu en binome et d'une note. Voir les critères d'évaluation en bas de la page.
