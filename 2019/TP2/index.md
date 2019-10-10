@@ -35,7 +35,7 @@ Lire l'[introduction à la structuration d'application React](https://reactjs.or
 
 Nous allons commencer par créer un squelette d'application statique, nous rajouterons les parties dynamiques par la suite.
 
-Créez la structure des composants correspondant à une application de présentation. L'application est composée de transparents, d'outils d'édition, d'outils de navigation, et d'outils de présentations (notes, timer, ...)
+L'application est composée de transparents, d'outils d'édition, d'outils de navigation, et d'outils de présentations (notes, timer, ...)
 
 <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2FUntitled%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
 
@@ -47,10 +47,98 @@ Les transparents auront (à minima) deux modèles:
     - Texte (texte libre ou liste).
     - Notes pour l'orateur
     - Visibilité (afficher/cacher le transparent)
+- on peut penser à d'autre modèles: image seule, iframe intégrant une page html...
+
+Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) : 
+
+```javascript
+[
+  {type: 'title', title: 'TIW 8', visible: true, notes: ""},
+  {type: 'content', title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, notes: "ce transparent est caché"},
+  {type: 'content', title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, notes: ""},
+  {type: 'content', title: 'TP 3', text: "Le TP 3", visible: true, notes: ""},
+  {type: 'content', title: 'TP 4', text: "Le TP 4", visible: true, notes: ""},
+  {type: 'title', title: 'Question ?', visible: true, notes: ""},
+];
+```
 
 <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A3" allowfullscreen></iframe>
  
  <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A15" allowfullscreen></iframe>
+
+
+Créez la structure des composants correspondant à cette application, en suivant le guide et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy).
+
+Voici une structure pour démarrer, pensez à utiliser les composants bootstrap plutôt que du html pur: 
+
+```javascript
+
+class Slide extends React.Component {
+  render() {
+    const slide = this.props.slide;
+    const type = slide.type ? "title" : ...
+
+    return (
+        <h1> {slide.title} </h1>
+        ...
+    );
+  }
+}
+
+class Slides extends React.Component {
+  render() {
+    
+    this.props.slides.forEach((slide) => {
+        ...
+    });
+
+    return (
+      <div>
+      ...
+      </div>
+    );
+  }
+}
+
+class Toolbar extends React.Component {
+  render() {
+    return (
+      <div>
+      ... d'autres composants ...
+      </div>
+    );
+  }
+}
+
+class SlideShow extends React.Component {
+  render() {
+    return (
+      <div>
+        <Slides slides={this.props.slides}/>
+        <Toolbar slides={this.props.slides} />
+      </div>
+    );
+  }
+}
+
+
+const SLIDES = [
+  {type: 'title', title: 'TIW 8', visible: true, notes: ""},
+  {type: 'content', title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, notes: "ce transparent est caché"},
+  {type: 'content', title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, notes: ""},
+  {type: 'content', title: 'TP 3', text: "Le TP 3", visible: true, notes: ""},
+  {type: 'content', title: 'TP 4', text: "Le TP 4", visible: true, notes: ""},
+  {type: 'title', title: 'Question ?', visible: true, notes: ""},
+];
+
+ReactDOM.render(
+  <FilterableProductTable slides={SLIDES} />,
+  document.getElementById('container')
+);
+```
+
+Ce code est donné à titre indicatif. Commencez progressivement et testez régulièrement.
+
 
 ### Gérer la logique de l'application
 
