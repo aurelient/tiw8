@@ -162,7 +162,8 @@ Nous allons utiliser [react-router](https://reacttraining.com/react-router/). Po
 
 En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/3](http://monsite.net/3) charge le 3e transparent.
 
-En utilisant le hook `useParams();` vous pouvez récupérer la valeur de la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params).
+- Si vous utilisez des `class components`, vous pouver récupérer la valeur de la route en utilisant un prop dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter)
+- Si vous utilisez des `functional components`, le hook `useParams();` vous pouvez récupérer la valeur de la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params).
 
 Une fois la valeur de la route récupérée, modifier l'état de l'application, pour qu'il corresponde au transparent à afficher.
 
