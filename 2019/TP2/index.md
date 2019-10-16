@@ -177,6 +177,8 @@ Nous allons gérer l'état qui comprend la liste des transparents et le transpar
 
 **Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.**
 
+Afin de vous faciliter le debug du TP, vous pouvez activer la création d'un Source Map dans votre `webpack.config.js` : `devtool: 'eval-source-map'`.
+
 ### Redux
 
 [Installez Redux et les dépendances associées pour React](https://redux-docs.netlify.com/introduction/installation) (`react-redux`). Par défaut Redux n'est pas lié à React et peut être utilisé avec d'autres Framework.
@@ -224,7 +226,7 @@ Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à
     import store from "store/index"; // verifiez que le chemin est correct
     window.store = store;
 ```
-
+Un devtool pour Redux est disponible pour [Chrome](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) et [Firefox](https://addons.mozilla.org/en-US/firefox/addon/reduxdevtools/), il necessite quelques légères [modification de votre code](http://extension.remotedev.io/#11-basic-store).
 
 #### Creation des actions
 
@@ -236,7 +238,7 @@ Vous aurez à définir les actions suivantes dans `æctions/index.js`
 export const ADD_SLIDE = "ADD_SLIDE";
 export const REMOVE_SLIDE = "REMOVE_SLIDE";
 export const NEXT_SLIDE = 'NEXT_SLIDE'
-export const REMOVE_SLIDE = 'REMOVE_SLIDE'
+export const PREVIOUS_SLIDE = 'PREVIOUS_SLIDE'
 ```
 
 #### Tester les actions
@@ -254,22 +256,33 @@ Redux n'est toujours pas branché à React, il est donc normal que l'interface n
 Suivez l'utilisation de Redux avec React Router [telle que présentée dans la documentation de Redux](https://redux.js.org/advanced/usage-with-react-router#components-rootjs) pour configurer votre `index.js`.  
 
 
-
-### Déployer sur Heroku 
-
-Suivre le guide de Heroku pour déployer une application via git :
-[https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
-
-Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
-
 ### Middleware et websockets
 
 Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/advanced/middleware). Faites un essai qui reprend l'idée et logue dans la console toutes les actions déclenchées (voir [ici](https://redux.js.org/advanced/middleware#the-final-approach) _sans le crashReporter_).
 
 
-Nous allons maintenant faire communiquer plusieurs navigateurs entre eux gràce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié.
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux gràce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
+
+Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `previous_slide` et `next_slide` provenant d'un client et de les propager à tous les autres clients.
+
+Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `NEXT_SLIDE` ou `PREVIOUS_SLIDE`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
+
+Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `previous_slide` et `next_slide`, les actions soient dispatchées au store.
+
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` peuvent embarquer un information supplémentaire grâce la propriété [`meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton provoquent la propagation d'un message via Websocket.
+
+N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup).
 
 
+
+### Déployer sur Heroku 
+Afin de rendre notre application disponible sur les internets, nous allons la déployer sur [Heroku](https://heroku.com). 
+Suivre le guide de Heroku pour déployer une application via git :
+[https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
+
+Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
+
+N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
 
 ## TP2.3 Distribution d’interface multi-dispositif
 
