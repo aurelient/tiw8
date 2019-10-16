@@ -169,12 +169,86 @@ Une fois la valeur de la route récupérée, modifier l'état de l'application, 
 
 
 
-## TP2.2 Redux + websockets / multi-dispositif
+## TP2.2 Redux, Middleware, websockets pour le multi-dispositif
+
+Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux et des Websockets. L'objectif est que vous puissiez changer l'état de votre application de présentation sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre présentation à distance sur sa machine...)
+
+Nous allons commencer avec la gestion du transparent affiché, mais ce partage d'état peut s'étendre au contenu des transparents pour permettre une édition des transparents "en direct".
+
+**Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.**
 
 ### Redux
 
+[Installez Redux et les dépendances associées pour React](https://redux-docs.netlify.com/introduction/installation) (`react-redux`). Par défaut Redux n'est pas lié à React et peut être utilisé avec d'autres Framework.
 
-### Middleware
+Créez dans `src` des dossiers pour organiser votre `store`, vos `reducers`, `actions`, et `containers`.
+
+
+#### Création d'un store
+
+Nous allons commencer par créer le store qui va gérer les états.
+
+```js
+    // src/store/index.js
+    import { createStore } from "redux";
+    import rootReducer from "../reducers/index";
+    const store = createStore(rootReducer);
+    export default store;
+```
+
+On importe `createStore` depuis redux et aussi `rootReducer`, on verra plus bas la définition des reducers. 
+
+`createStore` peut aussi prendre un état initial en entrée, mais c'est en React c'est les reducers qui produisent l'état de l'application (y compris l'état initial).
+
+
+#### Création d'un reducer
+
+On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a un état initial constant (_immutable_) à compléter.
+
+```js
+    const initialState = {
+      slides: []
+    };
+    function rootReducer(state = initialState, action) {
+      return state;
+    };
+    export default rootReducer;
+```
+
+
+
+#### Creation d'une action
+
+```js
+    {
+      type: 'ADD_ARTICLE',
+      payload: { title: 'React Redux Tutorial', id: 1 }
+    }
+```
+
+
+#### Tester Redux et le store
+
+
+#### Lien avec l'application et React Router
+
+Suivez l'utilisation de Redux avec React Router [telle que présentée dans la documentation de Redux](https://redux.js.org/advanced/usage-with-react-router#components-rootjs) pour configurer votre `index.js`.  
+
+
+
+### Deployer sur Heroku 
+
+Suivre le guide de Heroku pour déployer une application via git :
+[https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
+
+Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
+
+### Middleware et websockets
+
+Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/advanced/middleware). Faites un essai qui reprend l'idée et logue dans la console toutes les actions déclenchées (voir [ici](https://redux.js.org/advanced/middleware#the-final-approach) _sans le crashReporter_).
+
+
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux gràce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié.
 
 
 
@@ -182,6 +256,23 @@ Une fois la valeur de la route récupérée, modifier l'état de l'application, 
 
 
 
-## TP2.4 Modalité d’entrée (gestes, stylet)
+## TP2.4 Modalité d’entrées (gestes, stylet)
 
 
+
+
+
+# Backup notes
+
+### Redux
+
+On importe dans `index.js` : `Provider` de `react-redux`, et `createStore` de `redux`
+
+```js
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+```
+
+> Actions — functions that return an object akin to a JSON object describing something to happen. There is one compulsory key, named type. We must give every action a type. Other arguments can be passed into an action that can be used to update your Store (state).
+
+> Reducers — functions that handle actions and update the store. We do this by returning the new state. Reducers must be pure functions.
