@@ -173,7 +173,7 @@ Une fois la valeur de la route récupérée, modifier l'état de l'application, 
 
 Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux et des Websockets. L'objectif est que vous puissiez changer l'état de votre application de présentation sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre présentation à distance sur sa machine...)
 
-Nous allons commencer avec la gestion du transparent affiché, mais ce partage d'état peut s'étendre au contenu des transparents pour permettre une édition des transparents "en direct".
+Nous allons gérer l'état qui comprend la liste des transparents et le transparent en cours.
 
 **Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.**
 
@@ -207,7 +207,7 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
 
 ```js
     const initialState = {
-      slides: []
+      slides: [] // vous pouvez réutiliser votre état de slides initial.
     };
     function rootReducer(state = initialState, action) {
       return state;
@@ -215,20 +215,39 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
     export default rootReducer;
 ```
 
+#### Tester Redux et le store
 
-
-#### Creation d'une action
+Dans votre `index.js` principal exposez le store pour pouvoir l'afficher via la console du navigateur.
+Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à votre application React.
 
 ```js
-    {
-      type: 'ADD_ARTICLE',
-      payload: { title: 'React Redux Tutorial', id: 1 }
-    }
+    import store from "store/index"; // verifiez que le chemin est correct
+    window.store = store;
 ```
 
 
-#### Tester Redux et le store
+#### Creation des actions
 
+Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics/actions) en transposant la gestion de todos à la gestion de slides.
+
+Vous aurez à définir les actions suivantes dans `æctions/index.js`
+
+```js
+export const ADD_SLIDE = "ADD_SLIDE";
+export const REMOVE_SLIDE = "REMOVE_SLIDE";
+export const NEXT_SLIDE = 'NEXT_SLIDE'
+export const REMOVE_SLIDE = 'REMOVE_SLIDE'
+```
+
+#### Tester les actions
+
+Toujours dans votre `index.js` principal, exposez les actions pour si elles changent bien le contenu du store. 
+Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment.
+
+```js
+    import { nextSlide } from "actions/index"; // verifiez que le chemin est correct
+    window.nextSlide = nextSlide;
+```
 
 #### Lien avec l'application et React Router
 
@@ -236,7 +255,7 @@ Suivez l'utilisation de Redux avec React Router [telle que présentée dans la d
 
 
 
-### Deployer sur Heroku 
+### Déployer sur Heroku 
 
 Suivre le guide de Heroku pour déployer une application via git :
 [https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
