@@ -269,9 +269,9 @@ Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#th
 
 Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `previous_slide` et `next_slide`, les actions soient dispatchées au store.
 
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` peuvent embarquer un information supplémentaire grâce la propriété [`meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton provoquent la propagation d'un message via Websocket.
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton provoquent la propagation d'un message via Websocket.
 
-N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup).
+N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup) pour modifier de nouveau votre code.
 
 
 
