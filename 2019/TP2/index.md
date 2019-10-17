@@ -77,7 +77,7 @@ Créez la structure des composants correspondant à cette application, en suivan
 
 Voici une structure pour démarrer, pensez à utiliser les composants bootstrap plutôt que du html pur: 
 
-```javascript
+```JSX
 
 class Slide extends React.Component {
   render() {
