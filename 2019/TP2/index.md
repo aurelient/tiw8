@@ -209,10 +209,23 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
 
 ```js
     const initialState = {
+      index: 1, // initialise votre presentation au transparent 1
       slides: [] // vous pouvez réutiliser votre état de slides initial.
     };
     function rootReducer(state = initialState, action) {
-      return state;
+    switch (action.type) {
+        case ADD_SLIDE:
+            return ...
+        case REMOVE_SLIDE: 
+            return ...
+        case NEXT_SLIDE: 
+            return ...
+        case PREVIOUS_SLIDE: 
+            return ...
+        default: 
+            return state
+    }
+    return state;
     };
     export default rootReducer;
 ```
@@ -228,11 +241,12 @@ Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à
 ```
 Un devtool pour Redux est disponible pour [Chrome](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) et [Firefox](https://addons.mozilla.org/en-US/firefox/addon/reduxdevtools/), il necessite quelques légères [modification de votre code](http://extension.remotedev.io/#11-basic-store).
 
+
 #### Creation des actions
 
 Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics/actions) en transposant la gestion de todos à la gestion de slides.
 
-Vous aurez à définir les actions suivantes dans `æctions/index.js`
+Vous aurez à définir les actions suivantes dans `actions/index.js`
 
 ```js
 export const ADD_SLIDE = "ADD_SLIDE";
@@ -241,19 +255,83 @@ export const NEXT_SLIDE = 'NEXT_SLIDE'
 export const PREVIOUS_SLIDE = 'PREVIOUS_SLIDE'
 ```
 
+Ces actions sont utilisées comme signaux par Redux, ce ne que des objects JavaScript Simle. C'est le Reducer qui va faire le travail.
+
+Les actions forcent principalement à définir des traitement unitaire.
+
+Une bonne pratique Redux consiste à envelopper les actions dans une fonction pour s'assurer que la création de l'objet est bien faite. Ces fonction s'appellent `action creator`.
+
+```js
+export function addSlide(payload) {
+  return { type: ADD_SLIDE, payload };
+}
+```
+
+**Ne le faites pas maintenant**. Toutefois, quand votre application deviendra plus complexe, vous pourrez utiliser la convention [Redux duck](https://github.com/erikras/ducks-modular-redux) pour organiser votre code. 
+
+
 #### Tester les actions
 
-Toujours dans votre `index.js` principal, exposez les actions pour si elles changent bien le contenu du store. 
-Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment.
+Toujours dans votre `index.js` principal, exposez les actions pour vérifier qu'elles changent bien le contenu du store. 
+Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment. Mais vous pouvez observer l'état via l'extension Redux ou un simple `console.log()` dans votre Reducer.
 
 ```js
     import { nextSlide } from "actions/index"; // verifiez que le chemin est correct
     window.nextSlide = nextSlide;
 ```
 
-#### Lien avec l'application et React Router
+#### Lien Redux / React
 
-Suivez l'utilisation de Redux avec React Router [telle que présentée dans la documentation de Redux](https://redux.js.org/advanced/usage-with-react-router#components-rootjs) pour configurer votre `index.js`.  
+Nous allons lier votre composant principal à Redux.
+
+Pour commencer `Redux` fournit un composant `<Provider>` à placer à la racine de votre application.
+
+Voir l'[exemple de la documentation](https://react-redux.js.org/introduction/quick-start#provider).
+
+Ce `provider` va rendre le store Redux disponible dans l'application.
+
+Il faut ensuite ce connecter à ce store. Pour cela on utilise la fonction `connect()`, et en définissant une fonction `mapStateToProps()` qui va faire le lien entre le state Redux et les props de votre composant.
+
+```js
+const mapStateToProps = (state) => {
+  return {
+    slides: state.slides,
+    index: state.index
+  }
+}
+
+... VOTRE_COMPOSANT ...
+
+export default connect(mapStateToProps)(VOTRE_COMPOSANT)
+```
+
+
+Maintenant nous allons modifier l'état de `index` en cliquant sur les boutons précédent/suivant de votre `Toolbar`. Pour cela nous allons utiliser `mapDispatchToProps()` [qui va connecter notre application React aux actions Redux](https://react-redux.js.org/using-react-redux/connect-mapdispatch).
+
+1. Importer connect de `react-redux`, et les actions depuis votre fichier de définition d'action.
+```js
+import { connect } from "react-redux";
+import { action1, action2 } from "..../actions/index";
+```
+
+2. Créer un `mapDispatchToProps` et le connecter avec votre composant.
+
+```js
+const mapDispatchToProps = { precendent, suivant } // corriger selon le nom de vos actions
+
+// ... VOTRE_COMPOSANT
+
+export default withRouter(connect(null,{ precendent, suivant })(VOTRE_COMPOSANT));
+```
+
+3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions  `onClick={() => {suivant(true)}`
+
+
+#### Lien Redux / React Router  
+
+Normalement l'intégration avec React Router se passe bien (pas de changements nécessaire). Si jamais ce n'était pas le cas, suivez l'utilisation de Redux avec React Router telle que présentée dans la documentation de [React Router](https://reacttraining.com/react-router/web/guides/redux-integration) ou celle de [Redux](https://redux.js.org/advanced/usage-with-react-router) pour configurer votre projet.  
+
+
 
 
 ### Middleware et websockets
@@ -284,6 +362,9 @@ Ce [guide permet de créer et tester une micro-application express utilisant soc
 
 N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
 
+
+
+
 ## TP2.3 Distribution d’interface multi-dispositif
 
 
@@ -294,17 +375,3 @@ N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack 
 
 
 
-# Backup notes
-
-### Redux
-
-On importe dans `index.js` : `Provider` de `react-redux`, et `createStore` de `redux`
-
-```js
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-```
-
-> Actions — functions that return an object akin to a JSON object describing something to happen. There is one compulsory key, named type. We must give every action a type. Other arguments can be passed into an action that can be used to update your Store (state).
-
-> Reducers — functions that handle actions and update the store. We do this by returning the new state. Reducers must be pure functions.
