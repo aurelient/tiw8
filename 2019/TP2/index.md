@@ -298,7 +298,6 @@ Il faut ensuite ce connecter à ce store. Pour cela on utilise la fonction `conn
 const mapStateToProps = (state) => {
   return {
     slides: state.slides,
-    index: state.index
   }
 }
 
@@ -319,14 +318,18 @@ import { action1, action2 } from "..../actions/index";
 2. Créer un `mapDispatchToProps` et le connecter avec votre composant.
 
 ```js
-const mapDispatchToProps = { precendent, suivant } // corriger selon le nom de vos actions
+const matchDispatchProps = dispatch => {
+  return {
+    nextSlide: () => dispatch(nextSlide(true)),
+    previousSlide: () => dispatch(previousSlide(true))
+  }
 
 // ... VOTRE_COMPOSANT
 
 export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
 ```
 
-3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions  `onClick={() => {suivant(true)}`
+3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions  `onClick={() => {this.props.previousSlide}`
 
 
 #### Lien Redux / React Router  
