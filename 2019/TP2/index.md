@@ -351,7 +351,65 @@ N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack 
 
 ## TP2.3 Distribution d’interface multi-dispositif
 
+Nous allons maintenant travailler à la distribution de l'application sur plusieurs dispositifs et à leur synchronisation.
 
+### Définition de nouvelles routes et des vues associées
+
+Nous allons définir une route par situations d'usage : 
+
+- `controler` : route pour dispositif mobile qui va controler la présentation et afficher les notes de présentation.
+- `present` : route pour le mode présentation plein écran, seule une diapositive plein écran sera affichée (pas de toolbar).
+- `edit`: mode actuel permettant l'édition des transparents
+
+Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière simple de la distribution d'interface, nous allons donc devoir le faire "à la main".
+
+Rajouter des [`Redirect`](https://reacttraining.com/react-router/web/api/Redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état. 
+
+Vous pouvez utiliser `react-device-detect` pour détecter le dispositif (mobile ou non). Et la [`fullscreen API`](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour controler le plein écran.
+
+Déployez et tester.
+
+### Créez une vue controler 
+
+Cette vue pour mobile affiche les notes de présentation associées à un transparet ainsi que les boutons suivant précédent. 
+
+Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. Pour l'instant la vue doit simplement afficher les notes correspondant au transparent courant.
+
+### Gestion "à la main" des routes des transparents.
+
+Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le transparent courant dans notre état (`currentSlide` dans le store).
+`ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état. Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
+
+En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement d'état de l'url du navigateur.
+
+```javascript
+// Update Redux if we navigated via browser's back/forward
+// most browsers restore scroll position automatically
+// as long as we make content scrolling happen on document.body
+window.addEventListener('popstate', () => {
+  // `setSlide` is an action creator that takes 
+  // the hash of the url and pushes to the store it.
+  store.dispatch(setSlide(window.location.hash))
+})
+```
+
+En écoutant les changements dans le store nous allons pouvoir être notifiés de changements et les répercuter dans la barre d'url :
+
+```javascript
+// The other part of the two-way binding is updating the displayed
+// URL in the browser if we change it inside our app state in Redux.
+// We can simply subscribe to Redux and update it if it's different.
+store.subscribe(() => {
+  const hash = "#/" + store.getState().currentSlide
+  if (location.hash !== hash) {
+    window.location.hash = hash
+    // Force scroll to top this is what browsers normally do when
+    // navigating by clicking a link.
+    // Without this, scroll stays wherever it was which can be quite odd.
+    document.body.scrollTop = 0
+  }
+})
+```
 
 ### Middleware et websockets
 
