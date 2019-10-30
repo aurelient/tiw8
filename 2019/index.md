@@ -32,8 +32,8 @@ Ubicomp Web
 | -------------------- | ----- | ------ | ------ |
 | [TP 1](TP1)          | 20/09 | Mise en place d'une Stack JavaScript  | rendu 0 |
 | [TP 2](TP2/)         | 11/10 | Introduction à React                  |         |
-| [TP 2](TP2/#2-suite) | 18/10 | Redux + websockets / multi-dispositif |         |
-| [TP 2](TP2/#3-suite) | 08/11 | Distribution d'interface multi-dispositif |     |
+| [TP 2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 18/10 | Redux + websockets / multi-dispositif |         |
+| [TP 2](TP2/#tp23-distribution-dinterface-multi-dispositif) | 08/11 | Distribution d'interface multi-dispositif |     |
 | [TP 2](TP2/#4-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
 | [TP 3](TP3)          | 06/12 | WebRTC: video    	                   |         |
 | [TP 3](TP3/#2-suite) | 13/12 | Texte synchrone (WebRTC + CRDT)       | rendu 2 |
