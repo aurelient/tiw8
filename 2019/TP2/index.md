@@ -380,7 +380,9 @@ Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. 
 Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le transparent courant dans notre état (`currentSlide` dans le store).
 `ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état. Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
 
-En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement d'état de l'url du navigateur.
+#### Changer l'état à partir de la route
+
+En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans le numéro de transparent à afficher, nous allons déclencher l'action `setSlide`, avec le numéro de transparent approprié. 
 
 ```javascript
 // Update Redux if we navigated via browser's back/forward
@@ -389,11 +391,18 @@ En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changeme
 window.addEventListener('popstate', () => {
   // `setSlide` is an action creator that takes 
   // the hash of the url and pushes to the store it.
-  store.dispatch(setSlide(window.location.hash))
+
+  // TODO add parsing and checks on the location.hash 
+  // to make sure it is a proper slide index.
+  slideIndex = window.location.hash
+  store.dispatch(setSlide(slideIndex))
 })
 ```
 
-En écoutant les changements dans le store nous allons pouvoir être notifiés de changements et les répercuter dans la barre d'url :
+Si vous n'avez pas encore définit l'action `setSlide`, créez le action creator correspondant, et le traitement associé dans le reducer.
+
+#### Changer la route à partir de l'état
+En écoutant les changements dans le store nous allons pouvoir être notifiés de changement de l'état et les répercuter dans la barre d'url (utile pour la suite, quand nous allons synchroniser des dispositifs):
 
 ```javascript
 // The other part of the two-way binding is updating the displayed
