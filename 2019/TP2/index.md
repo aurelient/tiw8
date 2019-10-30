@@ -411,6 +411,9 @@ store.subscribe(() => {
 })
 ```
 
+### Refactorisation
+Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_SLIDE` avec une incrémentation ou une décrémentation de l'index courant.
+
 ### Middleware et websockets
 
 Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/advanced/middleware). Faites un essai qui reprend l'idée et logue dans la console toutes les actions déclenchées (voir [ici](https://redux.js.org/advanced/middleware#the-final-approach) _sans le crashReporter_).
@@ -418,27 +421,38 @@ Pour comprendre la logique du Middleware [suivez la documentation Redux](https:/
 
 Nous allons maintenant faire communiquer plusieurs navigateurs entre eux gràce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
 
-Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `previous_slide` et `next_slide` provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
+Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `set_slide` provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
 
 
-Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `NEXT_SLIDE` ou `PREVIOUS_SLIDE`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
+Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `SET_SLIDE`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
 
-Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `previous_slide` et `next_slide`, les actions soient dispatchées au store.
+Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `set_slide`, les actions soient dispatchées au store.
 
 ```js
 const propagateSocket = store => next => action => {
   if (action.meta.propagate) {
-    if (action.type === NEXT_SLIDE) {
-      socket.emit('action', 'next_slide')
-    } else if (action.type === PREVIOUS_SLIDE) {
-      socket.emit('action', 'previous_slide')
-    }
+    if (action.type === SET_SLIDE) {
+        socket.emit('action', {type:'set_slide', value: action.hash})
+      }
   }
   next(action)
 }
 ```
 
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton provoquent la propagation d'un message via Websocket.
+```js
+
+socket.on('action', (msg) => {
+  console.log('action',msg)
+  switch (msg.type) {
+    case 'set_slide':
+      store.dispatch(setSlide(msg.value, false))
+      break
+
+  }
+})
+```
+
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `SET_SLIDE` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
 
 N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup) pour modifier de nouveau votre code.
 
