@@ -16,7 +16,7 @@ Ubicomp Web
 | CM 1 bis | 20/09 | Stack                      | [pdf](cours/cm1-stack.pdf)        | A. Tabard |
 | CM 2     | 11/10 | Programmation Réactive     | [pdf](cours/cm2-reactivity.pdf)   | A. Tabard |
 |          | 18/10 | *séance de TP supplémentaire* |  |  |
-| CM 3     | 08/11 | Design adaptatif & Gestes  |          | A. Tabard |
+| CM 3     | 08/11 | Design adaptatif & Gestes  | [pdf](cours/cm3-adaptation-gestes.pdf) | A. Tabard |
 |          | 15/11 | *séance de TP supplémentaire* |  |  |
 | CM 4     | 06/12 | Temps réel & Collaboration |          | A. Tabard |
 | CM 5     | 13/12 | Algorithmes de synchronisation |      | A. Tabard |
@@ -44,12 +44,12 @@ Ubicomp Web
 
 ## Evaluation
 
-- 4 TPs notés (70%)
+- 4 TPs notés (66%)
     - TP1 : 10% (PASS/FAIL)
     - TP2 : 40%
     - TP3 : 20%
     - TP3 : 30%
-- 1 controle écrit (30%)
+- 1 controle écrit (33%)
 
 # Références
 
