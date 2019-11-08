@@ -9,17 +9,17 @@
 
 #### Présentation du TP
 
-L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de créer et controler des présentations. Elle sera développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en JavaScript. 
+L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de créer et controler des présentations. Elle sera développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en JavaScript.
 
 Les points suivants seront abordés
 
-- Composants React 
+- Composants React
 - Gestion des états et flux de données
 - Gestion de routes React
-- Redux pour la gestion avancée des états 
+- Redux pour la gestion avancée des états
 - Middleware pour gérer des effets de bord
 - Design responsive et adaptatif
-- Reconnaissance de gestes 
+- Reconnaissance de gestes
 
 
 Ce TP s'étalera sur 4 séances et fera l'objet d'un rendu en binome et d'une note. Voir les critères d'évaluation en bas de la page.
@@ -37,7 +37,7 @@ Si vous n'avez pas utilisé [react-bootstrap](https://react-bootstrap.github.io/
 
 ### Structurer une application React en composants
 
-Lire l'[introduction à la structuration d'application React](https://reactjs.org/docs/thinking-in-react.html). 
+Lire l'[introduction à la structuration d'application React](https://reactjs.org/docs/thinking-in-react.html).
 
 Nous allons commencer par créer un squelette d'application statique, nous rajouterons les parties dynamiques par la suite.
 
@@ -45,8 +45,8 @@ L'application est composée de transparents, d'outils d'édition, d'outils de na
 
 <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2FUntitled%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
 
-Les transparents auront (à minima) deux modèles: 
-- titre (le transparent ne contient qu'un grand titre centré), et 
+Les transparents auront (à minima) deux modèles:
+- titre (le transparent ne contient qu'un grand titre centré), et
 - contenu qui peut avoir les éléments suivants :
     - Titre,
     - Image (url vers imgur ou autre fournisseur d'image),
@@ -55,7 +55,7 @@ Les transparents auront (à minima) deux modèles:
     - Visibilité (afficher/cacher le transparent)
 - on peut penser à d'autre modèles: image seule, iframe intégrant une page html...
 
-Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) : 
+Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) :
 
 ```javascript
 [
@@ -69,13 +69,13 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
 ```
 
 <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A3" allowfullscreen></iframe>
- 
+
  <iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A15" allowfullscreen></iframe>
 
 
 Créez la structure des composants correspondant à cette application, en suivant le guide et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy).
 
-Voici une structure pour démarrer, pensez à utiliser les composants bootstrap plutôt que du html pur: 
+Voici une structure pour démarrer, pensez à utiliser les composants bootstrap plutôt que du html pur:
 
 ```JSX
 
@@ -93,7 +93,7 @@ class Slide extends React.Component {
 
 class Slides extends React.Component {
   render() {
-    
+
     this.props.slides.forEach((slide) => {
         ...
     });
@@ -200,7 +200,7 @@ Nous allons commencer par créer le store qui va gérer les états.
     export default store;
 ```
 
-On importe `createStore` depuis redux et aussi `rootReducer`, on verra plus bas la définition des reducers. 
+On importe `createStore` depuis redux et aussi `rootReducer`, on verra plus bas la définition des reducers.
 
 `createStore` peut aussi prendre un état initial en entrée, mais c'est en React c'est les reducers qui produisent l'état de l'application (y compris l'état initial).
 
@@ -218,13 +218,13 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
     switch (action.type) {
         case ADD_SLIDE:
             return ...
-        case REMOVE_SLIDE: 
+        case REMOVE_SLIDE:
             return ...
-        case NEXT_SLIDE: 
+        case NEXT_SLIDE:
             return ...
-        case PREVIOUS_SLIDE: 
+        case PREVIOUS_SLIDE:
             return ...
-        default: 
+        default:
             return state
     }
     return state;
@@ -269,12 +269,12 @@ export function addSlide(payload) {
 }
 ```
 
-**Ne le faites pas maintenant**. Toutefois, quand votre application deviendra plus complexe, vous pourrez utiliser la convention [Redux duck](https://github.com/erikras/ducks-modular-redux) pour organiser votre code. 
+**Ne le faites pas maintenant**. Toutefois, quand votre application deviendra plus complexe, vous pourrez utiliser la convention [Redux duck](https://github.com/erikras/ducks-modular-redux) pour organiser votre code.
 
 
 #### Tester les actions
 
-Toujours dans votre `index.js` principal, exposez les actions pour vérifier qu'elles changent bien le contenu du store. 
+Toujours dans votre `index.js` principal, exposez les actions pour vérifier qu'elles changent bien le contenu du store.
 Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment. Mais vous pouvez observer l'état via l'extension Redux ou un simple `console.log()` dans votre Reducer.
 
 ```js
@@ -318,12 +318,12 @@ import { action1, action2 } from "..../actions/index";
 2. Créer un `mapDispatchToProps` et le connecter avec votre composant.
 
 ```js
-const matchDispatchProps = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
     nextSlide: () => dispatch(nextSlide(true)),
     previousSlide: () => dispatch(previousSlide(true))
   }
-
+}
 // ... VOTRE_COMPOSANT
 
 export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
@@ -340,8 +340,8 @@ Normalement l'intégration avec React Router se passe bien (pas de changements n
 
 
 
-### Déployer sur Heroku 
-Afin de rendre notre application disponible sur les internets, nous allons la déployer sur [Heroku](https://heroku.com). 
+### Déployer sur Heroku
+Afin de rendre notre application disponible sur les internets, nous allons la déployer sur [Heroku](https://heroku.com).
 Suivre le guide de Heroku pour déployer une application via git :
 [https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
 
@@ -355,7 +355,7 @@ Nous allons maintenant travailler à la distribution de l'application sur plusie
 
 ### Définition de nouvelles routes et des vues associées
 
-Nous allons définir une route par situations d'usage : 
+Nous allons définir une route par situations d'usage :
 
 - `controler` : route pour dispositif mobile qui va controler la présentation et afficher les notes de présentation.
 - `present` : route pour le mode présentation plein écran, seule une diapositive plein écran sera affichée (pas de toolbar).
@@ -363,15 +363,15 @@ Nous allons définir une route par situations d'usage :
 
 Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière simple de la distribution d'interface, nous allons donc devoir le faire "à la main".
 
-Rajouter des `Redirect` [(doc)](https://reacttraining.com/react-router/web/api/Redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état. 
+Rajouter des `Redirect` [(doc)](https://reacttraining.com/react-router/web/api/Redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état.
 
 Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour controler le plein écran.
 
 Déployez et tester.
 
-### Créez une vue controler 
+### Créez une vue controler
 
-Cette vue pour mobile affiche les notes de présentation associées à un transparet ainsi que les boutons suivant précédent. 
+Cette vue pour mobile affiche les notes de présentation associées à un transparet ainsi que les boutons suivant précédent.
 
 Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. Pour l'instant la vue doit simplement afficher les notes correspondant au transparent courant.
 
@@ -382,17 +382,17 @@ Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela n
 
 #### Changer l'état à partir de la route
 
-En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans le numéro de transparent à afficher, nous allons déclencher l'action `setSlide`, avec le numéro de transparent approprié. 
+En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans le numéro de transparent à afficher, nous allons déclencher l'action `setSlide`, avec le numéro de transparent approprié.
 
 ```javascript
 // Update Redux if we navigated via browser's back/forward
 // most browsers restore scroll position automatically
 // as long as we make content scrolling happen on document.body
 window.addEventListener('popstate', () => {
-  // `setSlide` is an action creator that takes 
+  // `setSlide` is an action creator that takes
   // the hash of the url and pushes to the store it.
 
-  // TODO add parsing and checks on the location.hash 
+  // TODO add parsing and checks on the location.hash
   // to make sure it is a proper slide index.
   slideIndex = window.location.hash
   store.dispatch(setSlide(slideIndex))
@@ -478,6 +478,17 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(propagat
 ## TP2.4 Modalité d’entrées (gestes, stylet)
 
 
+### Reconnaissance de gestes
 
 
+Page du $1 recognizer: 
 
+- http://depts.washington.edu/acelab/proj/dollar/index.html
+- https://github.com/nok/onedollar-unistroke-coffee
+
+
+Création de template: 
+
+- https://quentinroy.fr/misc/track-recorder/
+
+### Gestion de modalités d'entrée
