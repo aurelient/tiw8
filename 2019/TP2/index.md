@@ -492,3 +492,152 @@ Création de template:
 - https://quentinroy.fr/misc/track-recorder/
 
 ### Gestion de modalités d'entrée
+
+Nous allons maintenant ajouter des fonctions de dessin à nos slides. En utilisant un stylet, un utilisateur pourra mettre en avant des elements sur la slide courante, et ce de manière synchronisée avec les autres appareils.
+
+## Création d'un canva sur lequel dessiner
+Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
+
+Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref) :
+
+```jsx
+<canvas className="stroke" 
+          ref={refCanvas}
+          onPointerDown={pointerDownHandler} 
+          onPointerMove={pointerMoveHandler} 
+          onPointerUp={pointerUpEvent}></canvas>
+```
+
+Ces handlers nous permettront de d'écouter les événements provenant de `pointer`.
+
+Afin de vous faciliter la tâche, voici le code *presque* complet pour faire marcher le dessin sur le canvas :
+
+```js
+  var clickX = new Array()
+  var clickY = new Array()
+  var clickDrag = new Array()
+  var paint = false
+
+  // Cette ligne permet d'avoir accès à notre canvas après que le composant aie été rendu. Le canvas est alors disponible via refCanvas.current
+  let refCanvas = useRef(null)
+
+  function addClick(x, y, dragging)
+  {
+    clickX.push(x),
+    clickY.push(y),
+    clickDrag.push(dragging)
+  }
+
+  function redraw(){
+    let context = refCanvas.current.getContext('2d')
+    let width = refCanvas.current.getBoundingClientRect().width
+    let height = refCanvas.current.getBoundingClientRect().height
+
+    //Ceci permet d'adapter la taille du contexte de votre canvas à sa taille sur la page
+    refCanvas.current.setAttribute('width', width)
+    refCanvas.current.setAttribute('height', height)
+    context.clearRect(0, 0, context.width, context.height); // Clears the canvas
+    
+    context.strokeStyle = "#df4b26";
+    context.lineJoin = "round";
+    context.lineWidth = 2;
+    
+    for(var i=0; i < clickX.length; i++) {		
+      context.beginPath();
+      if(clickDrag[i] && i){
+      context.moveTo(clickX[i-1]*width, clickY[i-1]*height);
+       }else{
+         context.moveTo((clickX[i]*width)-1, clickY[i]*height);
+       }
+       context.lineTo(clickX[i]*width, clickY[i]*height);
+       context.closePath();
+       context.stroke();
+    }
+  }
+
+  function pointerDownHandler (ev) {
+    
+    console.error('HEY ! ICI ON PEUT DIFFERENCIER QUEL TYPE DE POINTEUR EST UTILISE !')
+
+    let width = refCanvas.current.getBoundingClientRect().width
+    let height = refCanvas.current.getBoundingClientRect().height
+    var mouseX = (ev.pageX - refCanvas.current.offsetLeft)/width
+    var mouseY = (ev.pageY - refCanvas.current.offsetTop)/height
+      
+    paint = true
+    addClick(mouseX, mouseY, false)
+    redraw()
+  }
+
+  function pointerMoveHandler (ev) {
+    if(paint){
+      let width = refCanvas.current.getBoundingClientRect().width
+      let height = refCanvas.current.getBoundingClientRect().height
+      addClick((ev.pageX - refCanvas.current.offsetLeft)/width, (ev.pageY - refCanvas.current.offsetTop)/height, true)
+      redraw()
+    }
+  }
+
+  function pointerUpEvent (ev) {
+    paint = false
+  }
+
+```
+
+Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessus. Faites en sortes que l'on ne dessine que si c'est un [stylet qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
+
+## Lien du canva au store
+Dans votre état initial, rajoutez l'attribut suivant :
+```js
+drawing: {
+        clickX: [],
+        clickY: [],
+        clickDrag: []
+    }
+```
+
+Et créez les actions `ADD_DRAW_POINTS` et `RESET_DRAW_POINTS`.
+
+`ADD_DRAW_POINTS` devra accepter au moins 3 paramètres de type Array `(clickX, clickY, clickDrag)` qui seront concaténés à l'état du store.
+
+`RESET_DRAW_POINTS` réinitialiseras les tableaux du store à vide.
+
+Dans votre composant Slide, réalisez la connexion avec le store :
+
+```js
+const mapStateToProps = state => {
+  return { 
+    drawing: state.drawing
+  } 
+}
+
+const mapDispatchProps = dispatch => {
+  return {
+    addPoints: (x, y, drag) => dispatch(addDrawPoints(x, y, drag, true))
+  }
+}
+```
+
+Une fois ceci fait, faites en sorte qu'à chaque fois qu'une ligne est finie de dessiner (`pointerUpEvent`), que vous copiez les points de la nouvelle ligne dans le store. Bien sûr, maintenant il faut aussi dessiner les lignes stockées dans le store (`props.drawing.`).
+
+Ajoutez un bouton "Effacer" à votre toolbar, ce bouton déclenchera l'action `RESET_DRAW_POINTS`
+
+## Syncronisation du canva entre les appareils
+
+Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de propager les nouvelles lignes dessinées aux autres appareils.
+```js
+// ...
+ else if (action.type === ADD_DRAW_POINTS) {
+  socket.emit('action', {type: 'add_draw_points', value: {
+      x: action.x,
+      y: action.y,
+      drag: action.drag
+    }
+  })
+} else if (action.type === RESET_DRAW_POINTS) {
+  socket.emit('action', {type: 'reset_draw_points'})
+}
+//...
+```
+
+Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparait que si vous dessinez aussi sur cet appareil. Pour remédier à ce problème, utilisez [useEffect](https://reactjs.org/docs/hooks-effect.html) afin d'exécuter `redraw()` au moment opportun.
