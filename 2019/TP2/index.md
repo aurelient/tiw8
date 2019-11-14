@@ -495,7 +495,7 @@ Création de template:
 
 Nous allons maintenant ajouter des fonctions de dessin à nos slides. En utilisant un stylet, un utilisateur pourra mettre en avant des elements sur la slide courante, et ce de manière synchronisée avec les autres appareils.
 
-## Création d'un canva sur lequel dessiner
+#### Création d'un canvas sur lequel dessiner
 Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
 
 Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref) :
@@ -510,7 +510,11 @@ Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` a
 
 Ces handlers nous permettront de d'écouter les événements provenant de `pointer`.
 
-Afin de vous faciliter la tâche, voici le code *presque* complet pour faire marcher le dessin sur le canvas :
+Afin de vous faciliter la tâche, voici le code *presque* complet pour faire marcher le dessin sur le canvas.
+
+Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessous. Faites en sortes que l'on ne dessine que si c'est un [stylet qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
+
+
 
 ```js
   var clickX = new Array()
@@ -584,9 +588,8 @@ Afin de vous faciliter la tâche, voici le code *presque* complet pour faire mar
 
 ```
 
-Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessus. Faites en sortes que l'on ne dessine que si c'est un [stylet qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
 
-## Lien du canva au store
+### Lien du canvas au store
 Dans votre état initial, rajoutez l'attribut suivant :
 ```js
 drawing: {
@@ -622,7 +625,7 @@ Une fois ceci fait, faites en sorte qu'à chaque fois qu'une ligne est finie de 
 
 Ajoutez un bouton "Effacer" à votre toolbar, ce bouton déclenchera l'action `RESET_DRAW_POINTS`
 
-## Syncronisation du canva entre les appareils
+### Syncronisation du canvas entre les appareils
 
 Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de propager les nouvelles lignes dessinées aux autres appareils.
 ```js
@@ -641,3 +644,15 @@ Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de
 ```
 
 Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparait que si vous dessinez aussi sur cet appareil. Pour remédier à ce problème, utilisez [useEffect](https://reactjs.org/docs/hooks-effect.html) afin d'exécuter `redraw()` au moment opportun.
+
+
+## Rendu
+
+À rendre pour le dimanche 17 à 23h59.
+
+1. Déployez votre code sur Heroku
+2. Pousser votre code sur la forge
+3. Déposer les liens sur Tomuss UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs
+
+
+### Critères d'évaluation
