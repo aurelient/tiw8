@@ -481,6 +481,8 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(propagat
 
 Nous allons maintenant ajouter des fonctions de dessin à nos slides. En utilisant un stylet, un utilisateur pourra mettre en avant des elements sur la slide courante, et ce de manière synchronisée avec les autres appareils.
 
+**Pour simplier on ne dessine que sur la slide courante, et on efface/oublie le dessin quand on change de slide.**
+
 #### Création d'un canvas sur lequel dessiner
 Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
 
@@ -637,7 +639,7 @@ Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparai
 
 Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évènements touch.
 
-Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de[OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module JS récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](code/onedollar.js) dans le dossier `src/` pour qu'elle soit facilement bundlée par Webpack.
+Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module JS récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](code/onedollar.js) dans le dossier `src/` pour qu'elle soit facilement bundlée par Webpack.
 
 
 #### Gérer le recognizer 
@@ -669,7 +671,7 @@ Stocker les points composants le geste dans un Array `gesturePoints`.
 
 #### Dessiner le geste
 Dans la fonction de dessin `redraw` vous pouvez ajouter un cas à la fin qui dessine en cas de geste (les points composant le geste sont stockés dans `gesturePoints`). 
-Vous devrez être vigilant à convertir vos points pour être dans le référentiel du canvas, comme dans le code fournit ci-dessus.
+Vous devrez être **vigilant à convertir vos points pour être dans le référentiel du canvas**, comme dans le code fournit ci-dessus.
 
 ```js
   function redraw(){
@@ -706,7 +708,7 @@ Pensez à réinitialiser `gesturePoints` une fois le geste terminé.
 
 #### Apprendre de nouveaux gestes
 
-Toujours dans `pointerUpHandler` Vous pouvez imprimer les trajectoires correspondants à des gestes.
+Toujours dans `pointerUpHandler`, vous pouvez imprimer les trajectoires correspondants à des gestes.
 
 ```js
     console.log('[['+gesturePoints.join('],[')+']]')
@@ -718,6 +720,25 @@ Utiliser cette sortie pour ajouter deux nouveaux gestes: '>' et '<' (partant du 
 #### Associer le geste à une action
 
 Une fois le geste exécute, s'il correspond à un de ces deux nouveaux gestes (`recognized == true`), dispatcher les actions suivant ou précédent.
+
+Pour faire cela, nous allons nous appuyer sur un `mapDispatchToProps` qu'il faudra connecter à votre composant. 
+
+```js
+const matchDispatchProps = dispatch => {
+  return {
+    nextSlide: () => {
+      dispatch(setSlide(store.getState().currentSlide+1, true))
+      dispatch(resetDrawPoints(true))
+    },
+    previousSlide: () => {
+      dispatch(setSlide(store.getState().currentSlide-1, true))
+      dispatch(resetDrawPoints(true))
+    },
+    resetDrawPoints: () => dispatch(resetDrawPoints(true))
+  }
+```
+
+`resetDrawPoints` est l'action associée à l'effaçage des dessins effectué sur le transparent.
 
 Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 
