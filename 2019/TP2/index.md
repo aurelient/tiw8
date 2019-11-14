@@ -637,16 +637,12 @@ Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparai
 
 Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évènements touch.
 
-Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. On va 
-
-Installez la version de la librairie suivante [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee): `npm install OneDollar.js`
-
-Si vous souhaitez créer vos propre template vous pouvez utiliser [l'outil suivant qui va vous renvoyer une liste de points associés à un geste](- https://quentinroy.fr/misc/track-recorder/).
+Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de[OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module JS récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](code/onedollar.js) dans le dossier `src/` pour qu'elle soit facilement bundlée par Webpack.
 
 
-#### Initialiser le recognizer 
+#### Gérer le recognizer 
 
-Au niveau de votre `Slideshow`, initialiser votre recognizer.
+Au niveau de votre `Slide`, importer et initialiser votre le One Dollar Recognizer.
 
 ```js
 // Voir ici pour le détails de options https://github.com/nok/onedollar-unistroke-coffee#options
@@ -658,15 +654,76 @@ const options = {
   'size': 250   // The width and height of the scaling bounding box
 };
 const recognizer = new OneDollar(options);
+
+// Let's "teach" two gestures to the recognizer:
+recognizer.add('triangle', [[627,213],[626,217],[617,234],[611,248],[603,264],[590,287],[552,329],[524,358],[489,383],[461,410],[426,444],[416,454],[407,466],[405,469],[411,469],[428,469],[453,470],[513,478],[555,483],[606,493],[658,499],[727,505],[762,507],[785,508],[795,508],[796,505],[796,503],[796,502],[796,495],[790,473],[785,462],[776,447],[767,430],[742,390],[724,362],[708,340],[695,321],[673,289],[664,272],[660,263],[659,261],[658,256],[658,255],[658,255]]);
+recognizer.add('circle', [[621,225],[616,225],[608,225],[601,225],[594,227],[572,235],[562,241],[548,251],[532,270],[504,314],[495,340],[492,363],[492,385],[494,422],[505,447],[524,470],[550,492],[607,523],[649,531],[689,531],[751,523],[782,510],[807,495],[826,470],[851,420],[859,393],[860,366],[858,339],[852,311],[833,272],[815,248],[793,229],[768,214],[729,198],[704,191],[678,189],[655,188],[623,188],[614,188],[611,188],[611,188]]);
 ```
 
-#### 
+#### Traitement différencié selon le type du pointerEvent.
 Etendre les fonctions `pointerDownHandler`, `pointerMoveHandler`, `pointerUpHandler` pour qu'elles traite différemment les sources `touch`, `pen` et `mouse`.
 
-Nous allons associer les gestes au `touch`.
+Nous allons associer les gestes au `touch`. Toutefois pour débugger plus facilement, vous pouvez commencer traiter les gestes sur le pointerEvent `mouse`, et basculer sur le touch une fois que cela marche bien.
+
+Stocker les points composants le geste dans un Array `gesturePoints`.
+
+#### Dessiner le geste
+Dans la fonction de dessin `redraw` vous pouvez ajouter un cas à la fin qui dessine en cas de geste (les points composant le geste sont stockés dans `gesturePoints`). 
+Vous devrez être vigilant à convertir vos points pour être dans le référentiel du canvas, comme dans le code fournit ci-dessus.
+
+```js
+  function redraw(){
+
+    ...
+
+    if (gesture) {
+      context.strokeStyle = "#666";
+      context.lineJoin = "round";
+      context.lineWidth = 5;
+
+      context.beginPath();
+      context.moveTo(gesturePoints[0][0]*width, gesturePoints[0][1]*height);
+      for(var i=1; i < gesturePoints.length; i++) {
+        context.lineTo(gesturePoints[i][0]*width-1, gesturePoints[i][1]*height);
+      }  
+
+      context.stroke();
+    }
+  }
+```
+
+#### Reconnaitre un geste prédéfinit
+
+Quand le geste se termine (`pointerUpHandler`), vous pouvez lancer la reconnaissance du geste.
+
+```js
+      let gesture = recognizer.check(gesturePoints);
+```
+
+Inspectez l'objet gesture dans la console, et vérifiez que vous arrivez bien à reconnaiter un cercle et un triangle.
+
+Pensez à réinitialiser `gesturePoints` une fois le geste terminé.
+
+#### Apprendre de nouveaux gestes
+
+Toujours dans `pointerUpHandler` Vous pouvez imprimer les trajectoires correspondants à des gestes.
+
+```js
+    console.log('[['+gesturePoints.join('],[')+']]')
+``` 
+
+Utiliser cette sortie pour ajouter deux nouveaux gestes: '>' et '<' (partant du haut vers le bas) à votre recognizer. 
 
 
+#### Associer le geste à une action
 
+Une fois le geste exécute, s'il correspond à un de ces deux nouveaux gestes (`recognized == true`), dispatcher les actions suivant ou précédent.
+
+Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
+
+#### FIN
+
+Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ## Rendu
 
@@ -695,5 +752,6 @@ Nous allons associer les gestes au `touch`.
 - Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons - posants.
 - Gestion différenciée des pointer-events.
 - Synchronisation des dessins s'appuyant sur un middleware
-- Gestion des gestes pour des commandes suivant, précédent, début, fin. 
+- Gestion des gestes pour des commandes suivant, précédent. 
+- Les commandes associées aux gestes sont bien propagées et permettent de controler un dispositif à distance.
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
