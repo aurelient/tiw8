@@ -477,20 +477,6 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(propagat
 
 ## TP2.4 Modalité d’entrées (gestes, stylet)
 
-
-### Reconnaissance de gestes
-
-
-Page du $1 recognizer: 
-
-- http://depts.washington.edu/acelab/proj/dollar/index.html
-- https://github.com/nok/onedollar-unistroke-coffee
-
-
-Création de template: 
-
-- https://quentinroy.fr/misc/track-recorder/
-
 ### Gestion de modalités d'entrée
 
 Nous allons maintenant ajouter des fonctions de dessin à nos slides. En utilisant un stylet, un utilisateur pourra mettre en avant des elements sur la slide courante, et ce de manière synchronisée avec les autres appareils.
@@ -646,13 +632,68 @@ Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de
 Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparait que si vous dessinez aussi sur cet appareil. Pour remédier à ce problème, utilisez [useEffect](https://reactjs.org/docs/hooks-effect.html) afin d'exécuter `redraw()` au moment opportun.
 
 
+
+### Reconnaissance de gestes
+
+Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évènements touch.
+
+Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. On va 
+
+Installez la version de la librairie suivante [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee): `npm install OneDollar.js`
+
+Si vous souhaitez créer vos propre template vous pouvez utiliser [l'outil suivant qui va vous renvoyer une liste de points associés à un geste](- https://quentinroy.fr/misc/track-recorder/).
+
+
+#### Initialiser le recognizer 
+
+Au niveau de votre `Slideshow`, initialiser votre recognizer.
+
+```js
+// Voir ici pour le détails de options https://github.com/nok/onedollar-unistroke-coffee#options
+const options = {
+  'score': 80,  // The similarity threshold to apply the callback(s)
+  'parts': 64,  // The number of resampling points
+  'step': 2,    // The degree of one single rotation step
+  'angle': 45,  // The last degree of rotation
+  'size': 250   // The width and height of the scaling bounding box
+};
+const recognizer = new OneDollar(options);
+```
+
+#### 
+Etendre les fonctions `pointerDownHandler`, `pointerMoveHandler`, `pointerUpHandler` pour qu'elles traite différemment les sources `touch`, `pen` et `mouse`.
+
+Nous allons associer les gestes au `touch`.
+
+
+
+
 ## Rendu
 
 À rendre pour le dimanche 17 à 23h59.
 
 1. Déployez votre code sur Heroku
 2. Pousser votre code sur la forge
-3. Déposer les liens sur Tomuss UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs
+3. Déposer les liens sur Tomuss "UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs"
 
+- Le lien vers Heroku pointe vers le 1e transparents
+- Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/tiw8-tp2.git)
 
 ### Critères d'évaluation
+
+- Fichier `README.md` décrivant le process de build en dev, en prod, et de déploiement.
+- Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
+- Déploiement sur Heroku
+- Composants React pour le `Slideshow`, les `Slides`, la `Toolbar`.
+- Store qui contient l'état de l'application
+- Le flux de données suit le flow React, des actions sont déclarées, et les changements d'états passent par des actions unitaires qui modifient le store.
+- Les changement sont des fonctions qui renvoient un nouvel état (immutabilité) dans le reducer.
+- Redux pour la gestion avancée des états
+- Gestions des routes pour les transparents
+- Implémentation des Websockets côté client et serveur
+- Synchronisation du transparent affiché entre les dispositifs s'appuyant sur un middleware
+- Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons - posants.
+- Gestion différenciée des pointer-events.
+- Synchronisation des dessins s'appuyant sur un middleware
+- Gestion des gestes pour des commandes suivant, précédent, début, fin. 
+- Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
