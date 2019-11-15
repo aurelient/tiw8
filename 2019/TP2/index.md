@@ -486,7 +486,7 @@ Nous allons maintenant ajouter des fonctions de dessin à nos slides. En utilisa
 #### Création d'un canvas sur lequel dessiner
 Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
 
-Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref) :
+Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref). Utilisez `useRef`si vous êtes dans un 'function component', ou `createRef` si vous êtes dans un 'class-based component' ([voir ici](https://stackoverflow.com/a/54620836)):
 
 ```jsx
 <canvas className="stroke" 
@@ -495,6 +495,8 @@ Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` a
           onPointerMove={pointerMoveHandler} 
           onPointerUp={pointerUpEvent}></canvas>
 ```
+
+
 
 Ces handlers nous permettront de d'écouter les événements provenant de `pointer`.
 
@@ -511,6 +513,7 @@ Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du cod
   var paint = false
 
   // Cette ligne permet d'avoir accès à notre canvas après que le composant aie été rendu. Le canvas est alors disponible via refCanvas.current
+  // Si vous utilisez des Class Components plutôt que des function Components, voir ici https://stackoverflow.com/a/54620836 
   let refCanvas = useRef(null)
 
   function addClick(x, y, dragging)
@@ -768,11 +771,13 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 - Les changement sont des fonctions qui renvoient un nouvel état (immutabilité) dans le reducer.
 - Redux pour la gestion avancée des états
 - Gestions des routes pour les transparents
+- Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'etat de l'application.
 - Implémentation des Websockets côté client et serveur
 - Synchronisation du transparent affiché entre les dispositifs s'appuyant sur un middleware
-- Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons - posants.
+- Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons composants.
+- Gestion du plein écran.
 - Gestion différenciée des pointer-events.
-- Synchronisation des dessins s'appuyant sur un middleware
+- Synchronisation des dessins s'appuyant sur un middleware.
 - Gestion des gestes pour des commandes suivant, précédent. 
 - Les commandes associées aux gestes sont bien propagées et permettent de controler un dispositif à distance.
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
