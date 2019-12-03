@@ -45,48 +45,19 @@ Nous aurons avoir :
   - pour permettre la découverte des clients du réseau p2p
 - des clients qui se parleront entre eux.
 
-### Démarrage du TP
+### 
 
-Pour établir une connexion entre deux clients il faut suivre les étapes suivantes
-- Instantier deux `RTCPeerConnection`
-- Ajouter les clients comme `ICE candidates`
-- Effectuer un `createOffer` sur le 1e objet
-- définir sa `description` locale  et distante.
-- Effectuer un `createAnswer` sur le 2e objet
-- créer la `description`
-    
+
+### Création d'un composant dédié 
+
+Avec les dernières versions de React, et notamment l'introduction des [hooks](https://reactjs.org/docs/hooks-intro.html) permettent de gérer des états dans créer de classes dédiées.
+Au sein d'un composant React, on peut manipuler l'état avec `useRef` ou `useState`, [lire ici pour savoir lequel utiliser(https://www.codebeast.dev/usestate-vs-useref-re-render-or-not/)
+
+   
     
 ```js
 class WebRTCPeerConnection extends React.Component {
-    constructor(){
-        super();
 
-        this.state = {
-            startDisabled: false,
-            callDisabled: true,
-            hangUpDisabled: true,
-            servers: null,
-            pc1: null,
-            pc2: null,
-            localStream: null
-        };   
-
-        // TODO I don't think we need to use createRef
-        this.localVideoRef = React.createRef();
-        this.remoteVideoRef = React.createRef();
-    } 
-
-    start() {
-        // start media devices
-    };
- 
-    call() {
-        // initiate a call
-    };
- 
-    hangUp () {
-        // hang up connection
-    };
  
     render() {
         const { startDisabled, callDisabled, hangUpDisabled } = this.state;
@@ -94,13 +65,13 @@ class WebRTCPeerConnection extends React.Component {
         return (
             <div>
                 <video
-                    ref={this.localVideoRef}
+                    ref={localVideo}
                     autoPlay
                     muted
                     style={{ width: "240px", height: "180px" }}
                 />
                 <video
-                    ref={this.remoteVideoRef}
+                    ref={remoteVideo}
                     autoPlay
                     style={{ width: "240px", height: "180px" }}
                 />
@@ -339,8 +310,35 @@ We guess the other client and add it as a candidate. If we had more than 2, this
     };
 ```
 
-### Signaling : Améliorer la découverte des pairs
+### Mise en place d'un serveur
 
+#### Signaling côté serveur
+
+Nous allons réutiliser le [code du serveur](https://github.com/mdn/samples-server/blob/master/s/webrtc-from-chat/chatserver.js)  de la [documentation MDN](http://bit.ly/webrtc-from-chat)
+
+#### Signaling côté client
+
+Voici une [classe qui permet de gérer le signaling côté client](../code/SignalingConnection.js).
+
+Elle fait les choses suivantes : 
+
+- créé un WebSocket avec `connectToSocket`,  
+- configure des callbacks : `onOpen` quand la connexion démarre, `onMessage` quand on recoit des messages.
+- `addMsgListener` permet d'ajouter des listeners de message au besoin.  
+- `sendToServer` permet d'envoyer un objet json au serveur.
+
+Nous allons utiliser cela pour configurer notre PeerConnection au via le serveur.
+
+
+### Etablissement de la connexion pair à pair
+
+#### 
+
+#### Refactoring 
+
+C'est le chaos, une grosse partie du code n'a pas sa place dans un composant sensé géré la vue.
+
+Il faut maintenant réorganiser tout cela pour avoir une helper classe qui gère la logique de connexion.
 
 
 ## TP3.2 WebRTC et edition de texte synchrone
