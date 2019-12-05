@@ -9,9 +9,9 @@
 
 #### Présentation du TP
 
-L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de mettre en place .
+L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant à deux navigateurs de commencer une conversation via chat vidéo.
 
-Les points suivants seront abordés
+Les points suivants seront abordés : ...
 
 Ce TP s'étalera sur 2 séances et fera l'objet d'un rendu en binome et d'une note. Voir les critères d'évaluation en bas de la page.
 
@@ -50,89 +50,93 @@ Nous aurons avoir :
 
 ### Création d'un composant dédié 
 
-Avec les dernières versions de React, et notamment l'introduction des [hooks](https://reactjs.org/docs/hooks-intro.html) permettent de gérer des états dans créer de classes dédiées.
+Avec les dernières versions de React, et notamment l'introduction des [hooks](https://reactjs.org/docs/hooks-intro.html) permettent de gérer des états dans les Function Components.
 Au sein d'un composant React, on peut manipuler l'état avec `useRef` ou `useState`, [lire ici pour savoir lequel utiliser(https://www.codebeast.dev/usestate-vs-useref-re-render-or-not/)
 
-   
+Créez un composant React permettant de visualiser :
+- le flux vidéo local
+- le flux vidéo du correspondant
+- un bouton démarrant la capture du flux vidéo local
+- un bouton démarrant l'appel avec le correspondant
+- un bouton mettant fin à l'appel
     
 ```js
-class WebRTCPeerConnection extends React.Component {
+const Videochat = () => {
+        
+    const [startAvailable, setStart] = useState(true)
+    const [callAvailable, setCall] = useState(false)
+    const [hangupAvailable, setHangup] = useState(false)
 
- 
-    render() {
-        const { startDisabled, callDisabled, hangUpDisabled } = this.state;
- 
-        return (
-            <div>
-                <video
-                    ref={localVideo}
-                    autoPlay
-                    muted
-                    style={{ width: "240px", height: "180px" }}
-                />
-                <video
-                    ref={remoteVideo}
-                    autoPlay
-                    style={{ width: "240px", height: "180px" }}
-                />
- 
-                <ButtonToolbar>
-                    <Button onClick={this.start} disabled={startDisabled}>
-                        Start
-                    </Button>
-                    <Button onClick={this.call} disabled={callDisabled}>
-                        Call
-                    </Button>
-                    <Button onClick={this.hangUp} disabled={hangUpDisabled}>
-                        Hang Up
-                    </Button>
-                </ButtonToolbar>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <video
+                ref={localVideoRef}
+                autoPlay
+                muted
+                style={{ width: "240px", height: "180px" }}
+            />
+            <video
+                ref={remoteVideoRef}
+                autoPlay
+                style={{ width: "240px", height: "180px" }}
+            />
+
+            <ButtonToolbar>
+                <Button onClick={start} disabled={!startAvailable}>
+                    Start
+                </Button>
+                <Button onClick={call} disabled={!callAvailable}>
+                    Call
+                </Button>
+                <Button onClick={hangUp} disabled={!hangupAvailable}>
+                    Hang Up
+                </Button>
+            </ButtonToolbar>
+        </div>
+    )
 }
 ```
 
 
 ### Récupération du flux vidéo
 
-Nous allons faire en sorte de récupérer le flux vidéo du navigateur, lorsqu'on clique sur `Start`
+Pour pouvoir le transmettre à notre correspondant, nous allons tout d'abord faire en sorte de récupérer le flux vidéo du navigateur, lorsqu'on clique sur `Start`
+
+Utilisez l'API mediaDevices pour récupérer le `stream` vidéo et le visualiser dans votre composant.
 
 ```js
-    start = () => {
-        this.setState({
-            startDisabled: true
-        });
+    const start = () => {
+        setStart(false)
         navigator.mediaDevices
             .getUserMedia({
                 audio: true,
                 video: true
             })
-            .then(this.gotStream)
-            .catch(e => alert("getUserMedia() error:" + e.name));
-    };
+            .then(gotStream)
+            .catch(e => {console.log(e); alert("getUserMedia() error:" + e.name)})
+    }
  
-    gotStream = stream => {
-        //TODO supprimer ces refs
-        this.localVideoRef.current.srcObject = stream;
-        this.setState({
-            callDisabled: false,
-            localStream: stream
-        });
-    };
+    const gotStream = stream => {
+        localVideoRef.current.srcObject = stream
+        setCall(true) // On fait en sorte d'activer le bouton permettant de commencer un appel
+        localStreamRef.current = stream
+    }
 ```
 
 
 ### Établissement de la connexion
-You can now press the Call button. That starts two peer connections, pc1 and pc2, and goes through the dance to get them talking to each other.
 
-- call initiates the offer
-- onCreateOfferSuccess updates both pcs and initiates the answer
-- onCreateAnswerSuccess finishes the handshake
-- gotRemoteStream wakes up and sets the second video
+Dans un premier temps, pour plus de simplicité, nous allons nous concentrer à établir une connexion WebRTC entre 2 peers sur une même page web. Tout au long du TP, n'hésitez pas à vous référer à la documentation de [RTCPeerConnection](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection).
+Le fonctionnement peut être résumé par le diagramme suivant :
 
-https://developer.mozilla.org/fr/docs/Web/API/RTCPeerConnection/RTCPeerConnection
+![](flow1.png)
 
+Le click sur le bouton `Call` initiera la connexion entre les [`RTCPeerConnection`](https://developer.mozilla.org/fr/docs/Web/API/RTCPeerConnection/RTCPeerConnection) pc1 et pc2. Les étapes à suivre seront détaillées dans les parties qui vont suivre :
+
+- pc1 veut communiquer avec pc2, il va créer une Offre
+- si l'Offre est correctement créée (`onCreateOfferSuccess`), on met à jour les connexions et pc2 va créer une Réponse
+- si la Réponse est correctement créée (`onCreateAnswerSuccess`), on peut finaliser le handshake entre les 2 connexions
+- enfin, quand le handshake est terminé, le callBack `gotRemoteStream` est appelé et diffuse le stream vidéo
 
 ```js
     call = () => {
@@ -153,12 +157,10 @@ https://developer.mozilla.org/fr/docs/Web/API/RTCPeerConnection/RTCPeerConnectio
         pc2.oniceconnectionstatechange = e => this.onIceStateChange(pc2, e);
         pc2.ontrack = this.gotRemoteStream;
  
-        localStream
-            .getTracks()
+        localStream.getTracks()
             .forEach(track => pc1.addTrack(track, localStream));
  
-        pc1
-            .createOffer({
+        pc1.createOffer({
                 offerToReceiveAudio: 1,
                 offerToReceiveVideo: 1
             })
@@ -178,9 +180,13 @@ https://developer.mozilla.org/fr/docs/Web/API/RTCPeerConnection/RTCPeerConnectio
     };
 ```
 
+Dans le code ci-dessus, les 2 connexions (pc1 et pc2) voient certains de leurs listeners configurés : `onIceCandidate` leurs permettra de se connecter l'un à l'autre, `onIceStateChange` ne sera utilisé que pour afficher des infos de debug. `gotRemoteStream` s'occupera d'afficher dans le bon element `<video>`.
+
+pc1 récupère toutes les tracks du flux vidéo et audio local et en créée une Offre.
 
 ### onCreateOfferSuccess
-After pc1 successfully creates an offer to be received, we update local and remote descriptions in our clients. I’m not sure what these “descriptions” are, but it’s where the important stuff happens.
+Quand pc1 aura réussi à créer une Offre, on met à jour chacune des connexions respectivement avec `setLocalDescription` pour pc1 et `setRemoteDescription` pour pc2.
+
 
 ```js
 onCreateOfferSuccess = desc => {
@@ -214,20 +220,11 @@ onCreateOfferSuccess = desc => {
 };
 ```
 
-pc1 updates its local description, and pc2 updates its remote description. pc2 also creates an answer, which I think is akin to saying “Okay, I accepted your offer, let’s do this”.
+Dans le code ci-dessus pc1 et pc2 mettent à jour leurs descriptions (qui sont des propriétés de la connexion ou le format utilisé pour les flux, etc.) et pc2 renvoie une Réponse qui va en quelque sorte accepter l'Offre faite par pc1.
 
-
-
-We enable and disable the appropriate buttons, get localStream from state, and instantiate servers, pc1, and pc2.
-
-Both pc objects get a bunch of event listeners. onIceCandidate will connect them to each other, onIceStateChange just prints debugging info, and gotRemoteStream will add it to the right <video> element.
-
-Then we take all tracks from localStream (audio and video) and add them to the first client. After that pc1 creates an offer to receive its video and audio.
-
-When all that’s done, we update component state.
 
 ### onCreateAnswerSuccess
-When pc2 successfully creates an answer, we do another round of description setting. This time in reverse order.
+Quand la Réponse de pc2 est créée avec succès, on recommence un round de configuration de desciption, cette fois dans l'autre sens.
 
 
 ```js
@@ -264,11 +261,9 @@ When pc2 successfully creates an answer, we do another round of description sett
     };
 ```
 
-pc1 sets its remote description and pc2 sets its local description. I think this acknowledges that, from pc1‘s perspective, it is local to itself and pc2 is remote, and vice-versa for pc2.
-
-
 ### onIceCandidate
-At some point during all this, both pc*s say that they’ve got an ICE candidate. Don’t know when exactly that happens, but it gives us a chance to tell each client who they’re talking to.
+
+Une fois que les connexions se sont synchronisées avec les étapes précédentes, elles vont détecter qu'elle ont chacune un candidat ICE viable. On peut alors finaliser la mise en communication des deux : 
 
 ```js
     onIceCandidate = (pc, event) => {
@@ -289,10 +284,8 @@ At some point during all this, both pc*s say that they’ve got an ICE candidate
     };
 ```
 
-We guess the other client and add it as a candidate. If we had more than 2, this could get tricky.
-
-
 ### Raccrocher
+Il suffit d'appeler la méthode `close()` sur chacune des connexion.
 
 ```js
     hangUp = () => {
