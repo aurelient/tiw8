@@ -35,7 +35,7 @@ Nous allons créer une application qui permette de faire une visio entre deux na
 
 Elle ressemblera à cela : 
 
-// TODO dessin / lien ?
+![](mockup.png)
 
 Nous allons nous appuyer sur WebRTC pour réaliser cela. WebRTC est une technologie p2p.
 
@@ -44,8 +44,6 @@ Nous aurons avoir :
   - pour fournir le site de base
   - pour permettre la découverte des clients du réseau p2p
 - des clients qui se parleront entre eux.
-
-### 
 
 
 ### Création d'un composant dédié 
