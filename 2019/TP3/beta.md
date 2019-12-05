@@ -312,9 +312,10 @@ We guess the other client and add it as a candidate. If we had more than 2, this
 
 ### Mise en place d'un serveur
 
+
 #### Signaling côté serveur
 
-Nous allons réutiliser le [code du serveur](https://github.com/mdn/samples-server/blob/master/s/webrtc-from-chat/chatserver.js)  de la [documentation MDN](http://bit.ly/webrtc-from-chat)
+Nous allons utiliser une version légèrement modifiée du [code serveur](https://github.com/mdn/samples-server/blob/master/s/webrtc-from-chat/chatserver.js) de la [documentation MDN](http://bit.ly/webrtc-from-chat)
 
 #### Signaling côté client
 
@@ -322,23 +323,49 @@ Voici une [classe qui permet de gérer le signaling côté client](../code/Signa
 
 Elle fait les choses suivantes : 
 
-- créé un WebSocket avec `connectToSocket`,  
+- crée un WebSocket avec `connectToSocket`,  
 - configure des callbacks : `onOpen` quand la connexion démarre, `onMessage` quand on recoit des messages.
 - `addMsgListener` permet d'ajouter des listeners de message au besoin.  
 - `sendToServer` permet d'envoyer un objet json au serveur.
 
-Nous allons utiliser cela pour configurer notre PeerConnection au via le serveur.
+Nous allons utiliser cela pour configurer se connecter à l'autre client participant à l'appel. 
+
+
+### Ajouter un nom d'utilisateur
+
+Ces imports faits, nous allons maintenant rajouter un champ dans l'interface pour gérer les noms d'utilisateurs, au lieu de les avoir codé en dur. Gérer le comme un état.
+
+
+Quand un nom est validé, nous allons l'envoyer au serveur.
+
+```js
+    const pushUsername = () => {
+        this.signalingConnection.sendToServer({
+            name: username,
+            date: Date.now(),
+            id: clientID,
+            type: "username"
+        });
+    };
+```
+
+Vous remarquerez la présence d'un clientID. C'est un identifiant unique à chaque client. 
+Utiliser l'algorithme de votre choix pour le générer. 
+Nous avons utilisé `new Date().getTime() % 1000`.
+
+
+
+#### Refactoring 
+Une grosse partie du code n'a pas sa place dans un composant sensé géré la vue.
+
+Nous allons réorganiser tout cela pour avoir une helper classe qui gère la logique de connexion, avant de passer à la suite.
+
 
 
 ### Etablissement de la connexion pair à pair
 
 #### 
 
-#### Refactoring 
-
-C'est le chaos, une grosse partie du code n'a pas sa place dans un composant sensé géré la vue.
-
-Il faut maintenant réorganiser tout cela pour avoir une helper classe qui gère la logique de connexion.
 
 
 ## TP3.2 WebRTC et edition de texte synchrone
