@@ -137,45 +137,36 @@ Le click sur le bouton `Call` initiera la connexion entre les [`RTCPeerConnectio
 - enfin, quand le handshake est terminé, le callBack `gotRemoteStream` est appelé et diffuse le stream vidéo
 
 ```js
-    call = () => {
-        this.setState({
-            callDisabled: true,
-            hangUpDisabled: false
-        });
-        let { localStream } = this.state;
+    const call = () => {
+        setCall(false);
+        setHangup(true);
  
-        let servers = null,
-            pc1 = new RTCPeerConnection(servers),
-            pc2 = new RTCPeerConnection(servers);
+        client1Ref.current = new RTCPeerConnection(serversRef.current);
+        client2Ref.current = new RTCPeerConnection(serversRef.current);
+        
+        client1Ref.current.onicecandidate = e => onIceCandidate(client1Ref.current, e);
+        client1Ref.current.oniceconnectionstatechange = e => onIceStateChange(client1Ref.current, e);
+        
+        client2Ref.current.onicecandidate = e => onIceCandidate(client2Ref.current, e);
+        client2Ref.current.oniceconnectionstatechange = e => onIceStateChange(client2Ref.current, e);
+        client2Ref.current.ontrack = gotRemoteStream;
  
-        pc1.onicecandidate = e => this.onIceCandidate(pc1, e);
-        pc1.oniceconnectionstatechange = e => this.onIceStateChange(pc1, e);
+        localStreamRef.current
+            .getTracks()
+            .forEach(track => client1Ref.current.addTrack(track, localStreamRef.current));
  
-        pc2.onicecandidate = e => this.onIceCandidate(pc2, e);
-        pc2.oniceconnectionstatechange = e => this.onIceStateChange(pc2, e);
-        pc2.ontrack = this.gotRemoteStream;
- 
-        localStream.getTracks()
-            .forEach(track => pc1.addTrack(track, localStream));
- 
-        pc1.createOffer({
+        client1Ref.current.createOffer({
                 offerToReceiveAudio: 1,
                 offerToReceiveVideo: 1
             })
-            .then(this.onCreateOfferSuccess, error =>
+            .then(onCreateOfferSuccess, error =>
                 console.error(
                     "Failed to create session description",
                     error.toString()
                 )
             );
  
-        this.setState({
-            servers,
-            pc1,
-            pc2,
-            localStream
-        });
-    };
+    }; 
 ```
 
 Dans le code ci-dessus, les 2 connexions (pc1 et pc2) voient certains de leurs listeners configurés : `onIceCandidate` leurs permettra de se connecter l'un à l'autre, `onIceStateChange` ne sera utilisé que pour afficher des infos de debug. `gotRemoteStream` s'occupera d'afficher dans le bon element `<video>`.
@@ -187,35 +178,34 @@ Quand pc1 aura réussi à créer une Offre, on met à jour chacune des connexion
 
 
 ```js
-onCreateOfferSuccess = desc => {
-  let { pc1, pc2 } = this.state;
+const onCreateOfferSuccess = desc => {     
 
-  pc1.setLocalDescription(desc).then( () =>
-    console.log("pc1 setLocalDescription complete createOffer"),
-    error =>
-        console.error(
-            "pc1 Failed to set session description in createOffer",
-            error.toString()
-        )
-  );
-
-  pc2.setRemoteDescription(desc).then( () => {
-    console.log("pc2 setRemoteDescription complete createOffer");
-    pc2.createAnswer()
-        .then(this.onCreateAnswerSuccess, error =>
-            console.error(
-                "pc2 Failed to set session description in createAnswer",
-                error.toString()
-            )
+        client1Ref.current.setLocalDescription(desc).then( () =>
+          console.log("pc1 setLocalDescription complete createOffer"),
+          error =>
+              console.error(
+                  "pc1 Failed to set session description in createOffer",
+                  error.toString()
+              )
         );
-    },
-    error =>
-        console.error(
-            "pc2 Failed to set session description in createOffer",
-            error.toString()
-        )
-  );
-};
+      
+        client2Ref.current.setRemoteDescription(desc).then( () => {
+          console.log("pc2 setRemoteDescription complete createOffer");
+          client2Ref.current.createAnswer()
+              .then(onCreateAnswerSuccess, error =>
+                  console.error(
+                      "pc2 Failed to set session description in createAnswer",
+                      error.toString()
+                  )
+              );
+          },
+          error =>
+              console.error(
+                  "pc2 Failed to set session description in createOffer",
+                  error.toString()
+              )
+        );
+      };
 ```
 
 Dans le code ci-dessus pc1 et pc2 mettent à jour leurs descriptions (qui sont des propriétés de la connexion ou le format utilisé pour les flux, etc.) et pc2 renvoie une Réponse qui va en quelque sorte accepter l'Offre faite par pc1.
@@ -226,33 +216,20 @@ Quand la Réponse de pc2 est créée avec succès, on recommence un round de con
 
 
 ```js
-    onCreateAnswerSuccess = desc => {
-        let { pc1, pc2 } = this.state;
+    const onCreateAnswerSuccess = desc => {
  
-        pc1
-            .setRemoteDescription(desc)
-            .then(
-                () =>
-                    console.log(
-                        "pc1 setRemoteDescription complete createAnswer"
-                    ),
-                error =>
-                    console.error(
-                        "pc1 Failed to set session description in onCreateAnswer",
+        client1Ref.current.setRemoteDescription(desc)
+            .then(() => console.log("client1 setRemoteDescription complete createAnswer"),
+                error => console.error(
+                        "client1 Failed to set session description in onCreateAnswer",
                         error.toString()
                     )
             );
  
-        pc2
-            .setLocalDescription(desc)
-            .then(
-                () =>
-                    console.log(
-                        "pc2 setLocalDescription complete createAnswer"
-                    ),
-                error =>
-                    console.error(
-                        "pc2 Failed to set session description in onCreateAnswer",
+        client2Ref.current.setLocalDescription(desc)
+            .then(() => console.log("client2 setLocalDescription complete createAnswer"),
+                error => console.error(
+                        "client2 Failed to set session description in onCreateAnswer",
                         error.toString()
                     )
             );
@@ -264,10 +241,10 @@ Quand la Réponse de pc2 est créée avec succès, on recommence un round de con
 Une fois que les connexions se sont synchronisées avec les étapes précédentes, elles vont détecter qu'elle ont chacune un candidat ICE viable. On peut alors finaliser la mise en communication des deux : 
 
 ```js
-    onIceCandidate = (pc, event) => {
-        let { pc1, pc2 } = this.state;
- 
-        let otherPc = pc === pc1 ? pc2 : pc1;
+    const onIceCandidate = (pc, event) => {
+        console.log("!!!!pc")
+        console.log(pc)
+        let otherPc = pc === client1Ref ? client2Ref.current : client1Ref.current;
  
         otherPc
             .addIceCandidate(event.candidate)
@@ -286,18 +263,16 @@ Une fois que les connexions se sont synchronisées avec les étapes précédente
 Il suffit d'appeler la méthode `close()` sur chacune des connexion.
 
 ```js
-    hangUp = () => {
-        let { pc1, pc2 } = this.state;
+    const hangUp = () => {
  
-        pc1.close();
-        pc2.close();
- 
-        this.setState({
-            pc1: null,
-            pc2: null,
-            hangUpDisabled: true,
-            callDisabled: false
-        });
+        client1Ref.current.close();
+        client2Ref.current.close();
+
+        client1Ref.current = null;
+        client2Ref.current = null;
+
+        setHangup(false)
+        setCall(true)
     };
 ```
 
