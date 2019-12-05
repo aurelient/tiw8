@@ -49,7 +49,7 @@ Nous aurons avoir :
 ### Création d'un composant dédié 
 
 Avec les dernières versions de React, et notamment l'introduction des [hooks](https://reactjs.org/docs/hooks-intro.html) permettent de gérer des états dans les Function Components.
-Au sein d'un composant React, on peut manipuler l'état avec `useRef` ou `useState`, [lire ici pour savoir lequel utiliser(https://www.codebeast.dev/usestate-vs-useref-re-render-or-not/)
+Au sein d'un composant React, on peut manipuler l'état avec `useRef` ou `useState`, [lire ici pour savoir lequel utiliser](https://www.codebeast.dev/usestate-vs-useref-re-render-or-not/)
 
 Créez un composant React permettant de visualiser :
 - le flux vidéo local
