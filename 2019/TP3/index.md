@@ -16,6 +16,12 @@ Ce TP s'étalera sur 2 séances et fera l'objet d'un rendu en binome et d'une no
 Vous ferez le rendu sur la forge.
 
 
+<!-- 
+    **Pour ce TP nous n'utiliserons que des [functional components]()** 
+https://reactjs.org/docs/hooks-intro.html
+
+-->
+
 ## TP3.1 WebRTC et vidéo en local
 
 ### Boilerplate
@@ -25,6 +31,7 @@ Repartez de votre projet du TP1. Ou utilisez react-create-app pour générer un 
 Vérifiez que vous arrivez à lancer une page hello world avec un serveur node basique comme dans le TP1.
 
 Vérifiez que votre déploiement sur Heroku fonctionne.
+
 
 ### Démarrage du TP
 Nous allons créer une application qui permette de faire une visio entre deux navigateurs.
@@ -40,6 +47,12 @@ Nous aurons avoir :
   - pour fournir le site de base
   - pour permettre la découverte des clients du réseau p2p
 - des clients qui se parleront entre eux.
+
+### ESLint
+
+Pour vérifier votre code, installer eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
+
+Vous pouvez suivre [ce guide dire à Webpack de linter](https://www.robinwieruch.de/react-eslint-webpack-babel).
 
 
 ### Création d'un composant dédié 
@@ -125,10 +138,10 @@ Le fonctionnement peut être résumé par le diagramme suivant :
 
 ![](flow1.png)
 
-Le click sur le bouton `Call` initiera la connexion entre les [`RTCPeerConnection`](https://developer.mozilla.org/fr/docs/Web/API/RTCPeerConnection/RTCPeerConnection) pc1 et pc2. Les étapes à suivre seront détaillées dans les parties qui vont suivre :
+Le click sur le bouton `Call` initiera la connexion entre les [`RTCPeerConnection`](https://developer.mozilla.org/fr/docs/Web/API/RTCPeerConnection/RTCPeerConnection) client1 et client2. Les étapes à suivre seront détaillées dans les parties qui vont suivre :
 
-- pc1 veut communiquer avec pc2, il va créer une Offre
-- si l'Offre est correctement créée (`onCreateOfferSuccess`), on met à jour les connexions et pc2 va créer une Réponse
+- client1 veut communiquer avec client2, il va créer une Offre
+- si l'Offre est correctement créée (`onCreateOfferSuccess`), on met à jour les connexions et client2 va créer une Réponse
 - si la Réponse est correctement créée (`onCreateAnswerSuccess`), on peut finaliser le handshake entre les 2 connexions
 - enfin, quand le handshake est terminé, le callBack `gotRemoteStream` est appelé et diffuse le stream vidéo
 
@@ -165,50 +178,50 @@ Le click sur le bouton `Call` initiera la connexion entre les [`RTCPeerConnectio
     }; 
 ```
 
-Dans le code ci-dessus, les 2 connexions (pc1 et pc2) voient certains de leurs listeners configurés : `onIceCandidate` leurs permettra de se connecter l'un à l'autre, `onIceStateChange` ne sera utilisé que pour afficher des infos de debug. `gotRemoteStream` s'occupera d'afficher dans le bon element `<video>`.
+Dans le code ci-dessus, les 2 connexions (client1 et client2) voient certains de leurs listeners configurés : `onIceCandidate` leurs permettra de se connecter l'un à l'autre, `onIceStateChange` ne sera utilisé que pour afficher des infos de debug. `gotRemoteStream` s'occupera d'afficher dans le bon element `<video>`.
 
-pc1 récupère toutes les tracks du flux vidéo et audio local et en créée une Offre.
+client1 récupère toutes les tracks du flux vidéo et audio local et en créée une Offre.
 
 ### onCreateOfferSuccess
-Quand pc1 aura réussi à créer une Offre, on met à jour chacune des connexions respectivement avec `setLocalDescription` pour pc1 et `setRemoteDescription` pour pc2.
+Quand client1 aura réussi à créer une Offre, on met à jour chacune des connexions respectivement avec `setLocalDescription` pour client1 et `setRemoteDescription` pour client2.
 
 
 ```js
 const onCreateOfferSuccess = desc => {     
 
         client1Ref.current.setLocalDescription(desc).then( () =>
-          console.log("pc1 setLocalDescription complete createOffer"),
+          console.log("client1 setLocalDescription complete createOffer"),
           error =>
               console.error(
-                  "pc1 Failed to set session description in createOffer",
+                  "client1 Failed to set session description in createOffer",
                   error.toString()
               )
         );
       
         client2Ref.current.setRemoteDescription(desc).then( () => {
-          console.log("pc2 setRemoteDescription complete createOffer");
+          console.log("client2 setRemoteDescription complete createOffer");
           client2Ref.current.createAnswer()
               .then(onCreateAnswerSuccess, error =>
                   console.error(
-                      "pc2 Failed to set session description in createAnswer",
+                      "client2 Failed to set session description in createAnswer",
                       error.toString()
                   )
               );
           },
           error =>
               console.error(
-                  "pc2 Failed to set session description in createOffer",
+                  "client2 Failed to set session description in createOffer",
                   error.toString()
               )
         );
       };
 ```
 
-Dans le code ci-dessus pc1 et pc2 mettent à jour leurs descriptions (qui sont des propriétés de la connexion ou le format utilisé pour les flux, etc.) et pc2 renvoie une Réponse qui va en quelque sorte accepter l'Offre faite par pc1.
+Dans le code ci-dessus client1 et client2 mettent à jour leurs descriptions (qui sont des propriétés de la connexion ou le format utilisé pour les flux, etc.) et client2 renvoie une Réponse qui va en quelque sorte accepter l'Offre faite par client1.
 
 
 ### onCreateAnswerSuccess
-Quand la Réponse de pc2 est créée avec succès, on recommence un round de configuration de desciption, cette fois dans l'autre sens.
+Quand la Réponse de client2 est créée avec succès, on recommence un round de configuration de desciption, cette fois dans l'autre sens.
 
 
 ```js
