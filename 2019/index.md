@@ -36,7 +36,7 @@ Ubicomp Web
 | [TP 2](TP2/#tp23-distribution-dinterface-multi-dispositif) | 08/11 | Distribution d'interface multi-dispositif |     |
 | [TP 2](TP2/#4-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
 | [TP 3](TP3)          | 06/12 | WebRTC: video    	                   |         |
-| [TP 3](TP3/#2-suite) | 13/12 | Texte synchrone (WebRTC + CRDT)       | rendu 2 |
+| [TP 3](TP3/32)       | 13/12 | WebRTC: video (suite)                 | rendu 2 |
 | [TP 4](TP4)          | 10/01 | WoT et capteurs Arduino               |         |
 | [TP 4](TP4/#2-suite) | 17/01 | WoT et CrowdSensing                   |         |
 | [TP 4](TP4/#3-suite) | 07/02 | WoT et Performance                    | rendu 3 |
