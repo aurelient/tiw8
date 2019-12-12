@@ -18,8 +18,8 @@ Ubicomp Web
 |          | 18/10 | *séance de TP supplémentaire* |  |  |
 | CM 3     | 08/11 | Design adaptatif & Gestes  | [pdf](cours/cm3-adaptation-gestes.pdf) | A. Tabard |
 |          | 15/11 | *séance de TP supplémentaire* |  |  |
-| CM 4     | 06/12 | Temps réel & Collaboration |          | A. Tabard |
-| CM 5     | 13/12 | Algorithmes de synchronisation |      | A. Tabard |
+| CM 4     | 06/12 | Temps réel & Collaboration | [pdf](cours/cm4-collaboration.pdf)         | A. Tabard |
+| CM 5     | 13/12 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)     | A. Tabard |
 | CM 6     | 10/01 | Web of Things              |          | L. Medini |
 |          | 17/01 | — |  |  |
 | CM 7     | 07/02 | *séance de TP supplémentaire* |  |  |
@@ -31,15 +31,15 @@ Ubicomp Web
 | Sujet                | Date  | Thème  | Rendu  |
 | -------------------- | ----- | ------ | ------ |
 | [TP 1](TP1)          | 20/09 | Mise en place d'une Stack JavaScript  | rendu 0 |
-| [TP 2](TP2/)         | 11/10 | Introduction à React                  |         |
-| [TP 2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 18/10 | Redux + websockets / multi-dispositif |         |
-| [TP 2](TP2/#tp23-distribution-dinterface-multi-dispositif) | 08/11 | Distribution d'interface multi-dispositif |     |
-| [TP 2](TP2/#4-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
-| [TP 3](TP3)          | 06/12 | WebRTC: video    	                   |         |
-| [TP 3](TP3/32)       | 13/12 | WebRTC: video (suite)                 | rendu 2 |
-| [TP 4](TP4)          | 10/01 | WoT et capteurs Arduino               |         |
-| [TP 4](TP4/#2-suite) | 17/01 | WoT et CrowdSensing                   |         |
-| [TP 4](TP4/#3-suite) | 07/02 | WoT et Performance                    | rendu 3 |
+| [TP 2.1](TP2/)       | 11/10 | Introduction à React                  |         |
+| [TP 2.2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 18/10 | Redux + websockets / multi-dispositif |       |
+| [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif) | 08/11 | Distribution d'interface multi-dispositif |     |
+| [TP 2.4](TP2/#4-suite) | 15/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
+| [TP 3.1](TP3)          | 06/12 | WebRTC: video    	                   |         |
+| [TP 3.2](TP3/32)       | 13/12 | WebRTC: video (suite)                 | rendu 2 |
+| [TP 4.1](TP4)          | 10/01 | WoT et capteurs Arduino               |         |
+| [TP 4.2](TP4/#2-suite) | 17/01 | WoT et CrowdSensing                   |         |
+| [TP 4.3](TP4/#3-suite) | 07/02 | WoT et Performance                    | rendu 3 |
 
 
 ## Evaluation
