@@ -1,6 +1,5 @@
 class PeerConnection {
     constructor({
-        gotRemoteStream,
         gotRemoteTrack,
         signalingConnection,
         onClose,
@@ -17,46 +16,26 @@ class PeerConnection {
         this.dataChannelLabel = dataChannelLabel;
 
         this.peerConnection = new RTCPeerConnection({
-            iceServers: [
+            /*iceServers: [
                 {
-                    urls: `turn:${window.location.hostname}`,
-                    username: "webrtc",
-                    credential: "turnserver"
+                    url: 'turn:numb.viagenie.ca',
+                    credential: 'jojolasurpise',
+                    username: '696upjj@mail3plus.net'
                 }
-            ]
+            ]*/
         });
         this.peerConnection.onicecandidate = this.handleICECandidateEvent;
         this.peerConnection.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
         this.peerConnection.onsignalingstatechange = this.handleSignalingStateChangeEvent;
-        this.peerConnection.onnegotiationneeded = this.handleNegotiationNeededEvent;
-        this.peerConnection.onaddtrack = gotRemoteTrack;
-        this.peerConnection.onaddstream = gotRemoteStream;
+        this.peerConnection.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent
+        //this.peerConnection.onnegotiationneeded = this.offerConnection;
+        this.peerConnection.ontrack = gotRemoteTrack;
 
         if (this.localStream) {
-            this.peerConnection.addStream(this.localStream);
+            for (const track of this.localStream.getTracks()) {
+                this.peerConnection.addTrack(track, this.localStream)
+            }
         }
-        if (this.dataChannelLabel) {
-            this.dataChannel = this.peerConnection.createDataChannel(
-                this.dataChannelLabel,
-                {
-                    ordered: true,
-                    maxRetransmitTime: 3000
-                }
-            );
-            this.dataChannel.onerror = error =>
-                console.error("Data channel error", error);
-            this.dataChannel.onmessage = this.onDataChannelMessage;
-            this.dataChannel.onopen = () => {
-                console.log("Data channel open");
-                this.dataChannel.send("Hello world!");
-            };
-            this.dataChannel.onclose = () => console.log("Data channel closed");
-        }
-
-        this.msgUnlisten = this.signalingConnection.addMsgListener(
-            this.onSignalingMessage
-        );
-
         console.log("peerconnection created", this.peerConnection);
     }
 
@@ -71,6 +50,8 @@ class PeerConnection {
     };
 
     handleICEConnectionStateChangeEvent = event => {
+        console.log(`ICE state : ${event}`)
+
         switch (this.peerConnection.iceConnectionState) {
             case "closed":
             case "failed":
@@ -85,6 +66,10 @@ class PeerConnection {
                 this.close();
         }
     };
+
+    handleICEGatheringStateChangeEvent = (ev) => {
+
+    }
 
     offerConnection = () => {
         const { username, targetUsername } = this;
@@ -130,7 +115,7 @@ class PeerConnection {
             .then(() => {
                 this.signalingConnection.sendToServer({
                     name: username,
-                    targetUsername: targetUsername,
+                    target: targetUsername,
                     type: "connection-answer",
                     sdp: this.peerConnection.localDescription
                 });
@@ -154,32 +139,18 @@ class PeerConnection {
         this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     };
 
-    onSignalingMessage = msg => {
-        console.log("onSignalingMessage" + msg);
-
-        switch (msg.type) {
-            case "connection-answer": // Callee has answered our offer
-                console.log(
-                    "Calling connectionAnswer from PeerConnection.onSignalingMessage"
-                );
-                this.connectionAnswer(msg);
-                break;
-
-            case "new-ice-candidate": // A new ICE candidate has been received
-                this.newICECandidate(msg);
-                break;
-
-            case "hang-up": // The other peer has hung up the call
-                this.close();
-                break;
-        }
-    };
-
     onDataChannelMessage = msg => {
         console.log("Data channel message received", msg);
     };
 
     close = () => {
+        const { username, targetUsername } = this
+
+        this.signalingConnection.sendToServer({
+            name: username,
+            target: targetUsername,
+            type: "hang-up"
+        });
         this.peerConnection.close();
         this.peerConnection = null;
 
