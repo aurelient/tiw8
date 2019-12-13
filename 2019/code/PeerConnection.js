@@ -28,7 +28,7 @@ class PeerConnection {
         this.peerConnection.onicecandidate = this.handleICECandidateEvent;
         this.peerConnection.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
         this.peerConnection.onsignalingstatechange = this.handleSignalingStateChangeEvent;
-        // this.peerConnection.onnegotiationneeded = this.handleNegotiationNeededEvent;
+        this.peerConnection.onnegotiationneeded = this.handleNegotiationNeededEvent;
         this.peerConnection.onaddtrack = gotRemoteTrack;
         this.peerConnection.onaddstream = gotRemoteStream;
 
