@@ -11,7 +11,7 @@ class SignalingConnection {
         this.onOpen = onOpen;
         this.messageListeners = [onMessage]
         this.connectToSocket();
-    }
+    }   
 
     sendToServer = msg => {
         const msgJSON = JSON.stringify(msg);
@@ -26,9 +26,14 @@ class SignalingConnection {
         this.connection.onopen = () => this.onOpen()
 
         this.connection.onmessage = event => {
+            console.log('ws: data received : ' + event.data)
             let msg = JSON.parse(event.data);
 
             this.messageListeners.forEach(func => func(msg))
+        }
+
+        this.connection.onerror = (err) => {
+            console.error('ws: error : ',err)
         }
     };
 
