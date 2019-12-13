@@ -39,7 +39,7 @@ class PeerConnection {
         console.log("peerconnection created", this.peerConnection);
     }
 
-    handleICECandidateEvent = event => {
+    handleICECandidateEvent = (event) => {
         if (event.candidate) {
             this.signalingConnection.sendToServer({
                 type: "new-ice-candidate",
@@ -49,7 +49,7 @@ class PeerConnection {
         }
     };
 
-    handleICEConnectionStateChangeEvent = event => {
+    handleICEConnectionStateChangeEvent = (event) => {
         console.log(`ICE state : ${event}`)
 
         switch (this.peerConnection.iceConnectionState) {
@@ -60,14 +60,14 @@ class PeerConnection {
         }
     };
 
-    handleSignalingStateChangeEvent = event => {
+    handleSignalingStateChangeEvent = () => {
         switch (this.peerConnection.signalingState) {
             case "closed":
                 this.close();
         }
     };
 
-    handleICEGatheringStateChangeEvent = (ev) => {
+    handleICEGatheringStateChangeEvent = () => {
 
     }
 
