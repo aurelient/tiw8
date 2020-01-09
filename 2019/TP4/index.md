@@ -7,15 +7,19 @@
 
 ## Présentation du TP
 
-L'objectif du TP est de vous faire développer une application Web of Things (WoT), qui utilise un arduino Uno, avec capteurs et actionneurs. Le use case choisi est un système de limitation d'accès à un environnement physique (en clair : une porte), contrôlé par un système d'authentification par vibrations sonores (quand on frappe) ou à distance (authentification).
+L'objectif du TP est de vous faire développer une application Web of Things (WoT), qui utilise un arduino Uno, avec capteurs et actionneurs.
 
-Ceci est schématisé par le montage suivant :
+### Description de l'application
 
-[![arduino Knock Lock](https://img.youtube.com/vi/VgFw7bc3fa8/0.jpg)](https://www.youtube.com/watch?v=VgFw7bc3fa8)
+Le use case choisi est un système de limitation d'accès à un environnement physique (en clair : une porte), contrôlé par un système d'ouverture et de fermeture par vibrations sonores (quand on frappe) ou à distance (authentification).
 
-Dans ce TP, il vous est demandé de réaliser une application Web et non le _sketch_ arduino de référence.
+La porte est matérialisée par un servo-moteur, et la détection de vibrations sonores est obtenus par un capteur piézo-électrique.
 
-Pour cela, vous utiliserez la bibliothèque [Johnny-Five](http://johnny-five.io/) pour communiquer avec l'arduino, et mettrez en place un serveur  [Socket.io](https://socket.io/) capable de gérer séparément les informations des capteurs et des actionneurs.
+### Outils
+
+Pour cela, vous utiliserez :
+- la bibliothèque [Johnny-Five](http://johnny-five.io/) pour communiquer avec l'arduino, 
+- un serveur [Socket.io](https://socket.io/) capable de gérer les informations des capteurs et des actionneurs.
 
 ## Mise en place de la plateforme matérielle
 
@@ -24,15 +28,6 @@ Pour cela, vous utiliserez la bibliothèque [Johnny-Five](http://johnny-five.io/
 La première étape est d'installer les drivers arduino, qui sont inclus dans le [Arduino Create Plugin](https://create.arduino.cc/getting-started/plugin/welcome). Branchez ensuite l'arduino Uno en USB, et voyez s'il est reconnu par votre PC.
 
 Alternativement, vous pouvez installer un [IDE](https://www.arduino.cc/en/Main/Software) qui inclut les drivers et vous permet de tester facilement que votre board est connectée et reconnue (menu Fichiers -> Exemples -> Basics -> Blink, puis "téléverser", et la LED doit clignoter).
-
-### Mise en place du circuit
-
-L'étape suivante est de réaliser le circuit ci-dessous, comme indiqué [ici](https://programminginarduino.wordpress.com/2016/03/06/project-13/) :
-
-
-<img alt="Knock Lock circuit" src="https://programminginarduino.files.wordpress.com/2016/03/knock-lock-disec3b1o-de-protoboard.jpg" style="max-width: 600px">
-
-Pour cela, vous pouvez vous aider du livre "Arduino Project Book" fourni avec le starter kit, ou des ressources sur [arduino.cc](https://www.arduino.cc/).
 
 ### Mise en place de Johnny-five
 
@@ -44,35 +39,53 @@ Pour cela, ouvrir l'IDE arduino et :
 
 *La méthode qui a marché pour moi sous Windows :* selon la procédure indiquée [ici](https://github.com/rwaldron/johnny-five/wiki/Getting-Started), dans un powershell en mode administrateur, taper : `npm --add-python-to-path install --global --production windows-build-tools`
 
-Puis, cloner le repo dans TP4 et lancer : node index.js
+Puis, cloner le repo dans TP4 et lancer : `node index.js`
 
 Vous devriez voir la LED clignoter.
 
-### Configuration de Babel 
+### Mise en place du circuit
 
+Le montage est schématisé ainsi :
 
+[![arduino Knock Lock](https://img.youtube.com/vi/VgFw7bc3fa8/0.jpg)](https://www.youtube.com/watch?v=VgFw7bc3fa8)
 
-### Projet React
+Dans ce TP, il vous est demandé de réaliser une application Web et non le _sketch_ arduino de référence.
 
+L'étape suivante est de réaliser le circuit ci-dessous, comme indiqué [ici](https://programminginarduino.wordpress.com/2016/03/06/project-13/). [Apparemment](https://forum.arduino.cc/index.php?topic=175831.msg1383787#msg1383787), le code est un peu buggé, mais c'est juste pour tester votre montage.
 
+<img alt="Knock Lock circuit" src="https://programminginarduino.files.wordpress.com/2016/03/knock-lock-disec3b1o-de-protoboard.jpg" style="max-width: 600px">
 
-### Générer un bundle
+Pour mieux comprendre le fonctionnement du circuit et de l'arduino, vous pouvez vous aider du livre "Arduino Project Book" fourni avec le starter kit, ou des ressources sur le site [arduino.cc](https://www.arduino.cc/).
 
+## Contrôle de l'arduino
 
-### Assembler et servir le contenu
+&Agrave; l'aide de [Johnny-Five](http://johnny-five.io/), vous allez mettre en place dans votre projet un module en JS qui expose les capacités (foncions JS) suivantes :
+- ouvrir et fermer la porte (en allumant les leds correspondantes : vert = ouvert, rouge = fermé)
+- générer un événement à partir du capteur piezoélectrique pour savoir quand quelqu'un frappe à la porte (en allumant la led jaune pendant 300ms)
 
+Remarque : le module "piezo" de Johnny-Five est un actionneur, destiné à produire des sons (au demeurant très désagréables). Il n'existe pas de module utilisant le piezo en tant que capteur. C'est pourquoi vous utiliserez le [module générique `Sensor`](http://johnny-five.io/api/sensor/) en vous inspirant du sketch arduino pour les paramètres d'initialisation.
 
-### Gérer les fichier statiques
+## Mise en place du serveur
 
+Installez et mettez en place dans votre projet un serveur [Socket.IO](https://socket.io/) qui expose des fonctionnalités applicatives :
+- une API RESTful pour le moteur `/door` avec un paramètre `position` (GET et PUT)
+- un modèle de communications "REST + Notify" pour le capteur piezo `/knock`, en permettant de s'abonner (POST) / se désabonner (DELETE) et de récupérer les événements (WebSocket)
+- une ressource supplémentaire `/unlock` répondant uniquement aux requêtes POST et prenant un paramètre `code` qui s'il est valide déclenchera alternativement l'ouverture ou la fermeture de la porte
 
-### CSS 
+Votre serveur sera basé sur un pattern MV* "classique", avec cette spécificité que le modèle sera le module d'interface avec l'arduino : il permet de récupérer les données des capteurs et de transmettre les ordres aux actionneurs.
 
+Le Content-Type des requêtes et des réponses sera `application/json`.
 
-### Des composants Reacts
+## Mise en place du client
 
+Utilisez le framework JS de votre choix pour :
+- visualiser sur le client les événements générés par le piezo
+- permettre la saisie et l'envoi d'un code d'ouverture / fermeture de la porte
+- visualiser sur le client l'état de la porte
 
-### React Developer Tools
+Faites en sorte que votre serveur serve aussi les fichiers statiques du client pour éviter les problèmes de CORS.
 
+**To be continued...**
 
 ### Rendu et évaluation
 
