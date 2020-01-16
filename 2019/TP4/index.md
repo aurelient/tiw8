@@ -70,7 +70,8 @@ Remarque : le module "piezo" de Johnny-Five est un actionneur, destiné à produ
 Installez et mettez en place dans votre projet un serveur [Socket.IO](https://socket.io/) qui expose des fonctionnalités applicatives :
 - une API RESTful pour le moteur `/door` avec un paramètre `position` (GET et PUT)
 - un modèle de communications "REST + Notify" pour le capteur piezo `/knock`, en permettant de s'abonner (POST) / se désabonner (DELETE) et de récupérer les événements (WebSocket)
-- une ressource supplémentaire `/unlock` répondant uniquement aux requêtes POST et prenant un paramètre `code` qui s'il est valide déclenchera alternativement l'ouverture ou la fermeture de la porte
+- une ressource supplémentaire `/unlock` répondant uniquement aux requêtes POST et prenant un paramètre `code` qui s'il est valide déclenchera l'ouverture de la porte puis sa fermeture au bout de 5 secondes<br>
+  <span style="color: red">Attention : **MODIFICATION**</span> par rapport à la version précédente, qui consistait à déclencher alternativement l'ouverture ou la fermeture de la porte
 
 Votre serveur sera basé sur un pattern MV* "classique", avec cette spécificité que le modèle sera le module d'interface avec l'arduino : il permet de récupérer les données des capteurs et de transmettre les ordres aux actionneurs.
 
@@ -85,11 +86,36 @@ Utilisez le framework JS de votre choix pour :
 
 Faites en sorte que votre serveur serve aussi les fichiers statiques du client pour éviter les problèmes de CORS.
 
+## Description sémantique de l'objet
+
+Vous allez maintenant faire en sorte que votre objet puisse être utilisé par d'autres clients que le vôtre, en fournissant une description standardisée de son API, conformément à la spec [WoT Thing Description](https://www.w3.org/TR/wot-thing-description/) (TD) du W3C.
+
+Créez un fichier de description de votre arduino en tant que `Thing`, qui exposera les capacités simples de l'objet indiquées ci-dessus et exposées par votre serveur à l'aide d'`InteractionAffordance` :
+- [`ActionAffordance`](https://www.w3.org/TR/wot-thing-description/#actionaffordance) : permet de modifier l'état de la porte,
+- [`PropertyAffordance`](https://www.w3.org/TR/wot-thing-description/#propertyaffordance) : expose l'état courant de la porte,
+- [`EventAffordance`](https://www.w3.org/TR/wot-thing-description/#eventaffordance) : permet de s'abonner, de se désabonner aux événements "knock" et définit le format des données dans cet événement
+
+Ne tenez pas compte pour l'instant de la fonctionnalité `unlock`.
+
+Pour réaliser votre fichier, vous pouvez vous inspirer des [exemples](https://www.w3.org/TR/wot-thing-description/#introduction) de l'introduction de la spec WoT TD.
+
+Pour valider votre fichier, vous pouvez utiliser le validateur du [Playground d'Eclipse ThingWeb](http://plugfest.thingweb.io/playground/).
+
+## Publication d'une TD
+
+Si votre fichier est valide, vous devez pouvoir le publier sur l'annuaire de TD fourni par le W3C : [ThingWeb Directory](https://github.com/thingweb/thingweb-directory/), dont nous avons déployé une instance sur la VM 193.168.75.90 de l'infra OpenStack. Pour accéder à cette machine de l'extérieur, vous pouvez passer par notre proxy : https://proxy-tps-m1if13-2019.univ-lyon1.fr/90
+
+## Découverte d'une TD
+
+Modifiez votre client pour qu'il requête cet annuaire, découvre votre arduino, requête sa TD et utilise cette TD pour :
+- déterminer les URLs à requêter pour avoir accès à l'objet
+- "comprenne" comment l'utiliser (bonus) ; pour cela, vous pouvez vous aider de la [WoT Scripting API](https://www.w3.org/TR/wot-scripting-api/)
+
 **To be continued...**
 
 ### Rendu et évaluation
 
-Le TP est individuel. Il est évalué sur une base binaire PASS/FAIL et compte pour 10% de la note de TP totale.
+Le TP est réalisé par groupe de 4. Il est évalué sur une base binaire PASS/FAIL + sur une soutenance qui aura lieu le mardi 4 février 2020 après-midi. IL compte pour 10% de la note de TP totale.
 
 Les critères d'évaluation sont les suivants pour avoir un PASS:
 
