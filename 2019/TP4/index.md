@@ -103,7 +103,7 @@ Pour valider votre fichier, vous pouvez utiliser le validateur du [Playground d'
 
 ## Publication d'une TD
 
-Si votre fichier est valide, vous devez pouvoir le publier sur l'annuaire de TD fourni par le W3C : [ThingWeb Directory](https://github.com/thingweb/thingweb-directory/), dont nous avons déployé une instance sur la VM 193.168.75.90 de l'infra OpenStack. Pour accéder à cette machine de l'extérieur, vous pouvez passer par notre proxy : https://proxy-tps-m1if13-2019.univ-lyon1.fr/90
+Si votre fichier est valide, vous devez pouvoir le publier sur l'annuaire de TD fourni par le W3C : [ThingWeb Directory](https://github.com/thingweb/thingweb-directory/), dont nous avons déployé une instance sur la VM 192.168.75.90 de l'infra OpenStack. Pour accéder à cette machine de l'extérieur, vous pouvez passer par notre proxy : https://proxy-tps-m1if13-2019.univ-lyon1.fr/90
 
 ## Découverte d'une TD
 
