@@ -103,15 +103,13 @@ Pour valider votre fichier, vous pouvez utiliser le validateur du [Playground d'
 
 ## Publication d'une TD
 
-Si votre fichier est valide, vous devez pouvoir le publier sur l'annuaire de TD fourni par le W3C : [ThingWeb Directory](https://github.com/thingweb/thingweb-directory/), dont nous avons déployé une instance sur la VM 192.168.75.90 de l'infra OpenStack. Pour accéder à cette machine de l'extérieur, vous pouvez passer par notre proxy : https://proxy-tps-m1if13-2019.univ-lyon1.fr/90/ (le slash à la fin est nécessaire).
+Si votre fichier est valide, vous devez pouvoir le publier sur ~~l'annuaire de TD fourni par le W3C : [ThingWeb Directory](https://github.com/thingweb/thingweb-directory/),~~ un annuaire dont nous avons déployé une instance sur l'infra OpenStack, à l'URL http://192.168.78.92:8080/TD/. Pour accéder à cette machine de l'extérieur, vous pouvez passer par notre proxy : https://proxy-tps-m1if13-2019.univ-lyon1.fr/92/ (le slash à la fin est nécessaire).
 
-## Découverte d'une TD
+## Requêtage d'une TD
 
 Modifiez votre client pour qu'il requête sa TD dans cet annuaire et utilise cette TD pour :
 - déterminer les URLs à requêter pour avoir accès à l'objet
 - "comprenne" comment l'utiliser (bonus) ; pour cela, vous pouvez vous aider de la [WoT Scripting API](https://www.w3.org/TR/wot-scripting-api/)
-
-**To be continued...**
 
 ### Rendu et évaluation
 
