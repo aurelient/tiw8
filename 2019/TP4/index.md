@@ -107,7 +107,7 @@ Si votre fichier est valide, vous devez pouvoir le publier sur l'annuaire de TD 
 
 ## Découverte d'une TD
 
-Modifiez votre client pour qu'il requête cet annuaire, découvre votre arduino, requête sa TD et utilise cette TD pour :
+Modifiez votre client pour qu'il requête sa TD dans cet annuaire et utilise cette TD pour :
 - déterminer les URLs à requêter pour avoir accès à l'objet
 - "comprenne" comment l'utiliser (bonus) ; pour cela, vous pouvez vous aider de la [WoT Scripting API](https://www.w3.org/TR/wot-scripting-api/)
 
