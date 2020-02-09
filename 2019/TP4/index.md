@@ -53,6 +53,8 @@ Dans ce TP, il vous est demandé de réaliser une application Web et non le _ske
 
 L'étape suivante est de réaliser le circuit ci-dessous, comme indiqué [ici](https://programminginarduino.wordpress.com/2016/03/06/project-13/). [Apparemment](https://forum.arduino.cc/index.php?topic=175831.msg1383787#msg1383787), le code est un peu buggé, mais c'est juste pour tester votre montage.
 
+*Note* : pour les moteurs Tower Pro MG90S (IGA), le schéma de montage en fonction des couleurs des files est [ici](https://www.electronics-lab.com/project/using-sg90-servo-motor-arduino/).
+
 <img alt="Knock Lock circuit" src="https://programminginarduino.files.wordpress.com/2016/03/knock-lock-disec3b1o-de-protoboard.jpg" style="max-width: 600px">
 
 Pour mieux comprendre le fonctionnement du circuit et de l'arduino, vous pouvez vous aider du livre "Arduino Project Book" fourni avec le starter kit, ou des ressources sur le site [arduino.cc](https://www.arduino.cc/).
