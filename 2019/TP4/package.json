@@ -1,0 +1,18 @@
+{
+  "name": "tp4-arduino",
+  "version": "1.0.0",
+  "description": "TP4 TIW8 2019-2020 - Web of Things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "WoT",
+    "arduino"
+  ],
+  "author": "L. Medini",
+  "license": "CC-BY-NC-4.0",
+  "dependencies": {
+    "johnny-five": "^1.4.0"
+  }
+}
