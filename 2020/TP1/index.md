@@ -14,10 +14,11 @@ L'objectif du TP est de mettre en place une Single Page Application (SPA), déve
 - L'automatisation d'un build et le bundling avec Webpack
 - Comment configurer Babel pour la rétrocompatibilité du code ES6
 - Créer un projet React 
-- 
 - Créer deux composants React basiques
 - Générer un bundle
+- Utiliser un linter pour analyser votre code
 - Assembler et servir le contenu
+- Déployer sur Heroku
 
 
 Ce TP fera l'objet d'un premier rendu __individuel__ et d'une note. Voir les critères d'évaluation en bas de la page.
@@ -31,6 +32,12 @@ Pensez à remplir le <a href="">formulaire de rendu (TODO )</a>.
 Structurer votre projet pour avoir un dossier serveur et un dossier client clairement nommés.
 
 Installer [Node](https://nodejs.org/) et [Express](https://expressjs.com/) si ce n'est pas déjà fait. Si c'est le cas, pensez à les mettre à jour.
+
+Selon votre OS, la version de node et d'Express que vous allez installer, il sera peut être nécessaire d'installer `express-generator` qui gère le "cli" d'Express (la possibilité de l'invoquer depuis la ligne de commande).
+
+```
+  npm install -g express-generator
+```
 
 
 __Pensez à bien ajouter les fichiers qui n'ont pas à être versionnés à .gitignore__ (ex: node_modules, dist, ...)
@@ -61,7 +68,7 @@ Ajouter un script à package.json qui permette de lancer votre serveur avec la c
 
 ```json
 "scripts": {
-  "start": "node serveur/index.js",
+  "start": "node server/index.js",
   "test": "echo \"Error: pas de tests pour le moment\" && exit 1"
 }
 ```
@@ -70,7 +77,52 @@ Ajouter un script à package.json qui permette de lancer votre serveur avec la c
 Vérifier que le serveur fonctionne et versionner.
 
 
-### Mise en place de Webpack
+
+### Projet React
+
+Nous verrons plus en détail le fonctionnement de React lors de la prochaine séance. 
+Pour le moment nous allons créer un projet simple. 
+
+Installons react et react-dom
+
+```
+npm i react react-dom
+```
+
+Dans votre dossier client (`src`), créer un `index.html`. 
+Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par React. 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>React Boilerplate</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+```
+
+Dans le même dossier nous allons créer un premier composant React, on l'appelera `index.js`:
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+const Index = () => {
+  return <div>TIW 8 TP1!</div>;
+};
+ReactDOM.render(<Index />, document.getElementById('root'));
+```
+
+
+### Générer un bundle avec Webpack
+
+
+#### Mise en place de Webpack
 
 Installer [Webpack](https://webpack.js.org/) en dev (pas la peine d'avoir les dépendances pour le déploiement)  :
 
@@ -85,14 +137,46 @@ Dans `package.json` ajouter une commande `build` (dans `scripts`)
 }
 ```
 
-Lancer le process de build, regarder les fichiers/dossiers générés. Corriger votre arborescence de fichiers si nécessaire.
 
-### Configuration de Babel 
+#### Bundling
+Il faut maintenant assembler le code React. Le résultat ira dans le dossier `dist``
+
+On installe le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
+
+On point vers le point d'entée React (le fichier index.js) et ou l'appliquer (`template: "./src/index.html"`).
+
+```javascript
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const htmlPlugin = new HtmlWebPackPlugin({
+  template: "./src/index.html", 
+  filename: "./index.html"
+});
+module.exports = {
+  entry: "./src/index.js",
+  output: { // NEW
+    path: path.join(__dirname, 'dist'),
+    filename: "[name].js"
+  }, // NEW Ends
+  plugins: [htmlPlugin],
+  module: {
+    rules: [
+      {
+        ...
+      }
+    ]
+  }
+};
+```
+
+#### Transpilation et configuration de Babel 
 
 React s'appuie sur [JSX](https://reactjs.org/docs/introducing-jsx.html) pour 
 lier la logique de rendu, la gestion d'évènement et les changements d'états 
 pour un élément donné. Ces éléments seraient normalement séparés entre langages 
 et technos différentes. Babel permet de traduire ce code (et au passage de transformer du ES6 en ES6).
+
+JSX n'est pas interprété par les navigateurs, nous devons donc le "traduire" ou transpiler avec Babel en HTML+JS pour que le code devienne compréhensible.
 
 Installer les dépendances (de développement) suivantes:
 
@@ -130,81 +214,7 @@ module.exports = {
 ```
 
 
-### Projet React
-
-Nous verrons plus en détail le fonctionnement de React lors de la prochaine séance. 
-Pour le moment nous allons créer un projet simple. 
-
-Installons react et react-dom
-
-```
-npm i react react-dom
-```
-
-Dans votre dossier client (`src`), créer un `index.html`. 
-Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par React. 
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>React Boilerplate</title>
-</head>
-<body>
-  <div id="root"></div>
-</body>
-</html>
-```
-
-Dans le même dossier nous allons créer un premier élément React:
-
-```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
-const Index = () => {
-  return <div>TIW 8 TP1!</div>;
-};
-ReactDOM.render(<Index />, document.getElementById('root'));
-```
-
-
-### Générer un bundle
-
-Il faut maintenant transpiler ce code pour qu'il soit compréhensible par un 
-navigateur. Le résultat ira dans le dossier `dist``
-
-On installe le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
-
-On point vers le point d'entée React (le fichier index.js) et ou l'appliquer (`template: "./src/index.html"`).
-
-```javascript
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const path = require('path');
-const htmlPlugin = new HtmlWebPackPlugin({
-  template: "./src/index.html", 
-  filename: "./index.html"
-});
-module.exports = {
-  entry: "./src/index.js",
-  output: { // NEW
-    path: path.join(__dirname, 'dist'),
-    filename: "[name].js"
-  }, // NEW Ends
-  plugins: [htmlPlugin],
-  module: {
-    rules: [
-      {
-        ...
-      }
-    ]
-  }
-};
-```
-
-### Assembler et servir le contenu
+#### Assembler et servir le contenu
 
 Il faut maintenant dire à Express ou aller chercher le contenu. 
 Pour cela il faut lui dire que sa route '/' est maintenant `dist/index.html`
@@ -306,14 +316,13 @@ Inspectez l'application.
 
 ### Rendu et évaluation
 
-Le TP est individuel. Il est évalué sur une base binaire PASS/FAIL et compte pour 10% de la note de TP totale.
+Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et compte pour 10% de la note de TP totale.
 
-Les critères d'évaluation sont les suivants pour avoir un PASS:
+Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un des critères n'est pas rempli c'est un FAIL (=0):
 
 - Le rendu est effectué avant ce soir minuit. Pensez à remplir le <a href="">formulaire</a>.
 - Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
-- Les dépendances de *développement* et de *déploiement* dans package.json sont bien définies
 - `npm run build` construit le projet
 - `npm run start` lance le serveur et permet de tester le projet.
 - `eslint` ne retourne pas d'erreur
