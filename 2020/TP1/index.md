@@ -99,7 +99,7 @@ Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par Reac
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>React Boilerplate</title>
+  <title>React TP1</title>
 </head>
 <body>
   <div id="root"></div>
@@ -107,7 +107,7 @@ Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par Reac
 </html>
 ```
 
-Dans le même dossier nous allons créer un premier composant React, on l'appelera `index.js`:
+Dans le même dossier nous allons créer un premier composant React, on l'appelera `index.jsx`:
 
 ```javascript
 import React from 'react';
@@ -143,29 +143,32 @@ Il faut maintenant assembler le code React. Le résultat ira dans le dossier `di
 
 On installe le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
 
-On point vers le point d'entée React (le fichier index.js) et ou l'appliquer (`template: "./src/index.html"`).
+On pointe vers le point d'entée React (le fichier index.js) et ou l'appliquer (`template: "./src/index.html"`).
 
 ```javascript
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require('path');
 const htmlPlugin = new HtmlWebPackPlugin({
-  template: "./src/index.html", 
+  template: "./client/index.html", 
   filename: "./index.html"
 });
-module.exports = {
-  entry: "./src/index.js",
-  output: { // NEW
-    path: path.join(__dirname, 'dist'),
-    filename: "[name].js"
-  }, // NEW Ends
-  plugins: [htmlPlugin],
-  module: {
-    rules: [
-      {
-        ...
-      }
-    ]
-  }
+module.exports = (env, argv) => {
+  console.log(argv.mode);
+  return {
+    entry: "./client/index.jsx",
+    output: { // NEW
+      path: path.join(__dirname, 'dist'),
+      filename: "[name].js"
+    }, // NEW Ends
+    plugins: [htmlPlugin],
+    module: {
+      rules: [
+        {
+          ...
+        }
+      ]
+    }
+  };
 };
 ```
 
@@ -246,7 +249,7 @@ app.use(express.static(DIST_DIR));
 
 Il faut aussi installer le module `file-loader` (toujours en dev).
 
-Et rajouter la règle suivante dans `webpack.config.js:` pour que webpack place les images dans `/static/`.
+Et rajouter la règle suivante dans `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
 ```js
 {
   test: /\.(png|svg|jpg|gif)$/,
@@ -255,7 +258,7 @@ Et rajouter la règle suivante dans `webpack.config.js:` pour que webpack place 
 }
 ```
 
-Pour que Webpack bundle ces images (ou autres ressources), il faudra les importer dans vos composants.
+Pour que Webpack bundle ces images (ou autres ressources), il faudra les importer dans vos composants. Voici comment cela se fait au sein d'un composant React:
 
 ```js
 // Import de l'image
@@ -295,9 +298,22 @@ ReactDOM.render(<Index />, document.getElementById('root'));
 ### Linting
 
 Pour vérifier que votre code se conforme aux bonnes pratiques, installer eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
-Choisissez les 
+
+Pour créer votre fichier de configuration `eslint` taper `npx eslint --init` votre configuration devrait ressembler à cela 
+```
+✔ How would you like to use ESLint? · style
+✔ What type of modules does your project use? · esm
+✔ Which framework does your project use? · react
+✔ Does your project use TypeScript? · No / Yes
+✔ Where does your code run? · browser, node
+✔ How would you like to define a style for your project? · guide
+✔ Which style guide do you want to follow? · airbnb
+✔ What format do you want your config file to be in? · JSON
+```
+
 
 Vous pouvez suivre [ce guide dire à Webpack de linter](https://www.robinwieruch.de/react-eslint-webpack-babel).
+
 
 
 ### Déployer sur Heroku
