@@ -8,20 +8,21 @@
 
 ### Présentation du TP
 
-L'objectif du TP est de mettre en place une Single Page Application (SPA), développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en JavaScript. Nous allons voir:
+L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework JS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP sera peu ou prou la même pour Angular ou Vue.
+Nous allons voir:
 
-- La mise en place d'un serveur Express très basique
-- L'automatisation d'un build et le bundling avec Webpack
-- Comment configurer Babel pour la rétrocompatibilité du code ES6
+- La mise en place d'un serveur Node/Express basique
+- L'automatisation d'un build 
+- Comment configurer Babel pour la transpiler du code ES6 et des composants JSX en JavaScript interprétable par n'importe quel navigateur
 - Créer un projet React 
 - Créer deux composants React basiques
-- Générer un bundle
-- Utiliser un linter pour analyser votre code
+- Gérer le bundling avec Webpack
+- Utiliser un linter pour vérifier votre code
 - Assembler et servir le contenu
 - Déployer sur Heroku
 
 
-Ce TP fera l'objet d'un premier rendu __individuel__ et d'une note. Voir les critères d'évaluation en bas de la page.
+Ce TP fera l'objet d'un premier rendu __individuel__ et d'une note binaire (PASS/FAIL). Voir les critères d'évaluation en bas de la page.
 
 Vous ferez le rendu sur la forge, créez un projet git dès maintenant, puis un projet (npm init).
 
