@@ -26,7 +26,7 @@ Ce TP fera l'objet d'un premier rendu __individuel__ et d'une note binaire (PASS
 
 Vous ferez le rendu sur la forge, créez un projet git dès maintenant, puis un projet (npm init).
 
-Pensez à remplir le <a href="">formulaire de rendu (TODO )</a>.
+Pensez à remplir les deux champs Tomuss associés au TP1.
 
 ### Mise en place du serveur
 
@@ -337,10 +337,11 @@ Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et comp
 
 Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un des critères n'est pas rempli c'est un FAIL (=0):
 
-- Le rendu est effectué avant ce soir minuit. Pensez à remplir le <a href="">formulaire</a>.
+- Le rendu est effectué avant ce soir minuit. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien heroku).
 - Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
+- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification 
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
 - `npm run build` construit le projet
-- `npm run start` lance le serveur et permet de tester le projet.
+- `npm run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
 - l'application Web est bien déployée sur Heroku au lien fournit dans le rendu
