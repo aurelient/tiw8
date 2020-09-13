@@ -1,5 +1,24 @@
 ## TIW8 - Technologies Web synchrones et multi-dispositifs
-Ubicomp Web
+
+Le temps où l’ordinateur personnel était le dispositif principal d’accès à l’informatique est révolu. Les dispositifs numériques prennent aujourd’hui des formes variées, de la montre connectée aux objets connectés, en passant par les murs d’écrans interactifs ou les wearables. Ces dispositifs communiquent entre eux et sont de plus en plus utilisés pour fournir des services complexes. Ils demandent de nouvelles façons de penser la conception, l’interaction, les architectures logicielles et leur implantation. Le caractère universel des technologies Web en fait un candidat de choix pour aborder ces problématiques de manière concrète. L’objectif de cette UE est d’aborder les problématiques de conception, de distribution, d’optimisation et de synchronisationdans des applications Web multi-dispositifs.
+
+## Contenu abordé
+Cette UE porte sur la conception et la réalisation d’applications Web multi-dispositifs. Elle abordera la question de l’adaptation des applications à leur dispositifs cibles, en termes de surface d’affichage, de modalités d’interaction ou de type de données échangées. Cette problématique sera vue à la fois d’un point de vue architectural (design adaptatif), mais aussi du point de vue des usages et de l’interaction.
+
+Seront ensuite abordés les principes et algorithmes de communication synchrone dédiés au Web (WebSocket, WebRTC, Operational Transform, CRDT). Les préoccupations transverses des applications Web embarquées et synchrones telles que découvrabilité de dispositifs, la qualité de service liée aux données de capteurs, la gestion des ressources énergétiques pour les objets autonomes et la performance applicative globale seront également prises en compte.
+
+D’un point de vue technique, nous mettrons en place une “stack” JavaScript côté serveur et côté client (Node+React/Redux), et apprendrons les principes de la programmation réactive. 
+
+**Mots-clés** : Programmation réactive, programmation Web synchrone, adaptation, interaction multi-dispositif, Internet des objets, Web des objets, découvrabilité, qualité de service, performance. 
+
+**Compétences visées** :
+● Mettre en place une architecture Web JavaScript côté serveur et côté client, en s’appuyant sur un framework dédié à la programmation réactive
+● Appliquer une méthode de conception fondée sur le design adaptatif, et permettre le déploiement d’une application sur les dispositifs présents dans l’environnement
+● Comprendre les enjeux et les spécificités de l’Internet des objets (IoT) et du Web des objets (WoT), et concevoir des applications multi-dispositifs prenant en compte les modalités d’interaction particulières de ces dispositifs
+● Comprendre les différents types de contraintes temporelles dans les technologies Web et gérer la communication entre dispositifs de manière synchrone, pour les usages temps réel de type collaboratif
+● Prendre en compte les problématiques de gestion des ressources pour l’accès aux capteurs et aux actionneurs sur les objets contraints, et mesurer et optimiser la qualité de service (QoS) et la performance de ces applications
+
+
 
 
 #### Encadrants
