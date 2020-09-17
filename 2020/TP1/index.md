@@ -170,7 +170,7 @@ module.exports = (env, argv) => {
 React s'appuie sur [JSX](https://reactjs.org/docs/introducing-jsx.html) pour 
 lier la logique de rendu, la gestion d'évènement et les changements d'états 
 pour un élément donné. Ces éléments seraient normalement séparés entre langages 
-et technos différentes. Babel permet de traduire ce code (et au passage de transformer du ES6 en ES6).
+et technos différentes. Babel permet de traduire ce code (et au passage de transformer du ES6 en ES5).
 
 JSX n'est pas interprété par les navigateurs, nous devons donc le "traduire" ou transpiler avec Babel en HTML+JS pour que le code devienne compréhensible.
 
