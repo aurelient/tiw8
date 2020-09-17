@@ -4,12 +4,11 @@
 - Aurélien Tabard (responsable)
 - Lionel Médini
 
-
-
 ### Présentation du TP
 
-L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework JS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP sera peu ou prou la même pour Angular ou Vue.
-Nous allons voir:
+L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework JS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP serait peu ou prou la même pour Angular ou Vue.
+
+Nous allons voir :
 
 - La mise en place d'un serveur Node/Express basique
 - L'automatisation d'un build 
@@ -21,16 +20,13 @@ Nous allons voir:
 - Assembler et servir le contenu
 - Déployer sur Heroku
 
-
 Ce TP fera l'objet d'un premier rendu __individuel__ et d'une note binaire (PASS/FAIL). Voir les critères d'évaluation en bas de la page.
 
-Vous ferez le rendu sur la forge, créez un projet git dès maintenant, puis un projet (npm init).
+Vous ferez le rendu sur la forge.
 
-Pensez à remplir les deux champs Tomuss associés au TP1.
+### Initialisation du projet
 
-### Mise en place du serveur
-
-Structurer votre projet pour avoir un dossier serveur et un dossier client clairement nommés.
+Créez un projet git sur la forge dès maintenant. Remplissez le champ Tomuss associé.
 
 Installer [Node](https://nodejs.org/) et [Express](https://expressjs.com/) si ce n'est pas déjà fait. Si c'est le cas, pensez à les mettre à jour.
 
@@ -40,8 +36,16 @@ Selon votre OS, la version de node et d'Express que vous allez installer, il ser
   npm install -g express-generator
 ```
 
+__Pensez régulièrement à ajouter les fichiers qui n'ont pas à être versionnés à votre .gitignore__ (_a minima_ : node_modules & dist)
 
-__Pensez à bien ajouter les fichiers qui n'ont pas à être versionnés à .gitignore__ (ex: node_modules, dist, ...)
+Créez un projet NPM (npm init), en le liant à votre dépôt Git sur la forge. Structurer votre projet en :
+
+- un dossier `serveur`,
+- un dossier `src` (qui contiendra le client).
+
+Poussez ce projet sur la forge.
+
+### Mise en place du serveur
 
 Voici le coeur d'un serveur Express.
 
@@ -64,7 +68,7 @@ app.listen(port, function () {
 });
 ```
 
-Ajouter un script à package.json qui permette de lancer votre serveur avec la commande 
+Ajouter un script au package.json qui permette de lancer votre serveur avec la commande 
 `npm run start`
 
 ```json
@@ -74,10 +78,7 @@ Ajouter un script à package.json qui permette de lancer votre serveur avec la c
 }
 ```
 
-
 Vérifier que le serveur fonctionne et versionner.
-
-
 
 ### Projet React
 
@@ -119,7 +120,6 @@ const Index = () => {
 ReactDOM.render(<Index />, document.getElementById('root'));
 ```
 
-
 ### Générer un bundle avec Webpack
 
 
@@ -130,21 +130,13 @@ Installer [Webpack](https://webpack.js.org/) en dev (pas la peine d'avoir les d�
 - `webpack` (Le bundler)
 - `webpack-cli` (Command Line Interface pour lancer les commandes webpack)
 
-Dans `package.json` ajouter une commande `build` (dans `scripts`)
+Installez également le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
 
-```json
-"scripts": {
-  "build": "webpack --mode production"
-}
-```
+#### Configuration de webpack
 
+Même si les dernières versions de webpack peuvent fonctionner sans fichier de configuration (avec des défauts), vous aurez de toutes façons à spécifier une config dans ce TP. Mettez donc en place un fichier `webpack.config.js` avec une configuration minimale (entry, output), que vous allez modifier par la suite.
 
-#### Bundling
-Il faut maintenant assembler le code React. Le résultat ira dans le dossier `dist``
-
-On installe le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
-
-On pointe vers le point d'entée React (le fichier index.js) et ou l'appliquer (`template: "./src/index.html"`).
+Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.jsx) et indiquez ou l'appliquer (`template: "./src/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
 
 ```javascript
 const HtmlWebPackPlugin = require("html-webpack-plugin");
@@ -199,7 +191,7 @@ en indiquant les pré-configurations utilisées pour le reste du projet.
 ```
 
 Il faut spécifier à Webpack la transpilation Babel des fichiers .js et .jsx du projet lors du build. 
-Cela se fait le fichier `webpack.config.js` :
+Cela se fait dans le fichier `webpack.config.js` :
 
 ```javascript
 module.exports = {
@@ -217,30 +209,43 @@ module.exports = {
 };
 ```
 
+#### Bundling
 
-#### Assembler et servir le contenu
+Il faut maintenant assembler le code React.
 
-Il faut maintenant dire à Express ou aller chercher le contenu. 
+Dans `package.json` ajouter une commande `build` (dans `scripts`)
+
+```json
+"scripts": {
+  "build": "webpack --mode production"
+}
+```
+
+Cette commande doit vous générer un fichier HTML et un fichier JS dans `dist`.
+
+### Servir le contenu
+
+Il faut maintenant dire à Express où aller chercher le contenu.
 Pour cela il faut lui dire que sa route '/' est maintenant `dist/index.html`
 
-Rajouter les constantes suivantes (selon vos noms de fichiers et de dossier):
+Rajouter les constantes suivantes (selon vos noms de fichiers et de dossiers) :
+
 ```js
 const path = require('path');
 
 const DIST_DIR = path.join(__dirname, '../dist'); 
 const HTML_FILE = path.join(DIST_DIR, 'index.html'); 
 
-// La route '/' pointe sur HTML_FILE
+// Modifier la route '/' pour qu'elle pointe sur HTML_FILE
 ```
 
-Nous allons aussi rajouter la commande suivante `package.json` pour distinguer un build de dev et un de production.
+Nous allons aussi rajouter la commande suivante dans `package.json` pour distinguer un build de dev et un de production.
 
 ```
   "dev": "webpack --mode development && node server/index.js",
 ```
 
-
-### Gérer les fichier statiques
+#### Gérer les fichiers statiques
 
 Pour que Express trouve plus tard son chemin "de base" et les fichiers statiques générés par Webpack (images, css...) rajouter la ligne suivante:
 
@@ -248,9 +253,12 @@ Pour que Express trouve plus tard son chemin "de base" et les fichiers statiques
 app.use(express.static(DIST_DIR));
 ```
 
-Il faut aussi installer le module `file-loader` (toujours en dev).
+Testez la commande `dev`.
 
-Et rajouter la règle suivante dans `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
+Installez le module `file-loader` (toujours en dev).
+
+Et rajoutez la règle suivante dans `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
+
 ```js
 {
   test: /\.(png|svg|jpg|gif)$/,
