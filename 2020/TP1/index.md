@@ -136,7 +136,7 @@ Installez également le module [html-webpack-plugin](https://github.com/jantimon
 
 Même si les dernières versions de webpack peuvent fonctionner sans fichier de configuration (avec des défauts), vous aurez de toutes façons à spécifier une config dans ce TP. Mettez donc en place un fichier `webpack.config.js` avec une configuration minimale (entry, output), que vous allez modifier par la suite.
 
-Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.jsx) et indiquez ou l'appliquer (`template: "./src/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
+Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.jsx) et indiquez ou l'appliquer (`template: "./client/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
 
 ```javascript
 const HtmlWebPackPlugin = require("html-webpack-plugin");
