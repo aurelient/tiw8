@@ -330,6 +330,8 @@ Afin de rendre notre application disponible sur le Web, nous allons la déployer
 Suivre le guide de Heroku pour déployer une application via git :
 [https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
 
+Pensez à bien committer avant de pusher sur heroku.
+
 N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
 
 
