@@ -33,7 +33,7 @@ Pensez à remplir les champs de rendu sur Tomuss.
 - [Components and Props](https://reactjs.org/docs/components-and-props.html)
 - [Hooks at a Glance](https://reactjs.org/docs/hooks-overview.html)
 - [En quoi les fonctions composants sont-elles différentes des classes ?](https://overreacted.io/fr/how-are-function-components-different-from-classes/)
-- [MaterialUI]https://material-ui.com/)
+- [MaterialUI](https://material-ui.com/)
 
 ## TP2.1 Introduction à React
 
@@ -114,7 +114,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Slides slides={this.props.slides}/>
+        <Mur slides={this.props.slides}/>
         <Toolbar slides={this.props.slides} />
       </div>
     );
@@ -123,17 +123,17 @@ class App extends React.Component {
 
 
 const WALLS = [
-  {type: 'mur', title: 'TIW 8', visible: true, notes: ""},
-  {type: 'postit', title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, color: "#CCC"},
-  {type: 'postit', title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, color: "#00E"},
-  {type: 'postit', title: 'TP 3', text: "Le TP 3", visible: true, color: "#00E"},
-  {type: 'postit', title: 'TP 4', text: "Le TP 4", visible: true, color: "#0E0"},
-  {type: 'mur', title: 'Courses', visible: false, notes: ""},
+  {type: 'wall', id:"1", title: 'TIW 8', visible: true, notes: ""},
+  {type: 'postit', wall:"1", title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, color: "#CCC"},
+  {type: 'postit', wall:"1", title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, color: "#00E"},
+  {type: 'postit', wall:"1", title: 'TP 3', text: "Le TP 3", visible: true, color: "#00E"},
+  {type: 'postit', wall:"1", title: 'TP 4', text: "Le TP 4", visible: true, color: "#0E0"},
+  {type: 'wall', id:"2", title: 'Courses', visible: false, notes: ""},
 ];
 
 
 ReactDOM.render(
-  <FilterableProductTable slides={POSTITS} />,
+  <App slides={WALLS} />,
   document.getElementById('container')
 );
 ```
@@ -149,13 +149,13 @@ La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre
 ### React Router
 
 Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu'il soit possible d'avoir un chemin dédié à chaque post-it, et à chaque mur.
-En plus d'avoir un état interne à l'application pour savoir quel post-it afficher, nous allons utiliser une route qui pointe vers le transparent en question. En chargeant cette route, l'état sera modifié.
+En plus d'avoir un état interne à l'application pour savoir quel post-it afficher, nous allons utiliser une route qui pointe vers le mur en question. En chargeant cette route, l'état sera modifié.
 
 Nous allons utiliser [react-router](https://reacttraining.com/react-router/). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à lire [cette page](https://reacttraining.com/react-router/web/guides/philosophy).
 
 [React router](https://reacttraining.com/react-router/web/guides/primary-components) requiert d'envelopper votre application dans un composant `Router`.
 
-En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/#/3](http://monsite.net/#/3) charge le 3e transparent. Importez bien `react-router-dom` non.
+En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/#/3](http://monsite.net/#/3) charge le 3e mur. Importez bien `react-router-dom` non.
 
 Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter)
 
@@ -173,7 +173,7 @@ Déployez et testez sur mobile (faites les adaptations nécessaires).
 
 Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux et des Websockets. L'objectif est que vous puissiez changer l'état de votre application de présentation sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre mur à distance sur sa machine...)
 
-<!-- Nous allons gérer l'état qui comprend la liste des murs et le transparent en cours.-->
+<!-- Nous allons gérer l'état qui comprend la liste des murs et le mur en cours.-->
 
 **Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.**
 
@@ -209,7 +209,7 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
 
 ```js
     const initialState = {
-      index: 1, // initialise votre presentation au transparent 1
+      index: 1, // initialise votre presentation au mur 1
       walls: [] // vous pouvez réutiliser votre état de murs initial.
     };
     function rootReducer(state = initialState, action) {
@@ -218,9 +218,11 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
             return ...
         case REMOVE_POSTIT:
             return ...
-        case NEXT_SLIDE:
+        case ADD_WALL:
             return ...
-        case PREVIOUS_SLIDE:
+        case REMOVE_WALL:
+            return ...
+        case GOTO_WALL:
             return ...
         default:
             return state
@@ -249,21 +251,23 @@ Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics
 Vous aurez à définir les actions suivantes dans `actions/index.js`
 
 ```js
-export const ADD_SLIDE = "ADD_SLIDE";
-export const REMOVE_SLIDE = "REMOVE_SLIDE";
-export const NEXT_SLIDE = 'NEXT_SLIDE'
-export const PREVIOUS_SLIDE = 'PREVIOUS_SLIDE'
+export const ADD_WALL = "ADD_WALL";
+export const REMOVE_WALL = "REMOVE_WALL";
+export const NEXT_WALL = "NEXT_WALL";
+export const PREVIOUS_WALL = "PREVIOUS_WALL";
+
+...
 ```
 
-Ces actions sont utilisées comme signaux par Redux, ce ne que des objects JavaScript Simle. C'est le Reducer qui va faire le travail.
+Ces actions sont utilisées comme signaux par Redux, ce ne sont que des objets JavaScript simples. C'est le Reducer qui va faire le travail.
 
 Les actions forcent principalement à définir des traitement unitaire.
 
 Une bonne pratique Redux consiste à envelopper les actions dans une fonction pour s'assurer que la création de l'objet est bien faite. Ces fonction s'appellent `action creator`.
 
 ```js
-export function addSlide(payload) {
-  return { type: ADD_SLIDE, payload };
+export function addWall(payload) {
+  return { type: ADD_WALL, payload };
 }
 ```
 
@@ -276,8 +280,8 @@ Toujours dans votre `index.js` principal, exposez les actions pour vérifier qu'
 Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment. Mais vous pouvez observer l'état via l'extension Redux ou un simple `console.log()` dans votre Reducer.
 
 ```js
-    import { nextSlide } from "actions/index"; // verifiez que le chemin est correct
-    window.nextSlide = nextSlide;
+    import { nextWall } from "actions/index"; // verifiez que le chemin est correct
+    window.nextWall = nextWall;
 ```
 
 #### Lien Redux / React
@@ -295,7 +299,7 @@ Il faut ensuite ce connecter à ce store. Pour cela on utilise la fonction `conn
 ```js
 const mapStateToProps = (state) => {
   return {
-    slides: state.slides,
+    walls: state.walls,
   }
 }
 
@@ -318,8 +322,8 @@ import { action1, action2 } from "..../actions/index";
 ```js
 const mapDispatchToProps = dispatch => {
   return {
-    nextSlide: () => dispatch(nextSlide(true)),
-    previousSlide: () => dispatch(previousSlide(true))
+    nextWall: () => dispatch(nextWall(true)),
+    previousWall: () => dispatch(previousWall(true))
   }
 }
 // ... VOTRE_COMPOSANT
@@ -327,7 +331,7 @@ const mapDispatchToProps = dispatch => {
 export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
 ```
 
-3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions  `onClick={() => {this.props.previousSlide}`
+3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions  `onClick={() => {this.props.previousWall}`
 
 
 #### Lien Redux / React Router  
@@ -337,14 +341,7 @@ Normalement l'intégration avec React Router se passe bien (pas de changements n
 
 
 
-
-### Déployer sur Heroku
-Afin de rendre notre application disponible sur les internets, nous allons la déployer sur [Heroku](https://heroku.com).
-Suivre le guide de Heroku pour déployer une application via git :
-[https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
-
-N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
-
+Testez et Déployez
 
 
 ## TP2.3 Distribution d’interface multi-dispositif
@@ -371,7 +368,7 @@ Déployez et tester.
 
 Cette vue pour mobile affiche un post-it ainsi que les boutons suivant précédent.
 
-Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. Pour l'instant la vue doit simplement afficher les notes correspondant au transparent courant.
+Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. Pour l'instant la vue doit simplement afficher les notes correspondant au mur courant.
 
 ### Gestion "à la main" des routes des transparents.
 
