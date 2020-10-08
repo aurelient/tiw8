@@ -49,20 +49,21 @@ Lire l'[introduction à la structuration d'application React](https://reactjs.or
 Nous allons commencer par créer un squelette d'application statique, nous rajouterons les parties dynamiques par la suite.
 
 L'application est composée de plusieurs murs. À chaque mur on peut ajouter des posts-its. 
-Les post-its ont un certain nombre de propriétés : couleur, contenu (texte, image, dessin à la main), position, taille, auteur, ...
+Les post-its ont un certain nombre de propriétés : couleur, contenu (texte, image, dessin à la main), position, taille, auteur, ... Vous pourrez par exemple vous inspirer de padlet ou de nombreux services équivalents.
 
-<iframe style="border: none;" width="600" height="337" src="" allowfullscreen></iframe>
+<img style="border: none;" alt="padlet postit board" width="600" height="337" src="padlet.png" allowfullscreen></img>
 
 
 Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) :
 
 ```javascript
 [
-  {type: 'mur', title: 'TIW 8', visible: true, notes: ""},
-  {type: 'postit', title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, color: "#CCC"},
-  {type: 'postit', title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, color: "#00E"},
-  {type: 'postit', title: 'TP 3', text: "Le TP 3", visible: true, color: "#00E"},
-  {type: 'postit', title: 'TP 4', text: "Le TP 4", visible: true, color: "#0E0"},
+  {type: 'board', id:"1", title: 'TIW 8', visible: true, notes: ""},
+  {type: 'postit', board:"1", title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, color: "#CCC"},
+  {type: 'postit', board:"1", title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, color: "#00E"},
+  {type: 'postit', board:"1", title: 'TP 3', text: "Le TP 3", visible: true, color: "#00E"},
+  {type: 'postit', board:"1", title: 'TP 4', text: "Le TP 4", visible: true, color: "#0E0"},
+  {type: 'board', board:"2", title: 'Courses', visible: false, notes: ""},
 ];
 ```
 
@@ -73,13 +74,12 @@ Voici une structure pour démarrer, pensez à utiliser les composants material p
 
 ```JSX
 
-class Mur extends React.Component {
+class Board extends React.Component {
   render() {
-    const slide = this.props.slide;
-    const type = slide.type ? "title" : ...
+    const board = this.props.board;
 
     return (
-        <h1> {slide.title} </h1>
+        <h1> {board.title} </h1>
         ...
     );
   }
@@ -88,7 +88,7 @@ class Mur extends React.Component {
 class Postit extends React.Component {
   render() {
 
-    this.props.slides.forEach((slide) => {
+    this.props.postits.forEach((postit) => {
         ...
     });
 
@@ -114,26 +114,26 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Mur slides={this.props.slides}/>
-        <Toolbar slides={this.props.slides} />
+        <Board board={this.props.boards}/>
+        <Toolbar board={this.props.boards} />
       </div>
     );
   }
 }
 
 
-const WALLS = [
-  {type: 'wall', id:"1", title: 'TIW 8', visible: true, notes: ""},
-  {type: 'postit', wall:"1", title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, color: "#CCC"},
-  {type: 'postit', wall:"1", title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, color: "#00E"},
-  {type: 'postit', wall:"1", title: 'TP 3', text: "Le TP 3", visible: true, color: "#00E"},
-  {type: 'postit', wall:"1", title: 'TP 4', text: "Le TP 4", visible: true, color: "#0E0"},
-  {type: 'wall', id:"2", title: 'Courses', visible: false, notes: ""},
+const BOARDS = [
+  {type: 'board', id:"1", title: 'TIW 8', visible: true, notes: ""},
+  {type: 'postit', board:"1", title: 'TP 1', text: "Le TP porte sur des rappels de developpement Web", visible: false, color: "#CCC"},
+  {type: 'postit', board:"1", title: 'TP 2', text: "Le TP porte sur la creation d'un outil de presentation HTML", visible: true, color: "#00E"},
+  {type: 'postit', board:"1", title: 'TP 3', text: "Le TP 3", visible: true, color: "#00E"},
+  {type: 'postit', board:"1", title: 'TP 4', text: "Le TP 4", visible: true, color: "#0E0"},
+  {type: 'board', board:"2", title: 'Courses', visible: false, notes: ""},
 ];
 
 
 ReactDOM.render(
-  <App slides={WALLS} />,
+  <App boards={BOARDS} />,
   document.getElementById('container')
 );
 ```
@@ -210,7 +210,7 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
 ```js
     const initialState = {
       index: 1, // initialise votre presentation au mur 1
-      walls: [] // vous pouvez réutiliser votre état de murs initial.
+      boards: [] // vous pouvez réutiliser votre état de murs initial.
     };
     function rootReducer(state = initialState, action) {
     switch (action.type) {
@@ -218,11 +218,11 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
             return ...
         case REMOVE_POSTIT:
             return ...
-        case ADD_WALL:
+        case ADD_BOARD:
             return ...
-        case REMOVE_WALL:
+        case REMOVE_BOARD:
             return ...
-        case GOTO_WALL:
+        case GOTO_BOARD:
             return ...
         default:
             return state
@@ -251,10 +251,10 @@ Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics
 Vous aurez à définir les actions suivantes dans `actions/index.js`
 
 ```js
-export const ADD_WALL = "ADD_WALL";
-export const REMOVE_WALL = "REMOVE_WALL";
-export const NEXT_WALL = "NEXT_WALL";
-export const PREVIOUS_WALL = "PREVIOUS_WALL";
+export const ADD_BOARD = "ADD_BOARD";
+export const REMOVE_BOARD = "REMOVE_BOARD";
+export const NEXT_BOARD = "NEXT_BOARD";
+export const PREVIOUS_BOARD = "PREVIOUS_BOARD";
 
 ...
 ```
@@ -267,7 +267,7 @@ Une bonne pratique Redux consiste à envelopper les actions dans une fonction po
 
 ```js
 export function addWall(payload) {
-  return { type: ADD_WALL, payload };
+  return { type: ADD_BOARD, payload };
 }
 ```
 
@@ -299,7 +299,7 @@ Il faut ensuite ce connecter à ce store. Pour cela on utilise la fonction `conn
 ```js
 const mapStateToProps = (state) => {
   return {
-    walls: state.walls,
+    boards: state.boards,
   }
 }
 
