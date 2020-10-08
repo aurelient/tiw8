@@ -51,7 +51,7 @@ Nous allons commencer par créer un squelette d'application statique, nous rajou
 L'application est composée de plusieurs murs. À chaque mur on peut ajouter des posts-its. 
 Les post-its ont un certain nombre de propriétés : couleur, contenu (texte, image, dessin à la main), position, taille, auteur, ... Vous pourrez par exemple vous inspirer de padlet ou de nombreux services équivalents.
 
-<img style="border: none;" alt="padlet postit board" width="600" height="337" src="padlet.png" allowfullscreen></img>
+<img style="border: none;" alt="padlet postit board" width="600" height="337" src="padlet.png"></img>
 
 
 Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) :
