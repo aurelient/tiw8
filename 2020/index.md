@@ -76,6 +76,14 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 - [Javascript Cheat Sheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
 - [Mozilla Developer Network (Documentation)](https://developer.mozilla.org/)
 
+### CM2 
+- [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
+- [Your Mouse is a Database](https://queue.acm.org/detail.cfm?id=2169076)
+- [A Survey on Reactive Programming](http://soft.vub.ac.be/Publications/2012/vub-soft-tr-12-13.pdf)
+- [Dynamics of Change: Why Reactivity Matters](https://queue.acm.org/detail.cfm?id=2971330)
+- [Immuntability is not enough](https://codewords.recurse.com/issues/six/immutability-is-not-enough)
+- [What is FRP?](https://stackoverflow.com/questions/1028250/what-is-functional-reactive-programming)
+
 
 ## Calendrier
 Le planning est disponible sur cet [agenda partagé Google](https://calendar.google.com/calendar/embed?src=rtlfsq23dgbtshi8lghu5qi7o6oihk0j%40import.calendar.google.com&ctz=Europe%2FBerlin).
