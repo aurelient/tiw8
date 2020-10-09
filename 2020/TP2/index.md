@@ -58,7 +58,6 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
     type: "board",
     id: "1",
     title: "TIW 8",
-    active: true,
     notes: ""
     postits:[
       {
@@ -98,7 +97,6 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
     type: "board",
     board: "2",
     title: "Courses",
-    active: false,
     notes: "",
     postits: [],
   },
@@ -145,7 +143,9 @@ Il peut être pratique de désactiver temporairement eslint pour faire des tests
 
 ### Gérer la logique de l'application
 
-La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre tous les murs. Faites en sorte que l'état de App change lorsque vous sélectionnez un mur, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents). Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
+La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre tous les murs. Rajouter à l'état de l'App, une balise indiquant le mur courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un mur, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents). Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
+
+Pour démarrer vous pouvez utiliser l'extension react dev tools, et modifier l'état à la main pour vérifier que la vue change bien.
 
 ### React Router
 
