@@ -192,7 +192,7 @@ Afin de vous faciliter le debug du TP, vous pouvez activer la création d'un Sou
 
 ### Redux
 
-[Installez Redux et les dépendances associées pour React](https://redux-docs.netlify.com/introduction/installation) (`react-redux`). Par défaut Redux n'est pas lié à React et peut être utilisé avec d'autres Framework.
+[Installez Redux et les dépendances associées pour React](https://redux-docs.netlify.com/introduction/installation) (`redux`, `react-redux`). Par défaut Redux n'est pas lié à React et peut être utilisé avec d'autres Framework.
 
 Créez dans `src` des dossiers pour organiser votre `store`, vos `reducers`, `actions`, et `containers`.
 
@@ -217,19 +217,21 @@ On importe `createStore` depuis redux et aussi `rootReducer`, on verra plus bas 
 On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a un état initial constant (_immutable_) à compléter.
 
 ```js
+    // src/reducers/index.js
+
     const initialState = {
       index: 1, // initialise votre presentation au mur 1
       boards: [] // vous pouvez réutiliser votre état de murs initial.
     };
     function rootReducer(state = initialState, action) {
     switch (action.type) {
-        case ADD_POSTIT:
+        case CREATE_POSTIT:
             return ...
-        case REMOVE_POSTIT:
+        case DELETE_POSTIT:
             return ...
-        case ADD_BOARD:
+        case CREATE_BOARD:
             return ...
-        case REMOVE_BOARD:
+        case DELETE_BOARD:
             return ...
         default:
             return state
@@ -245,7 +247,7 @@ Dans votre `index.js` principal exposez le store pour pouvoir l'afficher via la 
 Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à votre application React.
 
 ```js
-import store from "store/index"; // verifiez que le chemin est correct
+import store from "./store/index"; // verifiez que le chemin est correct
 window.store = store;
 ```
 
@@ -258,10 +260,10 @@ Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics
 Vous aurez à définir les actions suivantes dans `actions/index.js`
 
 ```js
-export const ADD_BOARD = "ADD_BOARD";
-export const REMOVE_BOARD = "REMOVE_BOARD";
-export const NEXT_BOARD = "NEXT_BOARD";
-export const PREVIOUS_BOARD = "PREVIOUS_BOARD";
+export const CREATE_BOARD = "CREATE_BOARD";
+export const DELETE_BOARD = "DELETE_BOARD";
+export const SET_BOARD = "SET_BOARD";
+export const CREATE_BOARD = "CREATE_BOARD";
 
 ...
 ```
@@ -273,8 +275,8 @@ Les actions forcent principalement à définir des traitement unitaire.
 Une bonne pratique Redux consiste à envelopper les actions dans une fonction pour s'assurer que la création de l'objet est bien faite. Ces fonction s'appellent `action creator`.
 
 ```js
-export function addBoard(payload) {
-  return { type: ADD_BOARD, payload };
+export function createBoard(payload) {
+  return { type: CREATE_BOARD, payload };
 }
 ```
 
@@ -286,8 +288,8 @@ Toujours dans votre `index.js` principal, exposez les actions pour vérifier qu'
 Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment. Mais vous pouvez observer l'état via l'extension Redux ou un simple `console.log()` dans votre Reducer.
 
 ```js
-import { nextBoard } from "actions/index"; // verifiez que le chemin est correct
-window.nextBoard = nextBoard;
+import { createBoard } from "actions/index"; // verifiez que le chemin est correct
+window.createBoard = createBoard;
 ```
 
 #### Lien Redux / React
@@ -328,8 +330,8 @@ import { action1, action2 } from "..../actions/index";
 ```js
 const mapDispatchToProps = (dispatch) => {
   return {
-    nextWall: () => dispatch(nextWall(true)),
-    previousWall: () => dispatch(previousWall(true)),
+    nextBoard: () => dispatch(nextBoard(true)),
+    previousBoard: () => dispatch(previousBoard(true)),
   };
 };
 // ... VOTRE_COMPOSANT
