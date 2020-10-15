@@ -143,7 +143,10 @@ Il peut être pratique de désactiver temporairement eslint pour faire des tests
 
 ### Gérer la logique de l'application
 
-La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre tous les murs. Rajouter à l'état de l'App, une balise indiquant le mur courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un mur, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents). Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
+La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre tous les murs. Rajouter à l'état de l'App, une balise indiquant le mur courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un mur, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents).
+Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
+
+Pour comprendre comment cela fonctionne avec des functionals components et non des class components [référez vous à l'exemple de todo app mentionné plus haut](https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks#step-5-%E2%80%94-updating-to-do-items)
 
 Pour démarrer vous pouvez utiliser l'extension react dev tools, et modifier l'état à la main pour vérifier que la vue change bien.
 
@@ -158,19 +161,26 @@ Nous allons utiliser [react-router](https://reacttraining.com/react-router/). Po
 
 En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/#/3](http://monsite.net/#/3) charge le 3e mur. Importez bien `react-router-dom`.
 
-Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter)
+<!-- Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter) -->
 
-Si vous utilisez des `functional components`, et utiliser le hook `useParams();` vous pouvez récupérer la valeur de la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params).
+Si vous utilisez des `functional components`, vous pouvez utiliser le hook `useParams();` pour récupérer des informations sur la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params). Vous pouvez aussi passer cette information with `routeProps`, du côté du composant parent [voir la documentation ici](https://reactrouter.com/web/api/Route/render-func).
 
-Une fois la valeur de la route récupérée, modifier l'état de l'application, pour qu'il corresponde au mur à afficher.
+```jsx
+<Switch>
+  <Route
+    path="/:id"
+    render={(routeProps) => <Board boards={boards} match={routeProps.match} />}
+  />
+</Switch>
+```
+
+Une fois la valeur de la route récupérée pour qu'il corresponde au mur à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
 
 <!-- Puis implémenter une route et une n'affichant qu'un post-it. -->
 
 <!-- Déployez et testez sur mobile (faites les adaptations nécessaires). -->
 
-> :construction: **Attention**: Les instructions pour les TPs suivants sont là pour vous donner une idée du travail réalisé l'année dernière sur une application différente. Elles sont pour le moment hasardeuses et n'ont pas encore été testées. :construction:
-
-## TP2.2 Redux, Middleware, websockets pour le multi-dispositif
+## TP2.2 Redux
 
 Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux et des Websockets. L'objectif est que vous puissiez changer l'état de votre application de présentation sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre mur à distance sur sa machine...)
 
@@ -221,8 +231,6 @@ On crée un premier reducer qui va initialiser l'application. Le `rootReducer` a
             return ...
         case REMOVE_BOARD:
             return ...
-        case GOTO_BOARD:
-            return ...
         default:
             return state
     }
@@ -265,7 +273,7 @@ Les actions forcent principalement à définir des traitement unitaire.
 Une bonne pratique Redux consiste à envelopper les actions dans une fonction pour s'assurer que la création de l'objet est bien faite. Ces fonction s'appellent `action creator`.
 
 ```js
-export function addWall(payload) {
+export function addBoard(payload) {
   return { type: ADD_BOARD, payload };
 }
 ```
@@ -278,8 +286,8 @@ Toujours dans votre `index.js` principal, exposez les actions pour vérifier qu'
 Redux n'est toujours pas branché à React, il est donc normal que l'interface ne change pas pour le moment. Mais vous pouvez observer l'état via l'extension Redux ou un simple `console.log()` dans votre Reducer.
 
 ```js
-import { nextWall } from "actions/index"; // verifiez que le chemin est correct
-window.nextWall = nextWall;
+import { nextBoard } from "actions/index"; // verifiez que le chemin est correct
+window.nextBoard = nextBoard;
 ```
 
 #### Lien Redux / React
@@ -337,7 +345,11 @@ Normalement l'intégration avec React Router se passe bien (pas de changements n
 
 Testez et Déployez
 
-## TP2.3 Distribution d’interface multi-dispositif
+> :construction: **Attention**: Les instructions pour les TPs suivants sont là pour vous donner une idée du travail réalisé l'année dernière sur une application différente. Elles sont pour le moment hasardeuses et n'ont pas encore été testées. :construction:
+
+## TP2.3 VERSION 2019
+
+## Distribution d’interface multi-dispositif Middleware et websockets
 
 Nous allons maintenant travailler à la distribution de l'application sur plusieurs dispositifs et à leur synchronisation.
 
