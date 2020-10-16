@@ -37,7 +37,7 @@ Pensez à remplir les champs de rendu sur Tomuss.
 
 Nous allons repartir du TP1 pour ce projet, vous pouvez donc le cloner, puis le pousser dans un nouveau repo dédié au TP2 (pour les 4 séances du TP).
 
-Si vous n'avez pas utilisé [material-ui]https://material-ui.com/) dans le TP précédent. Installez le.
+Si vous n'avez pas utilisé [material-ui](https://material-ui.com/) dans le TP précédent. Installez le.
 
 ### Structurer une application React en composants
 
@@ -339,7 +339,7 @@ const mapDispatchToProps = (dispatch) => {
 export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
 ```
 
-3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions `onClick={() => {this.props.previousWall}`
+3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions `onClick={() => {this.props.previousBoard}`
 
 #### Lien Redux / React Router
 
