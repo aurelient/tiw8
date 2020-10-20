@@ -280,7 +280,7 @@ export function createBoard(payload) {
 }
 ```
 
-**Ne le faites pas maintenant**. Toutefois, quand votre application deviendra plus complexe, vous pourrez utiliser la convention [Redux duck](https://github.com/erikras/ducks-modular-redux) pour organiser votre code.
+Quand votre application deviendra plus complexe, vous pourrez utiliser la convention [Redux duck](https://github.com/erikras/ducks-modular-redux) pour organiser votre code. (pas la peine de faire ça maintenant)
 
 #### Tester les actions
 
@@ -370,13 +370,7 @@ Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package
 
 Déployez et tester.
 
-### Créez une vue edit
-
-Cette vue pour mobile affiche un post-it ainsi que les boutons suivant précédent.
-
-Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. Pour l'instant la vue doit simplement afficher les notes correspondant au mur courant.
-
-### Gestion "à la main" des routes des transparents.
+### Gestion "à la main" des routes des Boards.
 
 Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le transparent courant dans notre état (`currentSlide` dans le store).
 `ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état. Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
