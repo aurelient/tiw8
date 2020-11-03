@@ -349,52 +349,59 @@ Testez et Déployez
 
 > :construction: **Attention**: Les instructions pour les TPs suivants sont là pour vous donner une idée du travail réalisé l'année dernière sur une application différente. Elles sont pour le moment hasardeuses et n'ont pas encore été testées. :construction:
 
-## TP2.3 VERSION 2019
+## TP2.3
 
 ## Distribution d’interface multi-dispositif Middleware et websockets
 
 Nous allons maintenant travailler à la distribution de l'application sur plusieurs dispositifs et à leur synchronisation.
 
+Nous allons définir une route pour chaque postit. Vous pouvez rajouter `edit` au chemin route pour basculer en mode édition de post-it.
+
+Sur mobile l'interface ressemblera à ça :
+
+```
+
+TODO screenshot
+
+```
+
+Les boutons `<` et `>` permettent de naviguer entre les post-its. Le menu à naviguer entre les boards.
+
 ### Définition de nouvelles routes et des vues associées
-
-Nous allons définir une route par situations d'usage :
-
-- `edit` : route pour dispositif mobile qui va controler un mur et afficher les post-its en mode édition.
-- `present` : route pour le mode présentation plein écran d'un mur, pas de toolbar, pas d'édition.
 
 Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière simple de la distribution d'interface, nous allons donc devoir le faire "à la main".
 
 Rajouter des `Redirect` [(doc)](https://reacttraining.com/react-router/web/api/Redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état.
 
-Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour controler le plein écran.
+Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour contrôler le plein écran.
 
 Déployez et tester.
 
-### Gestion "à la main" des routes des Boards.
+### Gestion "à la main" des routes des Boards
 
-Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le transparent courant dans notre état (`currentSlide` dans le store).
+Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le board courant dans notre état (`currentBoard` dans le store).
 `ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état. Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
 
 #### Changer l'état à partir de la route
 
-En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans le numéro de transparent à afficher, nous allons déclencher l'action `setSlide`, avec le numéro de transparent approprié.
+En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans l'index du board à afficher, nous allons déclencher l'action `setBoard`, avec l'index du board approprié.
 
 ```javascript
 // Update Redux if we navigated via browser's back/forward
 // most browsers restore scroll position automatically
 // as long as we make content scrolling happen on document.body
 window.addEventListener("popstate", () => {
-  // `setSlide` is an action creator that takes
+  // `setBoard` is an action creator that takes
   // the hash of the url and pushes to the store it.
 
   // TODO add parsing and checks on the location.hash
   // to make sure it is a proper slide index.
-  slideIndex = window.location.hash;
-  store.dispatch(setSlide(slideIndex));
+  boardIndex = window.location.hash;
+  store.dispatch(setBoard(boardIndex));
 });
 ```
 
-Si vous n'avez pas encore définit l'action `setSlide`, créez le action creator correspondant, et le traitement associé dans le reducer.
+Si vous n'avez pas encore définit l'action `setBoard`, créez le action creator correspondant, et le traitement associé dans le reducer.
 
 #### Changer la route à partir de l'état
 
@@ -418,25 +425,25 @@ store.subscribe(() => {
 
 ### Refactorisation
 
-Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_SLIDE` avec une incrémentation ou une décrémentation de l'index courant.
+Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_BOARD` et `PREVIOUS_BOARD` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_BOARD` avec un changement de l'index courant.
 
 ### Middleware et websockets
 
 Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/advanced/middleware). Faites un essai qui reprend l'idée et logue dans la console toutes les actions déclenchées (voir [ici](https://redux.js.org/advanced/middleware#the-final-approach) _sans le crashReporter_).
 
-Nous allons maintenant faire communiquer plusieurs navigateurs entre eux gràce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
 
 Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `set_slide` provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
 
-Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `SET_SLIDE`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
+Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `SET_BOARD`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
 
-Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `set_slide`, les actions soient dispatchées au store.
+Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `set_board`, les actions soient dispatchées au store.
 
 ```js
 const propagateSocket = (store) => (next) => (action) => {
   if (action.meta.propagate) {
-    if (action.type === SET_SLIDE) {
-      socket.emit("action", { type: "set_slide", value: action.hash });
+    if (action.type === SET_BOARD) {
+      socket.emit("action", { type: "set_board", value: action.hash });
     }
   }
   next(action);
@@ -447,14 +454,14 @@ const propagateSocket = (store) => (next) => (action) => {
 socket.on("action", (msg) => {
   console.log("action", msg);
   switch (msg.type) {
-    case "set_slide":
-      store.dispatch(setSlide(msg.value, false));
+    case "set_board":
+      store.dispatch(setBoard(msg.value, false));
       break;
   }
 });
 ```
 
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `SET_SLIDE` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `SET_BOARD` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
 
 N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup) pour modifier de nouveau votre code.
 
@@ -471,15 +478,15 @@ const store = createStore(
 
 ### Gestion de modalités d'entrée
 
-Nous allons maintenant ajouter des fonctions de dessin à nos slides. En utilisant un stylet, un utilisateur pourra mettre en avant des elements sur la slide courante, et ce de manière synchronisée avec les autres appareils.
+Nous allons maintenant ajouter des fonctions de dessin à nos post-its. En utilisant un stylet, un utilisateur pourra dessiner sur le post-it courant, et ce de manière synchronisée avec les autres appareils.
 
-**Pour simplier on ne dessine que sur la slide courante, et on efface/oublie le dessin quand on change de slide.**
+**Pour simplifier on ne dessine que sur le post-it courant, et on efface/oublie le dessin quand on change de post-it.**
 
 #### Création d'un canvas sur lequel dessiner
 
 Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
 
-Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref). Utilisez `useRef`si vous êtes dans un 'function component', ou `createRef` si vous êtes dans un 'class-based component' ([voir ici](https://stackoverflow.com/a/54620836)):
+Dans un premier temps, dans le composant `Postit` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref). Utilisez `useRef`si vous êtes dans un 'function component':
 
 ```jsx
 <canvas
@@ -491,7 +498,7 @@ Dans un premier temps, dans le composant `Slide` ajoutez un élément `canvas` a
 ></canvas>
 ```
 
-Ces handlers nous permettront de d'écouter les événements provenant de `pointer`.
+Ces handlers nous permettront d'écouter les événements provenant de `pointer`.
 
 Afin de vous faciliter la tâche, voici le code _presque_ complet pour faire marcher le dessin sur le canvas.
 
@@ -589,7 +596,7 @@ Et créez les actions `ADD_DRAW_POINTS` et `RESET_DRAW_POINTS`.
 
 `RESET_DRAW_POINTS` réinitialiseras les tableaux du store à vide.
 
-Dans votre composant Slide, réalisez la connexion avec le store :
+Dans votre composant `Postit`, réalisez la connexion avec le store :
 
 ```js
 const mapStateToProps = (state) => {
@@ -609,7 +616,7 @@ Une fois ceci fait, faites en sorte qu'à chaque fois qu'une ligne est finie de 
 
 Ajoutez un bouton "Effacer" à votre toolbar, ce bouton déclenchera l'action `RESET_DRAW_POINTS`
 
-### Syncronisation du canvas entre les appareils
+### Synchronisation du canvas entre les appareils
 
 Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de propager les nouvelles lignes dessinées aux autres appareils.
 
@@ -638,7 +645,7 @@ Pour ce faire nous allons utiliser le [\$1 recognizer](http://depts.washington.e
 
 #### Gérer le recognizer
 
-Au niveau de votre `Slide`, importer et initialiser votre le One Dollar Recognizer.
+Au niveau de votre `Postit`, importer et initialiser votre le One Dollar Recognizer.
 
 ```js
 // Voir ici pour le détails de options https://github.com/nok/onedollar-unistroke-coffee#options
@@ -785,7 +792,7 @@ Quand le geste se termine (`pointerUpHandler`), vous pouvez lancer la reconnaiss
 let gesture = recognizer.check(gesturePoints);
 ```
 
-Inspectez l'objet gesture dans la console, et vérifiez que vous arrivez bien à reconnaiter un cercle et un triangle.
+Inspectez l'objet gesture dans la console, et vérifiez que vous arrivez bien à reconnaitre un cercle et un triangle.
 
 Pensez à réinitialiser `gesturePoints` une fois le geste terminé.
 
@@ -808,19 +815,19 @@ Pour faire cela, nous allons nous appuyer sur un `mapDispatchToProps` qu'il faud
 ```js
 const matchDispatchProps = dispatch => {
   return {
-    nextSlide: () => {
-      dispatch(setSlide(store.getState().currentSlide+1, true))
+    nextBoard: () => {
+      dispatch(setBoard(store.getState().currentBoard+1, true))
       dispatch(resetDrawPoints(true))
     },
-    previousSlide: () => {
-      dispatch(setSlide(store.getState().currentSlide-1, true))
+    previousBoard: () => {
+      dispatch(setBoard(store.getState().currentBoard-1, true))
       dispatch(resetDrawPoints(true))
     },
     resetDrawPoints: () => dispatch(resetDrawPoints(true))
   }
 ```
 
-`resetDrawPoints` est l'action associée à l'effaçage des dessins effectué sur le transparent.
+`resetDrawPoints` est l'action associée à l'effaçage des dessins effectué sur le postit.
 
 Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 
@@ -830,11 +837,11 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ## Rendu
 
-À rendre pour le dimanche 17 à 23h59.
+À rendre pour le dimanche 15/11 à 23h59.
 
 1. Déployez votre code sur Heroku
 2. Pousser votre code sur la forge
-3. Déposer les liens sur Tomuss "UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs"
+3. Déposer les liens sur Tomuss :
 
 - Le lien vers Heroku pointe vers le 1e transparents
 - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/tiw8-tp2.git)
@@ -843,14 +850,16 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 - Fichier `README.md` décrivant le process de build en dev, en prod, et de déploiement.
 - Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
+- Linting bien configuré et respecté
 - Déploiement sur Heroku
-- Composants React pour le `Slideshow`, les `Slides`, la `Toolbar`.
+- Composants React pour le `Board`, les `Postits`, la `Toolbar`.
+- Utilisation de composants fonctionnels.
 - Store qui contient l'état de l'application
 - Le flux de données suit le flow React, des actions sont déclarées, et les changements d'états passent par des actions unitaires qui modifient le store.
-- Les changement sont des fonctions qui renvoient un nouvel état (immutabilité) dans le reducer.
+- Les changements sont des fonctions qui renvoient un nouvel état (immutabilité) dans le reducer.
 - Redux pour la gestion avancée des états
-- Gestions des routes pour les transparents
-- Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'etat de l'application.
+- Gestions des routes pour les boards et post-its
+- Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'état de l'application.
 - Implémentation des Websockets côté client et serveur
 - Synchronisation du transparent affiché entre les dispositifs s'appuyant sur un middleware
 - Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons composants.
@@ -858,5 +867,5 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 - Gestion différenciée des pointer-events.
 - Synchronisation des dessins s'appuyant sur un middleware.
 - Gestion des gestes pour des commandes suivant, précédent.
-- Les commandes associées aux gestes sont bien propagées et permettent de controler un dispositif à distance.
+- Les commandes associées aux gestes sont bien propagées et permettent de contrôler un dispositif à distance.
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
