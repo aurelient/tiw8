@@ -255,7 +255,7 @@ Un devtool pour Redux est disponible pour [Chrome](https://chrome.google.com/web
 
 #### Creation des actions
 
-Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics/actions) en transposant la gestion de todos à la gestion de slides.
+Suivre le [guide de Redux sur la création d'action](https://redux.js.org/basics/actions) en transposant la gestion de todos à la gestion de postits.
 
 Vous aurez à définir les actions suivantes dans `actions/index.js`
 
@@ -395,7 +395,7 @@ window.addEventListener("popstate", () => {
   // the hash of the url and pushes to the store it.
 
   // TODO add parsing and checks on the location.hash
-  // to make sure it is a proper slide index.
+  // to make sure it is a proper board index.
   boardIndex = window.location.hash;
   store.dispatch(setBoard(boardIndex));
 });
@@ -412,7 +412,7 @@ En écoutant les changements dans le store nous allons pouvoir être notifiés d
 // URL in the browser if we change it inside our app state in Redux.
 // We can simply subscribe to Redux and update it if it's different.
 store.subscribe(() => {
-  const hash = "#/" + store.getState().currentSlide;
+  const hash = "#/" + store.getState().currentBoard;
   if (location.hash !== hash) {
     window.location.hash = hash;
     // Force scroll to top this is what browsers normally do when
@@ -431,9 +431,9 @@ Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Suppri
 
 Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/advanced/middleware). Faites un essai qui reprend l'idée et logue dans la console toutes les actions déclenchées (voir [ici](https://redux.js.org/advanced/middleware#the-final-approach) _sans le crashReporter_).
 
-Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand le board courant sera changé, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur board courant.
 
-Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `set_slide` provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
+Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `set_board` provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
 
 Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `SET_BOARD`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
 
