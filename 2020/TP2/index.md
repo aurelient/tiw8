@@ -345,10 +345,6 @@ export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
 
 Normalement l'intégration avec React Router se passe bien (pas de changements nécessaire). Si jamais ce n'était pas le cas, suivez l'utilisation de Redux avec React Router telle que présentée dans la documentation de [React Router](https://reacttraining.com/react-router/web/guides/redux-integration) ou celle de [Redux](https://redux.js.org/advanced/usage-with-react-router) pour configurer votre projet.
 
-Testez et Déployez
-
-> :construction: **Attention**: Les instructions pour les TPs suivants sont là pour vous donner une idée du travail réalisé l'année dernière sur une application différente. Elles sont pour le moment hasardeuses et n'ont pas encore été testées. :construction:
-
 ## TP2.3
 
 ## Distribution d’interface multi-dispositif Middleware et websockets
@@ -359,13 +355,11 @@ Nous allons définir une route pour chaque postit. Vous pouvez rajouter `edit` a
 
 Sur mobile l'interface ressemblera à ça :
 
-```
+<img style="border: none;" alt="padlet postit board" width="350" src="mobile.png"/>
 
-TODO screenshot
 
-```
 
-Les boutons `<` et `>` permettent de naviguer entre les post-its. Le menu à naviguer entre les boards.
+Les boutons `<` et `>` permettent de naviguer entre les post-its. Le menu du haut pour  naviguer entre les boards. Eventuellement un menu du bas pour naviguer entre post-its (optionnel).
 
 ### Définition de nouvelles routes et des vues associées
 
