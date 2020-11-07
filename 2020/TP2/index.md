@@ -357,9 +357,7 @@ Sur mobile l'interface ressemblera à ça :
 
 <img style="border: none;" alt="padlet postit board" width="350" src="mobile.png"/>
 
-
-
-Les boutons `<` et `>` permettent de naviguer entre les post-its. Le menu du haut pour  naviguer entre les boards. Eventuellement un menu du bas pour naviguer entre post-its (optionnel).
+Les boutons `<` et `>` permettent de naviguer entre les post-its. Le menu du haut pour naviguer entre les boards. Eventuellement un menu du bas pour naviguer entre post-its (optionnel).
 
 ### Définition de nouvelles routes et des vues associées
 
@@ -837,7 +835,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 2. Pousser votre code sur la forge
 3. Déposer les liens sur Tomuss :
 
-- Le lien vers Heroku pointe vers le 1e transparents
+- Le lien vers Heroku pointe vers le 1e board
 - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/tiw8-tp2.git)
 
 ### Critères d'évaluation
@@ -855,7 +853,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 - Gestions des routes pour les boards et post-its
 - Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'état de l'application.
 - Implémentation des Websockets côté client et serveur
-- Synchronisation du transparent affiché entre les dispositifs s'appuyant sur un middleware
+- Synchronisation du board affiché entre les dispositifs s'appuyant sur un middleware
 - Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons composants.
 - Gestion du plein écran.
 - Gestion différenciée des pointer-events.
