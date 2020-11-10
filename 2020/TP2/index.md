@@ -415,9 +415,9 @@ store.subscribe(() => {
 });
 ```
 
-### Refactorisation
+<!-- ### Refactorisation
 
-Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_BOARD` et `PREVIOUS_BOARD` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_BOARD` avec un changement de l'index courant.
+Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_BOARD` et `PREVIOUS_BOARD` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_BOARD` avec un changement de l'index courant. -->
 
 ### Middleware et websockets
 
