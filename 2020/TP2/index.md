@@ -351,7 +351,7 @@ Normalement l'intégration avec React Router se passe bien (pas de changements n
 
 Nous allons maintenant travailler à la distribution de l'application sur plusieurs dispositifs et à leur synchronisation.
 
-Nous allons définir une route pour chaque postit. Vous pouvez rajouter `edit` au chemin route pour basculer en mode édition de post-it.
+Nous allons définir une route pour chaque postit. Vous pouvez rajouter `postit` au chemin route pour basculer en mode édition de post-it.
 
 Sur mobile l'interface ressemblera à ça :
 
@@ -453,7 +453,7 @@ socket.on("action", (msg) => {
 });
 ```
 
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `SET_BOARD` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `SET_BOARD` peuvent embarquer une information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
 
 N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup) pour modifier de nouveau votre code.
 
@@ -472,13 +472,11 @@ const store = createStore(
 
 Nous allons maintenant ajouter des fonctions de dessin à nos post-its. En utilisant un stylet, un utilisateur pourra dessiner sur le post-it courant, et ce de manière synchronisée avec les autres appareils.
 
-**Pour simplifier on ne dessine que sur le post-it courant, et on efface/oublie le dessin quand on change de post-it.**
-
 #### Création d'un canvas sur lequel dessiner
 
 Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
 
-Dans un premier temps, dans le composant `Postit` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref). Utilisez `useRef`si vous êtes dans un 'function component':
+Dans un premier temps, dans le composant `Postit` ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref). Utilisez `useRef` si vous êtes dans un 'function component':
 
 ```jsx
 <canvas
@@ -494,7 +492,7 @@ Ces handlers nous permettront d'écouter les événements provenant de `pointer`
 
 Afin de vous faciliter la tâche, voici le code _presque_ complet pour faire marcher le dessin sur le canvas.
 
-Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessous. Faites en sortes que l'on ne dessine que si c'est un [stylet qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
+Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessous. Faites en sortes que l'on ne dessine que si c'est [un doigt ou un stylet qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
 
 ```js
 var clickX = new Array();
@@ -538,9 +536,7 @@ function redraw() {
 }
 
 function pointerDownHandler(ev) {
-  console.error(
-    "HEY ! ICI ON PEUT DIFFERENCIER QUEL TYPE DE POINTEUR EST UTILISE !"
-  );
+  console.error("ICI ON PEUT DIFFERENCIER QUEL TYPE DE POINTEUR EST UTILISE !");
 
   let width = refCanvas.current.getBoundingClientRect().width;
   let height = refCanvas.current.getBoundingClientRect().height;
@@ -572,7 +568,7 @@ function pointerUpEvent(ev) {
 
 ### Lien du canvas au store
 
-Dans votre état initial, rajoutez l'attribut suivant :
+Dans votre rajoutez l'attribut `drawing` à chaque post-it :
 
 ```js
 drawing: {
@@ -606,7 +602,7 @@ const mapDispatchProps = (dispatch) => {
 
 Une fois ceci fait, faites en sorte qu'à chaque fois qu'une ligne est finie de dessiner (`pointerUpEvent`), que vous copiez les points de la nouvelle ligne dans le store. Bien sûr, maintenant il faut aussi dessiner les lignes stockées dans le store (`props.drawing.`).
 
-Ajoutez un bouton "Effacer" à votre toolbar, ce bouton déclenchera l'action `RESET_DRAW_POINTS`
+Sur mobile, ajoutez un bouton "Effacer" à votre toolbar, ce bouton déclenchera l'action `RESET_DRAW_POINTS`
 
 ### Synchronisation du canvas entre les appareils
 
@@ -627,7 +623,9 @@ Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de
 //...
 ```
 
-Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparait que si vous dessinez aussi sur cet appareil. Pour remédier à ce problème, utilisez [useEffect](https://reactjs.org/docs/hooks-effect.html) afin d'exécuter `redraw()` au moment opportun.
+Faites en sorte que tous les post-its affichent leurs dessins associés au chargement du board.
+
+<!-- Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparait que si vous dessinez aussi sur cet appareil. Pour remédier à ce problème, utilisez [useEffect](https://reactjs.org/docs/hooks-effect.html) afin d'exécuter `redraw()` au moment opportun. -->
 
 ### Reconnaissance de gestes
 
@@ -836,7 +834,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 3. Déposer les liens sur Tomuss :
 
 - Le lien vers Heroku pointe vers le 1e board
-- Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/tiw8-tp2.git)
+- Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/yyy.git)
 
 ### Critères d'évaluation
 
