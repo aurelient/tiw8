@@ -755,7 +755,7 @@ Stocker les points composants le geste dans un Array `gesturePoints`.
 #### Dessiner le geste
 
 Dans la fonction de dessin `redraw` vous pouvez ajouter un cas à la fin qui dessine en cas de geste (les points composant le geste sont stockés dans `gesturePoints`).
-Vous devrez être **vigilant à convertir vos points pour être dans le référentiel du canvas**, comme dans le code fournit ci-dessus.
+Vous devrez être **vigilant à convertir vos points pour être dans le référentiel du canvas**.
 
 ```js
   function redraw(){
@@ -805,6 +805,8 @@ Utiliser cette sortie pour ajouter deux nouveaux gestes: '>' et '<' (partant du 
 Une fois le geste exécute, s'il correspond à un de ces deux nouveaux gestes (`recognized == true`), dispatcher les actions suivant ou précédent.
 
 Pour faire cela, nous allons nous appuyer sur un `mapDispatchToProps` qu'il faudra connecter à votre composant.
+
+Par exemple passer au board ou au post-it suivant, selon vos préférences.
 
 ```js
 const matchDispatchProps = dispatch => {
