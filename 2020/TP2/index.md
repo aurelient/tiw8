@@ -510,6 +510,7 @@ function addClick(x, y, dragging) {
 
 function redraw() {
   let context = refCanvas.current.getContext("2d");
+
   let width = refCanvas.current.getBoundingClientRect().width;
   let height = refCanvas.current.getBoundingClientRect().height;
 
@@ -745,6 +746,9 @@ recognizer.add("circle", [
 Etendre les fonctions `pointerDownHandler`, `pointerMoveHandler`, `pointerUpHandler` pour qu'elles traite différemment les sources `touch`, `pen` et `mouse`.
 
 Nous allons associer les gestes au `touch`. Toutefois pour débugger plus facilement, vous pouvez commencer traiter les gestes sur le pointerEvent `mouse`, et basculer sur le touch une fois que cela marche bien.
+
+Similairement si vous n'avez pas de stylet à disposition, au lieu d'écouter `pen`, vous pouvez écouter des évènements `mouse` avec un modifieur (par exemple la touche `P` enfoncée). Mettez toutefois la condition dans le code avec un commentaire du type
+`/* nous n'avions pas de stylet pour tester */`
 
 Stocker les points composants le geste dans un Array `gesturePoints`.
 
