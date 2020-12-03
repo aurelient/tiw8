@@ -146,17 +146,18 @@ Le déroulé est le suivant :
 - Remplir les champs d'dentifiants d'émetteur et de récepteur, pour qu'ils se correspondent entre les deux fenêtres.
 - Lors du clic sur Start créez une connexion entre les deux clients (il faudra que les deux clients cliquent sur Start pour que la connexion soit établie). La création sera constituée des étapes suivantes
   - création/initialisation de l'objet Peer avec l'identifiant de votre client local.
+  - ajout d'un listener d'ouverture de connexion (on open)
+  - ajout d'un listener en cas de réception d'une demande de connexion (on connection)
+  - connexion au client distant
 
 ```js
+	// initialisation de votre objet Peer (à l'extérieur du composant)
   peer = new Peer(localID, {
     host: 'localhost',
     port: 3000,
     path: '/myapp',
   });
 ```
-  - ajout d'un listener d'ouverture de connexion (on open)
-  - ajout d'un listener en cas de réception d'une demande de connexion (on connection)
-  - connexion au client distant
 - Lors du clic sur Send, envoi du message.
 - Lors du clic sur HangUp, femer la connexion
 
@@ -269,30 +270,10 @@ Le click sur le bouton `Call` initiera la connexion entre les deux pairs
     const call = () => {
         setCall(false);
         setHangup(true);
- 
-
     }; 
 ```
-
-Dans le code ci-dessus, les 2 connexions (client1 et client2) voient certains de leurs listeners configurés : `onIceCandidate` leurs permettra de se connecter l'un à l'autre, `onIceStateChange` ne sera utilisé que pour afficher des infos de debug. `gotRemoteStream` s'occupera d'afficher dans le bon element `<video>`.
-
-client1 récupère toutes les tracks du flux vidéo et audio local et en créée une Offre.
-
 
 
 ### Raccrocher
 Il suffit d'appeler la méthode `close()` sur chacune des connexion.
 
-```js
-    const hangUp = () => {
- 
-        client1Ref.current.close();
-        client2Ref.current.close();
-
-        client1Ref.current = null;
-        client2Ref.current = null;
-
-        setHangup(false)
-        setCall(true)
-    };
-```
