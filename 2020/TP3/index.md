@@ -43,7 +43,7 @@ Nous aurons :
   - pour permettre la découverte des clients du réseau p2p
 - des clients qui se parleront entre eux.
 
-Nous allons nous appuyer sur la [peer.js](https://peerjs.com/) pour réaliser ce TP. Cette bibliothèque abstrait une bonne partie de la complexité de WebRTC. Vous pouvez aller voir le [TP de l'année dernière](../2019/TP3) pour avoir une idée de comment faire les choses "à la main".
+Nous allons nous appuyer sur la [peer.js](https://peerjs.com/) pour réaliser ce TP. Cette bibliothèque abstrait une bonne partie de la complexité de WebRTC. Vous pouvez aller voir le [TP de l'année dernière](../../2019/TP3) pour avoir une idée de comment faire les choses "à la main".
 
 On aura besoin des dépendances suivantes :
 - material-ui (déjà utilisé au TP2)
@@ -68,12 +68,10 @@ function DataChat()  {
     const [hangupAvailable, setHangup] = useState(false)
 
     return (
+    		// TODO rajouter les champs textes correspondants
+    		// Vous pouvez utiliser des TextField de material-UI
+    		// Et une Grid plutôt que des div pour la mise en page
         <div>
-          <ButtonGroup
-            size="large"
-            color="primary"
-            aria-label="large outlined primary button group"
-          >
           <Button onClick={start} disabled={!startAvailable}>
             Start
           </Button>
@@ -83,7 +81,6 @@ function DataChat()  {
           <Button onClick={hangUp} disabled={!hangupAvailable}>
             Hang Up
           </Button>
-          </ButtonGroup>
         </div>
     )
 }
@@ -159,6 +156,7 @@ Le déroulé est le suivant :
   });
 ```
 - Lors du clic sur Send, envoi du message.
+- (Rajouter) un listener à la connexion sur l'arrivée d'un message (on data) pour l'ajouter à la liste des messages reçus.
 - Lors du clic sur HangUp, femer la connexion
 
 
