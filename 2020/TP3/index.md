@@ -33,7 +33,7 @@ Nous allons créer une application qui permet de faire un chat entre deux naviga
 
 Elle ressemblera à cela : 
 
-![](mockup-chat.png)
+![](screen-tp3.png)
 
 À la différence d'une application de chat "normale", ici les messages vont s'échanger entre les navigateurs sans passer par un serveur. Nous allons nous appuyer sur WebRTC pour réaliser cela. WebRTC est une technologie p2p.
 
