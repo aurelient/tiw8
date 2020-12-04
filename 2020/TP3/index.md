@@ -68,9 +68,9 @@ function DataChat()  {
     const [hangupAvailable, setHangup] = useState(false)
 
     return (
-    		// TODO rajouter les champs textes correspondants
-    		// Vous pouvez utiliser des TextField de material-UI
-    		// Et une Grid plutôt que des div pour la mise en page
+        // TODO rajouter les champs textes correspondants
+        // Vous pouvez utiliser des TextField de material-UI
+        // Et une Grid plutôt que des div pour la mise en page
         <div>
           <Button onClick={start} disabled={!startAvailable}>
             Start
@@ -95,11 +95,11 @@ Comme dans les TP précédents nous allons utliser express.
 
 Nous allons y adjoindre un serveur facilitant la découverte entre pairs.
 
-installez globalement peer : `npm install -g peer`
+Installez globalement peer : `npm install -g peer` (une installation locale devrait fonctionner aussi, je l'ai installé globalement car le module offre aussi la possibilité de lancer un serveur peer dédié en ligne de commande - indépendant d'express - ce qui était pratique pour le développement)
 
 Voir [la documentation ici](https://github.com/peers/peerjs-server)
 
-voici à quoi votre serveur Express devrait ressembler :
+Voici à quoi votre serveur Express + Peer devrait ressembler :
 
 ```js
 const express = require('express');
