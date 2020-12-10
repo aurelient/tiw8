@@ -337,7 +337,7 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - signalement au serveur
   - établissement de la connexion entre les deux pairs
   - les deux pairs peuvent s'envoyer des messages
-- DataChat (4pt)
+- VidéoChat (4pt)
   - le flux local s'affiche
   - le flux distant est bien récupéré
   - le flux distant s'affiche

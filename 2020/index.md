@@ -55,7 +55,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif) | 06/11 | Distribution d'interface multi-dispositif |     |
 | [TP 2.4](TP2/#4-suite) | 13/11 | Modalité d'entrée (gestes, stylet)    | rendu 1 |
 | [TP 3.1](TP3)          | 04/12 | WebRTC: chat p2p local                |         |
-| [TP 3.2](TP3/32)       | 11/12 | WebRTC: audio et video                | rendu 2 |
+| [TP 3.2](TP3/#tp32-webrtc-et-vidéo)       | 11/12 | WebRTC: audio et video | rendu 2 |
 | [TP 4.1](TP4)          | 08/01 | WoT et capteurs Arduino               |         |
 | [TP 4.2](TP4/#2-suite) | 15/01 | WoT et CrowdSensing                   |         |
 | [TP 4.3](TP4/#3-suite) | 05/02 | WoT et Performance                    | rendu 3 |
