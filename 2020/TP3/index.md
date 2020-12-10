@@ -324,7 +324,7 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - Déposer les liens sur Tomuss “UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs”
 
   - Le lien vers Heroku pointe vers une page permettant d'aller sur le composant de chaque TP (ou sur une version intégrant les deux).
-  - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/tiw8-tp2.git)
+  - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/yyy.git)
 
 
 ## Evaluation
@@ -337,7 +337,6 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - signalement au serveur
   - établissement de la connexion entre les deux pairs
   - les deux pairs peuvent s'envoyer des messages
-  - les composants sont
 - DataChat (4pt)
   - le flux local s'affiche
   - le flux distant est bien récupéré
