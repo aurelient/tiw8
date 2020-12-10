@@ -1,4 +1,4 @@
-## TIW8 - TP3 Collaboration temps-réel 
+## TIW8 - TP3 Collaboration temps-réel
 
 #### Encadrants
 - Aurélien Tabard (responsable)
@@ -9,7 +9,7 @@
 
 L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant à deux navigateurs de commencer une conversation via chat vidéo.
 
-Ce TP s'étalera sur 2 séances et fera l'objet d'un rendu en binome et d'une note. 
+Ce TP s'étalera sur 2 séances et fera l'objet d'un rendu en binome et d'une note.
 
 Vous ferez le rendu sur la forge.
 
@@ -31,14 +31,14 @@ On continuera d'utiliser ESlint.
 ### Démarrage du TP
 Nous allons créer une application qui permet de faire un chat entre deux navigateurs.
 
-Elle ressemblera à cela : 
+Elle ressemblera à cela :
 
 ![](screen-tp3.png)
 
 À la différence d'une application de chat "normale", ici les messages vont s'échanger entre les navigateurs sans passer par un serveur. Nous allons nous appuyer sur WebRTC pour réaliser cela. WebRTC est une technologie p2p.
 
-Nous aurons : 
-- un serveur 
+Nous aurons :
+- un serveur
   - pour fournir le site de base
   - pour permettre la découverte des clients du réseau p2p
 - des clients qui se parleront entre eux.
@@ -51,18 +51,18 @@ On aura besoin des dépendances suivantes :
 
 ### Création du composant parent
 
-Nous allons créer un composant React qui va assembler les composants suivants : 
+Nous allons créer un composant React qui va assembler les composants suivants :
 - Un champ texte pour définir son identifiant
 - Un champ texte pour spécifier l'identifiant du destinataire
 - Un bouton pour démarrer la mise entre relation entre les deux clients
 - Un champ texte pour saisir son message
 - Un bouton pour envoyer les messages échangés
-- Un div pour afficher les messages au fur et à mesure 
+- Un div pour afficher les messages au fur et à mesure
 - Un bouton mettant fin à la connexion
-  
+
 ```js
 function DataChat()  {
-        
+
     const [startAvailable, setStart] = useState(true)
     const [sendAvailable, setSend] = useState(false)
     const [hangupAvailable, setHangup] = useState(false)
@@ -91,7 +91,7 @@ Vous devriez à ce stade avoir un cadre d'application non fonctionelle
 
 ### Mise en place d'un serveur
 
-Comme dans les TP précédents nous allons utliser express. 
+Comme dans les TP précédents nous allons utliser express.
 
 Nous allons y adjoindre un serveur facilitant la découverte entre pairs.
 
@@ -132,14 +132,14 @@ Quand vous lancez le serveur vous pourrez vérifier que votre application React 
 
 ### Mise en relation de deux clients
 
-⚠️ ATTENTION ⚠️ 
+⚠️ ATTENTION ⚠️
 
-Nous allons gérer pour ce qui a trait à peerJS à l'extérieur de nos composants React. En effet peerjs est une abstraction d'interfaces de communication réseau, il n'y a pas trop de raison de le gérer à l'interieur de l'état de notre application. 
+Nous allons gérer pour ce qui a trait à peerJS à l'extérieur de nos composants React. En effet peerjs est une abstraction d'interfaces de communication réseau, il n'y a pas trop de raison de le gérer à l'interieur de l'état de notre application.
 
-En vous référent à la [documentation de peerJS](https://peerjs.com/docs.html#peer) mettez en relation les deux clients. 
+En vous référent à la [documentation de peerJS](https://peerjs.com/docs.html#peer) mettez en relation les deux clients.
 
 Le déroulé est le suivant :
-- Ouvrir deux fenêtres de navigateur sur votre application 
+- Ouvrir deux fenêtres de navigateur sur votre application
 - Remplir les champs d'dentifiants d'émetteur et de récepteur, pour qu'ils se correspondent entre les deux fenêtres.
 - Lors du clic sur Start créez une connexion entre les deux clients (il faudra que les deux clients cliquent sur Start pour que la connexion soit établie). La création sera constituée des étapes suivantes
   - création/initialisation de l'objet Peer avec l'identifiant de votre client local.
@@ -164,21 +164,30 @@ Le déroulé est le suivant :
 
 Nous allons maintenant créer un nouveau composant dédié à la vidéo.
 
-![](mockup.png)
+![](video.png)
+
+Pour simplifier les choses je vous conseille de faire un Composant dédié qui a sa propre route.
+
+Comme pour le TP précédent, nous allons démarrer par établir une connexion WebRTC entre 2 peers en local.
 
 
-### Création du composant parent
+### Création du composant VideoChat
 
-Nous allons créer un composant React qui va assembler les composants suivants : 
+Nous allons reprendre le principe du DataChat, mais cette fois transmettre des flux vidéos plutôt que des data.
+
+Nous allons créer un composant React qui va assembler les composants suivants :
 - le flux vidéo local
 - le flux vidéo du correspondant
-- un bouton démarrant la capture du flux vidéo local
-- un bouton démarrant l'appel avec le correspondant
-- un bouton mettant fin à l'appel
-  
+
+- un champ d'identifiant de la personne distante
+
+- un bouton démarrant la capture du flux vidéo local, et se déclarant au serveur.
+- un bouton démarrant la connexion avec la personne.
+- un bouton mettant fin à la connexion.
+
 ```js
 function VideoChat()  {
-        
+
     const [startAvailable, setStart] = useState(true)
     const [callAvailable, setCall] = useState(false)
     const [hangupAvailable, setHangup] = useState(false)
@@ -198,26 +207,26 @@ function VideoChat()  {
             <track kind="captions" srcLang="en" label="english_captions"/>
           </video>
 
-          <ButtonGroup
-            size="large"
-            color="primary"
-            aria-label="large outlined primary button group"
-          >
-          <Button onClick={start} disabled={!startAvailable}>
-            Start
-          </Button>
-          <Button onClick={call} disabled={!callAvailable}>
-            Call
-          </Button>
-          <Button onClick={hangUp} disabled={!hangupAvailable}>
-            Hang Up
-          </Button>
-          </ButtonGroup>
+          <div>
+            <Button onClick={start} disabled={!startAvailable}>
+              Start
+            </Button>
+            <Button onClick={call} disabled={!callAvailable}>
+              Call
+            </Button>
+            <Button onClick={hangUp} disabled={!hangupAvailable}>
+              Hang Up
+            </Button>
+          </div>
         </div>
     )
 }
 export default VideoChat
 ```
+
+#### Identifiants des clients
+
+Pour établir la connexion il va falloir gérer la gestion d'identifiants permettant de savoir qui sont les clients à mettre en relation.
 
 
 ### Récupération du flux vidéo
@@ -228,6 +237,8 @@ Utilisez l'API mediaDevices pour récupérer le `stream` vidéo et le visualiser
 
 ```js
     const start = () => {
+        // TODO initialisation de peerjs
+
         setStart(false)
         navigator.mediaDevices
             .getUserMedia({
@@ -237,7 +248,7 @@ Utilisez l'API mediaDevices pour récupérer le `stream` vidéo et le visualiser
             .then(gotStream)
             .catch(e => {console.log(e); alert("getUserMedia() error:" + e.name)})
     }
- 
+
     const gotStream = stream => {
         localVideoRef.current.srcObject = stream
         setCall(true) // On fait en sorte d'activer le bouton permettant de commencer un appel
@@ -245,33 +256,91 @@ Utilisez l'API mediaDevices pour récupérer le `stream` vidéo et le visualiser
     }
 ```
 
+Plutôt que des déclarer des variables hors du scope du composant, comme au TP précédent, nous allons faire les choses plus proprement en déclarant certaines objets comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref).
+
+Vous aurez globalement besoin de gérer trois objets (déclarer au début du composant après vos variables d'état) :
+
+```js
+  const localStreamRef = useRef();
+  const localVideoRef = useRef();
+  const remoteVideoRef = useRef();
+```
+
 
 ### Établissement de la connexion
 
-Dans un premier temps, pour plus de simplicité, nous allons nous concentrer à établir une connexion WebRTC entre 2 peers sur une même page web. Tout au long du TP, n'hésitez pas à vous référer à la documentation de [RTCPeerConnection](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection).
-Le fonctionnement peut être résumé par le diagramme suivant :
+On établit la connexion de la même manière qu'au TP précédent.
 
-![](flow1.png)
-
-#### Identifiants des clients
-
-Pour établir la connexion il va falloir rajouter la gestion d'identifiants permettant de savoir qui sont les clients à mettre en relation. 
-
-Rajouter deux champs texte et les associer à votre state (on pourra les appeler `localID` et `remoteID`).
 
 #### Mise en relation des clients
 
-Le click sur le bouton `Call` initiera la connexion entre les deux pairs
+Le click sur le bouton `Call` initiera la connexion entre les deux pairs.
 
+Référez vous à la [documentation de peerjs](https://peerjs.com/) pour l'émission et la réception du flux vidéo.
+
+Vous pourrez appelez `gotRemoteStream(stream_de_peerjs);` dans votre événement `on call` pour cabler le flux à l'interface.
 
 ```js
     const call = () => {
+        // TODO voir la doc de peerjs
+
         setCall(false);
         setHangup(true);
-    }; 
+    };
 ```
 
+```js
+const gotRemoteStream = (remoteStream) => {
+  const remoteVideo = remoteVideoRef.current;
+
+  if (remoteVideo.srcObject !== remoteStream) {
+    remoteVideo.srcObject = remoteStream;
+  }
+};
+```
 
 ### Raccrocher
 Il suffit d'appeler la méthode `close()` sur chacune des connexion.
 
+
+## Déployer sur Heroku
+
+Pour terminer nous allons déployer le code sur Heroku. Pour cela nous allons utiliser un serveur peerjs dédié.
+
+Vous pouvez [en déployer un par ici](https://elements.heroku.com/buttons/harshjv/peerjs-server).
+
+Il faudra donc mettre à jour votre application en conséquence.
+
+Vous pouvez faire du code code conditionnel et tester `location` côté client pour savoir si vous êtes en localhost ou déployé sur heroku, et parler à un serveur peer ou un autre en conséquence.
+
+**Dans votre README préciser bien quelle type de configuration fonctionne.**
+
+## Rendu
+
+À rendre pour le dimanche 13 à 23h59.
+
+  - Déployez votre code sur Heroku
+  - Pousser votre code sur la forge
+  - Déposer les liens sur Tomuss “UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs”
+
+  - Le lien vers Heroku pointe vers une page permettant d'aller sur le composant de chaque TP (ou sur une version intégrant les deux).
+  - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/tiw8-tp2.git)
+
+
+## Evaluation
+
+- rendu respectant les consignes (2pt)
+- build correspondant aux instructions du TP1 (2pt)
+- README clair sur les spécificité du projet (build, déploiement, ce qui marche et ce qui ne marche pas, sur comment tester...) (1pt)
+- Des composants material (ou autre) sont utilisés de manière judicieuse (aka l'application ressemble à quelque chose) (2pt)
+- DataChat (6pt)
+  - signalement au serveur
+  - établissement de la connexion entre les deux pairs
+  - les deux pairs peuvent s'envoyer des messages
+  - les composants sont
+- DataChat (4pt)
+  - le flux local s'affiche
+  - le flux distant est bien récupéré
+  - le flux distant s'affiche
+  - le tout fonctionne en local
+- Déploiement sur Heroku qui fonctionne (3pt)
