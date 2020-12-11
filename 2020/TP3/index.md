@@ -342,4 +342,5 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - le flux distant est bien récupéré
   - le flux distant s'affiche
   - le tout fonctionne en local
-- Déploiement sur Heroku qui fonctionne (3pt)
+- Les states et props de React sont bien utilisées (1pt). 
+- Déploiement sur Heroku qui fonctionne (2pt)
