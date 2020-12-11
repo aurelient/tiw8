@@ -300,7 +300,7 @@ const gotRemoteStream = (remoteStream) => {
 ```
 
 ### Raccrocher
-Il suffit d'appeler la méthode `close()` sur chacune des connexion.
+Il suffit d'appeler les méthodes `disconnect` sur chacune des connexion (avec les listeners appropriés), potentiellement destroy pour forcer la fin de la connexion.
 
 
 ## Déployer sur Heroku
@@ -342,5 +342,5 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - le flux distant est bien récupéré
   - le flux distant s'affiche
   - le tout fonctionne en local
-- Les states et props de React sont bien utilisées (1pt). 
+- Les states et props de React sont bien utilisées (1pt).
 - Déploiement sur Heroku qui fonctionne (2pt)
