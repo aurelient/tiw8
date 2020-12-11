@@ -300,7 +300,7 @@ const gotRemoteStream = (remoteStream) => {
 ```
 
 ### Raccrocher
-Il suffit d'appeler les méthodes `disconnect` sur chacune des connexion (avec les listeners appropriés), potentiellement destroy pour forcer la fin de la connexion.
+Il suffit d'appeler les méthodes `disconnect` sur chacune des connexion (avec les listeners appropriés), potentiellement `destroy` pour forcer la fin de la connexion.
 
 
 ## Déployer sur Heroku
@@ -337,10 +337,11 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - signalement au serveur
   - établissement de la connexion entre les deux pairs
   - les deux pairs peuvent s'envoyer des messages
-- VidéoChat (4pt)
+- VidéoChat (5pt)
   - le flux local s'affiche
   - le flux distant est bien récupéré
   - le flux distant s'affiche
   - le tout fonctionne en local
+  - la fermeture de l'appel se passe correctement
 - Les states et props de React sont bien utilisées (1pt).
-- Déploiement sur Heroku qui fonctionne (2pt)
+- Déploiement sur Heroku qui fonctionne (3pt) (1 si c'est déployé, et 2 bonus si la démarche est documentée et me permet de comprendre ou ça coince). 
