@@ -5,15 +5,9 @@
 - Aurélien Tabard (responsable)
 - Louis Le Brun
 
-# Attention le sujet est en cours de mise à jour (finalisation le 10/09)
+# Attention le sujet est en cours de mise à jour
 
-changements :
-
-- utilisation de typescript
-- utilisation de prettier
-- npm -> yarn
-- changement de Material vers Windmill React UI (ou https://material-tailwind.com)
-- https://webpack.js.org/guides/tree-shaking/
+Il est relativement stable jusqu'à la partie CSS (finalisation le 13/09)
 
 ### Présentation du TP
 
@@ -49,10 +43,10 @@ Selon votre OS, la version de node et d'Express que vous allez installer, il ser
 
 **Pensez régulièrement à ajouter les fichiers qui n'ont pas à être versionnés à votre .gitignore** (_a minima_ : node_modules & dist)
 
-Créez un projet NPM (npm init), en le liant à votre dépôt Git sur la forge. Structurer votre projet en :
+Créez un projet node (`yarn init`), en le liant à votre dépôt Git sur la forge. Structurer votre projet en :
 
-- un dossier `serveur`,
-- un dossier `src` (qui contiendra le client).
+- un dossier `server` qui contiendra le code Nodejs + Express côté serveur
+- un dossier `client` ou `src` qui contiendra le code React côté navigateur
 
 Poussez ce projet sur la forge.
 
@@ -79,8 +73,8 @@ app.listen(port, function () {
 });
 ```
 
-Ajouter un script au package.json qui permette de lancer votre serveur avec la commande
-`npm run start`
+Installer express `yarn add express`, puis ajouter un script au package.json qui permette de lancer votre serveur avec la commande
+`yarn run start`
 
 ```json
 "scripts": {
@@ -94,15 +88,19 @@ Vérifier que le serveur fonctionne et versionner.
 ### Projet React
 
 Nous verrons plus en détail le fonctionnement de React lors de la prochaine séance.
-Pour le moment nous allons créer un projet simple.
-
-Installons react et react-dom
+Pour le moment nous allons créer un projet simple. Nous utiliserons Typescript plutôt que du JavaScript au passage.
 
 ```
-npm i react react-dom
+yarn add --dev typescript
 ```
 
-Dans votre dossier client (`src`), créer un `index.html`.
+Installons react et react-dom, ainsi que les déclarations de type pour Typescript.
+
+```
+yarn add --dev react-dom react @types/react-dom @types/react
+```
+
+Dans votre dossier client (`client`), créer un `index.html`.
 Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par React.
 
 ```html
@@ -123,7 +121,7 @@ Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par Reac
 </html>
 ```
 
-Dans le même dossier nous allons créer un premier composant React, on l'appelera `index.jsx`:
+Dans le même dossier nous allons créer un premier composant React, on l'appellera `index.tsx`:
 
 ```javascript
 import React from "react";
@@ -145,6 +143,10 @@ Installer [Webpack](https://webpack.js.org/) en dev (pas la peine d'avoir les d�
 
 Installez également le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
 
+```
+yarn add --dev awesome-typescript-loader css-loader html-webpack-plugin mini-css-extract-plugin source-map-loader webpack webpack-cli
+```
+
 #### Configuration de webpack
 
 Même si les dernières versions de webpack peuvent fonctionner sans fichier de configuration (avec des défauts), vous aurez de toutes façons à spécifier une config dans ce TP. Mettez donc en place un fichier `webpack.config.js` avec une configuration minimale (entry, output), que vous allez modifier par la suite.
@@ -161,11 +163,11 @@ const htmlPlugin = new HtmlWebPackPlugin({
 module.exports = (env, argv) => {
   console.log(argv.mode);
   return {
-    entry: "./client/index.jsx",
-    output: { // NEW
+    entry: "./client/index.tsx",
+    output: {
       path: path.join(__dirname, 'dist'),
-      filename: "[name].js"
-    }, // NEW Ends
+      filename: "bundle.js"
+    },
     plugins: [htmlPlugin],
     module: {
       rules: [
@@ -180,30 +182,35 @@ module.exports = (env, argv) => {
 
 #### Transpilation et configuration de Babel
 
-React s'appuie sur [JSX](https://reactjs.org/docs/introducing-jsx.html) pour
+React s'appuie "normalement" sur [JSX](https://reactjs.org/docs/introducing-jsx.html) pour
 lier la logique de rendu, la gestion d'évènement et les changements d'états
 pour un élément donné. Ces éléments seraient normalement séparés entre langages
 et technos différentes. Babel permet de traduire ce code (et au passage de transformer du ES6 en ES5).
 
-JSX n'est pas interprété par les navigateurs, nous devons donc le "traduire" ou transpiler avec Babel en HTML+JS pour que le code devienne compréhensible.
+Nous allons reprendre la même logique mais avec du Typescript (un fichier typescript simple se termine en .ts, nous allons créer des .tsx).
+JSX, Typescript ou TSX ne sont pas interprétés par les navigateurs, nous devons donc le "traduire" ou transpiler en HTML+JS pour que le code devienne compréhensible.
 
-Installer les dépendances (de développement) suivantes:
+Nous avons normalement déjà installé les dépendances typescript, reste à installer un dépendance (de développement) pour l'intégration à Webpack: `ts-loader`
 
-- `@babel/core` (ES6+ vers ES5)
-- `@babel/preset-env` (Preset pour les polyfills)
-- `@babel/preset-react` (Preset pour React et JSX)
-- `babel-loader` (pour l'intégration avec Webpack)
-
-Configurer Babel à l'aide d'un fichier `.babelrc` à la racine de votre projet,
-en indiquant les pré-configurations utilisées pour le reste du projet.
+Configurez le transpileur Typescript à l'aide d'un fichier `tsconfig.json` à la racine de votre projet, en indiquant les pré-configurations utilisées pour le reste du projet.
 
 ```json
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"]
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "outDir": "./dist/",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "include": ["./client/**/**/*"]
 }
 ```
 
-Il faut spécifier à Webpack la transpilation Babel des fichiers .js et .jsx du projet lors du build.
+Il faut spécifier à Webpack la transpilation des fichiers .ts et .tsx du projet lors du build.
 Cela se fait dans le fichier `webpack.config.js` :
 
 ```javascript
@@ -211,10 +218,10 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: "ts-loader",
         },
       },
     ],
@@ -289,6 +296,14 @@ import LOGO from "<path-to-file>/logo.png";
 // Utilisation
 <img src={LOGO} alt="Logo" />;
 ```
+
+# Attention le sujet est en cours de mise à jour (finalisation le 13/09)
+
+changements :
+
+- [x] utilisation de typescript
+- [x] npm -> yarn
+- changement de Material vers un dérivé de Tailwind CSS qui fonctionne bien avec React (Windmill React UI ou https://material-tailwind.com
 
 ### CSS
 
