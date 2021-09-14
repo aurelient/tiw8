@@ -17,7 +17,7 @@ Nous allons voir :
 
 - La mise en place d'un serveur Node/Express basique
 - L'automatisation d'un build
-- Comment configurer Babel pour la transpiler du code ES6 et des composants JSX en JavaScript interprétable par n'importe quel navigateur
+- Comment configurer la transpilation du code Typescript et des composants TSX en code interprétable par n'importe quel navigateur.
 - Créer un projet React
 - Créer deux composants React basiques
 - Gérer le bundling avec Webpack
@@ -35,11 +35,7 @@ Créez un projet git sur la forge dès maintenant. Remplissez le champ Tomuss as
 
 Installer [Node](https://nodejs.org/) et [Express](https://expressjs.com/) si ce n'est pas déjà fait. Si c'est le cas, pensez à les mettre à jour.
 
-Selon votre OS, la version de node et d'Express que vous allez installer, il sera peut être nécessaire d'installer `express-generator` qui gère le "cli" d'Express (la possibilité de l'invoquer depuis la ligne de commande).
-
-```
-  npm install -g express-generator
-```
+Selon votre OS, la version de node et d'Express que vous allez installer, il sera peut être nécessaire d'installer `express-generator` qui gère le "cli" d'Express (la possibilité de l'invoquer depuis la ligne de commande). Installez le globalement avec npm ou yarn.
 
 **Pensez régulièrement à ajouter les fichiers qui n'ont pas à être versionnés à votre .gitignore** (_a minima_ : node_modules & dist)
 
@@ -206,7 +202,8 @@ Configurez le transpileur Typescript à l'aide d'un fichier `tsconfig.json` à l
     "sourceMap": true,
     "target": "es5"
   },
-  "include": ["./client/**/**/*"]
+  "include": ["client"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
 }
 ```
 
@@ -256,7 +253,7 @@ const path = require("path");
 const DIST_DIR = path.join(__dirname, "../dist");
 const HTML_FILE = path.join(DIST_DIR, "index.html");
 
-// Modifier la route '/' pour qu'elle pointe sur HTML_FILE
+// TODO Modifier la route '/' pour qu'elle pointe sur HTML_FILE
 ```
 
 Nous allons aussi rajouter la commande suivante dans `package.json` pour distinguer un build de dev et un de production.
@@ -273,8 +270,6 @@ Pour que Express trouve plus tard son chemin "de base" et les fichiers statiques
 app.use(express.static(DIST_DIR));
 ```
 
-Testez la commande `dev`.
-
 Installez le module `file-loader` (toujours en dev).
 
 Et rajoutez la règle suivante dans `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
@@ -287,15 +282,28 @@ Et rajoutez la règle suivante dans `webpack.config.js:` pour que webpack place 
 }
 ```
 
-Pour que Webpack bundle ces images (ou autres ressources), il faudra les importer dans vos composants. Voici comment cela se fait au sein d'un composant React:
+> Note: depuis Webpack 5, vous pouvez préférer [Asset Modules](https://webpack.js.org/guides/asset-modules/) qui évite d'utiliser un loader externe.
+
+Il faudra les importer dans vos composants. Voici comment cela se fait au sein d'un composant React:
 
 ```js
 // Import de l'image
-import LOGO from "<path-to-file>/logo.png";
+import LOGO from "./logo.png";
 
 // Utilisation
 <img src={LOGO} alt="Logo" />;
 ```
+
+Pour que l'import marche, il faut spécifier à Typescript et Webpack de traiter les images comme des modules:
+
+- Créer un fichier `index.d.ts` qui contient la définition des modules/types associé aux extensions de fichiers :
+
+```
+declare module '*.png';
+declare module '*.jpg';
+```
+
+- Dans `tsconfig.json`, modifier la ligne d'include en rajoutant le fichier créé : `["client", "index.d.ts"],`
 
 # Attention le sujet est en cours de mise à jour (finalisation le 13/09)
 
@@ -374,7 +382,7 @@ Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un de
 - Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
 - Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
-- `npm run build` construit le projet
-- `npm run start` lance le serveur.
+- `yarn run build` construit le projet
+- `yarn run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
 - l'application Web est bien déployée sur Heroku au lien fournit dans le rendu
