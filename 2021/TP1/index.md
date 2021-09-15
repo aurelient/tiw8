@@ -140,7 +140,7 @@ Installer [Webpack](https://webpack.js.org/) en dev (pas la peine d'avoir les d�
 Installez également le module [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) pour faciliter la création de fichier HTML avec Webpack.
 
 ```
-yarn add --dev awesome-typescript-loader css-loader html-webpack-plugin mini-css-extract-plugin source-map-loader webpack webpack-cli
+yarn add --dev ts-loader css-loader html-webpack-plugin mini-css-extract-plugin source-map-loader webpack webpack-cli
 ```
 
 #### Configuration de webpack
