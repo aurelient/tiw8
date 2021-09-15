@@ -381,7 +381,7 @@ Inspectez l'application.
 
 ### Rendu et évaluation
 
-Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et compte pour 10% de la note de TP totale.
+Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et compte pour 10% de la note de Controle Continu (CC) totale.
 
 Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un des critères n'est pas rempli c'est un FAIL (=0):
 
