@@ -305,17 +305,53 @@ declare module '*.jpg';
 
 - Dans `tsconfig.json`, modifier la ligne d'include en rajoutant le fichier créé : `["client", "index.d.ts"],`
 
-# Attention le sujet est en cours de mise à jour (finalisation le 13/09)
-
-changements :
-
-- [x] utilisation de typescript
-- [x] npm -> yarn
-- changement de Material vers un dérivé de Tailwind CSS qui fonctionne bien avec React (Windmill React UI ou https://material-tailwind.com
-
 ### CSS
 
-Intégrez à votre application un framework front-end responsif pour améliorer le rendu, de type [Bootstrap](https://react-bootstrap.github.io/getting-started/introduction), [Foundation](https://foundation.zurb.com/) ou [autre](https://www.keycdn.com/blog/front-end-frameworks).
+Nous allons utiliser une bibliothèque dérivée de [Tailwind CSS](https://tailwindcss.com/) qui fonctionne bien avec React: [Windmill React UI](https://windmillui.com/react-ui). Cette bibliothèque fournit des composants, mais permet aussi de s'appuyer sur Tailwind pour la création de nouveaux composants/widgets.
+
+### Linting
+
+Pour vérifier que votre code se conforme aux bonnes pratiques, nous allons utiliser eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
+
+Pour créer votre fichier de configuration `eslint` taper `yarn run eslint --init` votre configuration devrait ressembler à cela
+
+```
+✔ How would you like to use ESLint? · style
+✔ What type of modules does your project use? · require
+✔ Which framework does your project use? · react
+✔ Does your project use TypeScript? · Yes
+✔ Where does your code run? · browser
+✔ How would you like to define a style for your project? · guide
+✔ Which style guide do you want to follow? · standard
+✔ What format do you want your config file to be in? · JSON
+```
+
+Vous pouvez tester eslint à la "main" avec
+
+```
+yarn run eslint client/*.tsx
+```
+
+Ajouter ensuite eslint à Webpack. Installez le module `eslint-webpack-plugin` en dev. Importez le dans votre webpack config et rajouter les lignes suivantes au blog plugin. eslint se lancera maintenant lors du build (vous pouvez rajouter une erreur dans votre index.tsx et tester le build).
+
+```
+  plugins: [
+    ...,
+    new ESLintPlugin({
+      extensions: ["js", "jsx", "ts", "tsx"],
+    }),
+  ],
+```
+
+### Déployer sur Heroku
+
+Afin de rendre notre application disponible sur le Web, nous allons la déployer sur [Heroku](https://heroku.com).
+Suivre le guide de Heroku pour déployer une application via git :
+[https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
+
+Pensez à bien committer avant de pusher sur heroku.
+
+N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
 
 ### Des composants Reacts
 
@@ -337,35 +373,6 @@ const Index = () => {
 };
 ReactDOM.render(<Index />, document.getElementById("root"));
 ```
-
-### Linting
-
-Pour vérifier que votre code se conforme aux bonnes pratiques, installer eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
-
-Pour créer votre fichier de configuration `eslint` taper `npx eslint --init` votre configuration devrait ressembler à cela
-
-```
-✔ How would you like to use ESLint? · style
-✔ What type of modules does your project use? · esm
-✔ Which framework does your project use? · react
-✔ Does your project use TypeScript? · No / Yes
-✔ Where does your code run? · browser, node
-✔ How would you like to define a style for your project? · guide
-✔ Which style guide do you want to follow? · airbnb
-✔ What format do you want your config file to be in? · JSON
-```
-
-Vous pouvez suivre [ce guide dire à Webpack de linter](https://www.robinwieruch.de/react-eslint-webpack-babel).
-
-### Déployer sur Heroku
-
-Afin de rendre notre application disponible sur le Web, nous allons la déployer sur [Heroku](https://heroku.com).
-Suivre le guide de Heroku pour déployer une application via git :
-[https://devcenter.heroku.com/articles/git#creating-a-heroku-remote](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
-
-Pensez à bien committer avant de pusher sur heroku.
-
-N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
 
 ### React Developer Tools
 
