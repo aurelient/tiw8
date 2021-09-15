@@ -5,10 +5,6 @@
 - Aurélien Tabard (responsable)
 - Louis Le Brun
 
-# Attention le sujet est en cours de mise à jour
-
-Il est relativement stable jusqu'à la partie CSS (finalisation le 13/09)
-
 ### Présentation du TP
 
 L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework JS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP serait peu ou prou la même pour Angular ou Vue.
@@ -120,8 +116,9 @@ Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par Reac
 Dans le même dossier nous allons créer un premier composant React, on l'appellera `index.tsx`:
 
 ```javascript
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+
 const Index = () => {
   return <div>TIW 8 TP1!</div>;
 };
@@ -381,7 +378,7 @@ Inspectez l'application.
 
 ### Rendu et évaluation
 
-Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et compte pour 10% de la note de Controle Continu (CC) totale.
+Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour dimanche 19 23h59.
 
 Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un des critères n'est pas rempli c'est un FAIL (=0):
 
