@@ -223,6 +223,15 @@ module.exports = {
 };
 ```
 
+Il faut aussi spécifier à votre bundler (Webpack) comment résoudre les liens vers les modules, il faut lui dire de quelles extensions de fichier rajouter et dans quel ordre les traiter.
+Pour cela on utilise la directive [resolve](https://webpack.js.org/configuration/resolve/) de webpack.
+
+```javascript
+  resolve: {
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+  },
+```
+
 #### Bundling
 
 Il faut maintenant assembler le code React.
