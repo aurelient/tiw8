@@ -399,3 +399,60 @@ Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un de
 - `yarn run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
 - l'application Web est bien déployée sur Heroku au lien fournit dans le rendu
+
+## Pour aller plus loin
+
+Il est possible d'automatiser votre déploiement sur Héroku dès que vous mettez à jour votre code sur la forge.
+
+Pour ce faire, on va configurer une CI/CD (Continuous Integration/Continuous Deployement) sur la forge.
+
+### Heroku
+
+Pour pouvoir mettre en place cette CI de façon propre, il vous faudra un compte Héroku et accéder directement au [Dashboard Heroku](https://dashboard.heroku.com/).
+
+Depuis le dashboard, cliquez sur `New` > `Create new App` et saisissez un nom pour votre application, et conservez le pour la suite. Dans les bonnes pratiques, on créé un projet par environnement donc il n'est pas rare de voir un projet `dev`, `staging` et prod. 
+
+Une fois que cette étape est réalisée, accédez à la page des settings et bas de celle-ci vous devriez trouver un champ `API Key`, copiez et conservez la valeur de ce champ, on va en avoir besoin juste après.
+
+### .gitlab-ci.yml
+
+À la racine de votre projet, créez un fichier `.gitlab-ci.yml`. Ce fichier sera repéré par Gitlab et sera interprété, vous pourrez vérifier que Gitlab l'a bien pris en compte en regardant les "Jobs" dans votre projet dans l'onglet "CI/CD".
+
+Dans ce fichier vous allez ajouter ceci:
+
+``` yaml
+image: node:latest
+
+before_script:
+    - apt update -qy
+    - apt install -y ruby-dev
+    - gem install dpl
+
+stages:
+    - dev
+
+dev:
+    type: deploy
+    stage: dev
+    image: ruby:latest
+    script:
+        - dpl --provider=heroku --app=$HEROKU_APP_DEV --api-key=$HEROKU_API_KEY
+    only:
+        - develop
+```
+
+C'est la configuration de notre Runner Gitlab, la machine virtuelle qui va se charger de déployer notre code.
+
+On précise son image, et avant son exécution, on lui demande d'installer dpl, un outil de déploiement issu de travis dont la description est dispo [ici](https://github.com/travis-ci/dpl) si vous êtes curieux.
+
+Ensuite, pour le stage `dev`, on lui demande d'exécuter les commandes dans la partie `script` mais de déclencher cette étape UNIQUEMENT sur la branche `develop` de votre projet sur la forge.
+
+Dans le script, on se sert de variables d'environnement: `HEROKU_APP_DEV` et `HEROKU_API_KEY`.
+
+Ces variables, vous devez les préciser dans votre repo la forge: `Settings` > `CI/CD` > `Variables` > `Expand` > `Add variable`.
+
+Ajoutez la variable `HEROKU_API_KEY` qui a pour valeur la `clé d'API` que vous avez conservé plus haut.
+
+Ajoutez la variable `HEROKU_APP_DEV` qui est le nom de votre application de dev sur le dashboard Héroku.
+
+Une fois que tout ça est mis en place, si vous mettez à jour le code sur votre branche `develop`, vous pourrez voir qu'un `Job` se lance, et quand celui-ci est terminé, votre code sera dispo sur Heroku ! Regardez les logs du runner pour avoir plus d'infos et notamment l'url de votre page.
