@@ -35,8 +35,6 @@ Pensez à remplir le formulaire de rendu sur Tomuss (n'importe quand avant la da
 
 Nous allons repartir du TP1 pour ce projet, et le pousser dans un nouveau repo dédié au TP2 (pour les 4 séances du TP).
 
-Si vous utilisez Prettier vous pouvez suivre [ce tutoriel pour que les règles de eslint et de prettier soient alignées.](https://javascript.plainenglish.io/setting-eslint-and-prettier-on-a-react-typescript-project-2021-22993565edf9)
-
 ### Structurer une application React en composants
 
 Lire l'[introduction à la structuration d'application React](https://reactjs.org/docs/thinking-in-react.html).
@@ -58,11 +56,15 @@ Les transparents auront (à minima) deux modèles:
   - Visibilité (afficher/cacher le transparent)
 - On peut penser à d'autre modèles: image seule, iframe intégrant une page html, slide avec flux de la webcam intégré...
 
+<iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A3" allowfullscreen></iframe>
+
+<iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A15" allowfullscreen></iframe>
+
 Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) :
 
 ```typescript
 [
-  { type: "title", title: "TIW 8", visible: true, notes: "" },
+  { type: "title", title: "TIW 8", text: "", visible: true, notes: "" },
   {
     type: "content",
     title: "TP 1",
@@ -79,53 +81,84 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
   },
   { type: "content", title: "TP 3", text: "Le TP 3", visible: true, notes: "" },
   { type: "content", title: "TP 4", text: "Le TP 4", visible: true, notes: "" },
-  { type: "title", title: "Question ?", visible: true, notes: "" },
+  { type: "title", title: "Question ?", text: "", visible: true, notes: "" },
 ];
 ```
 
-<iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A3" allowfullscreen></iframe>
-
-<iframe style="border: none;" width="600" height="337" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FUzpqcHwddgDnfriafh7gIs%2Ftiw8-tp2-appstructure%3Fnode-id%3D16%253A15" allowfullscreen></iframe>
-
-Créez la structure des composants correspondant à cette application, en suivant le guide et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy).
-
-Voici une structure pour démarrer, pensez à utiliser les composants Windmill React UI plutôt que du html pur:
-
-```typescript
-
-```
-
-Ce code est donné à titre indicatif. Commencez progressivement et testez régulièrement.
-
 ### Créer des composants passifs
 
-Créer des composants fonctionnels passifs (on rajoutera de l'interaction par la suite. Vous pouvez vous inspirer de la syntaxe et de la structure de cette <a href="https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks">mini todo app</a>
+Nous allons créer la structure des composants correspondant à cette application, en suivant le guide de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy).
 
-Vous allez vous rendre compte rapidement que votre linter râle. En effet, il veut pouvoir vérifier les types qui sont passés en props entre composants. Installez le module `prop-types` et lisez <a href="https://fr.reactjs.org/docs/typechecking-with-proptypes.html">la page suivante pour comprendre comment specifier les types de vos props</a>.
+Nous allons commencer par créer des composants fonctionnels passifs, on rajoutera de l'interaction par la suite.
 
-### Gérer la logique de l'application
+Créez un composant `App` principal qui contiendra un composant `Slideshow` et un composant `AppToolbar`. Nous définirons l'état de l'application dans `App` et passerons cet état comme une prop à `Slideshow` et `AppToolbar`.
 
-La toolbar doit contenir deux boutons avant/arrière pour naviguer entre les transparents. Faites en sorte que l'état du slideshow change lorsque vous pressez un bouton, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le bouton parle à des composants parents). Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
+```jsx
+import * as React from 'react'
+import SlideShow from './components/SlideShow'
+import AppToolbar from './components/AppToolbar'
 
-Pour comprendre comment cela fonctionne avec des functionals components et non des class components [référez vous à l'exemple de todo app mentionné plus haut](https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks#step-5-%E2%80%94-updating-to-do-items)
+const App: React.FC = () => {
+    const [slides] = React.useState(VOIR PLUS HAUT)
 
-Pour démarrer vous pouvez utiliser l'extension react dev tools, et modifier l'état à la main pour vérifier que la vue change bien.
+    return (
+        <div className="app">
+            <AppToolbar slides={slides}  />
+            <SlideShow slides={slides} />
+        </div>
+    )
+}
+
+export default App
+```
+
+#### Linter et Typage
+
+Vous allez vous rendre compte rapidement que votre linter râle.
+
+Plusieurs choses à faire :
+
+1. Créez un fichier `type.d.ts` dans `client` qui définisse l'Interface `Slide`. C'est à dire le type d'un Slide (voir le tableau ci-dessus). Vous pouvez vous référer à cet exemple de [Todo App (section 'Creating a Type Declaration File')](https://typeofnan.dev/your-first-react-typescript-project-todo-app/).
+
+2. Si vous utilisez Prettier, lier proprement Prettier et Eslint qui peuvent parfois avoir des opinions différentes. Vous trouverez ici mon fichier [.eslint](https://forge.univ-lyon1.fr/-/snippets/60)
 
 ### React Router
 
-Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu'il soit possible d'avoir un lien dédié pour chaque transparent.
-En plus d'avoir un état interne à l'application pour savoir quel transparent afficher, nous allons utiliser une route qui pointe vers le transparent en question. En chargeant cette route, l'état sera modifié.
+Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu'il soit possible d'avoir un lien dédié pour chaque transparent. Mais aussi pour que l'on puisse controller la présentation depuis la toolbar. Cette dernière doit contenir deux boutons avant/arrière pour naviguer entre les transparents, et un menu pour sélectionner le transparent à afficher. Faites en sorte que la route change en fonction.
 
 Nous allons utiliser [react-router](https://reacttraining.com/react-router/). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à lire [cette page](https://reacttraining.com/react-router/web/guides/philosophy).
 
 [React router](https://reacttraining.com/react-router/web/guides/primary-components) requiert d'envelopper votre application dans un composant `Router`.
 
-En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/#/3](http://monsite.net/#/3) charge le 3e transparent. Importez bien `react-router-dom` non.
+En l'occurrence `HashRouter` (vous pouvez utiliser `BrowserRouter` mais cela demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/#/3](http://monsite.net/#/3) charge le 3e transparent.
+Installez et importez `react-router-dom` dans votre index.
+Installez aussi `@types/react-router-dom` pour Typescript.
 
-- Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter)
-- Si vous utilisez des `functional components`, avec le hook `useParams();` vous pouvez récupérer la valeur de la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params).
+Dans votre composant `App` de base rajoutez un Switch qui s'occupera de capturer les chemins et d'afficher les bons composants. Par exemple:
 
-Une fois la valeur de la route récupérée, modifier l'état de l'application, pour qu'il corresponde au transparent à afficher.
+```jsx
+<Switch>
+  <Route
+    path="/:id"
+    render={() => (
+        <SlideShow slides={slides} />
+        <AppToolbar slides={slides} />
+    )}
+  />
+</Switch>
+```
+
+Dans vos composants (ici SlideShow et AppToolbar), vous pouvez récupérer la route en utilisant `useParams` de `react-router`. Importez le puis à l'intérieur déclarez:
+
+```js
+    const params = useParams<RouteParams>()
+```
+
+`params.id` correspondra à votre path. C'est un `string`, vous pouvez utiliser `Number(params.id)` pour le caster en entier et faire des opérations dessus.
+
+### Déploiement
+
+Si ce n'est pas encore fait, ou que vous n'avez pas automatisé, c'est le moment de tester le déploiement sur Heroku.
 
 ## TP2.2 Redux
 
