@@ -591,7 +591,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ## Rendu
 
-À rendre pour le dimanche 17 à 23h59.
+À rendre pour le dimanche 14/11 à 23h59.
 
 1. Déployez votre code sur Heroku
 2. Pousser votre code sur la forge
@@ -604,18 +604,33 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 - Fichier `README.md` décrivant le process de build en dev, en prod, et de déploiement.
 - Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
+- Linter bien défini qui ne renvoie pas d'erreur (et pas d'exception partout)
+- Typage réalisé
 - Déploiement sur Heroku
-- Composants React pour le `Slideshow`, les `Slides`, la `Toolbar`.
+
+TP2.1
+
+- Composants fonctionnels React pour le `Slideshow`, les `Slides`, la `Toolbar`.
+- Styling des composants avec Tailwind,
+- Gestions des routes pour les transparents
+
+TP2.2
+
 - Store qui contient l'état de l'application
 - Le flux de données suit le flow React, des actions sont déclarées, et les changements d'états passent par des actions unitaires qui modifient le store.
 - Les changement sont des fonctions qui renvoient un nouvel état (immutabilité) dans le reducer.
 - Redux pour la gestion avancée des états
-- Gestions des routes pour les transparents
-- Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'etat de l'application.
+- Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'état de l'application.
+
+TP2.3
+
 - Implémentation des Websockets côté client et serveur
 - Synchronisation du transparent affiché entre les dispositifs s'appuyant sur un middleware
 - Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons composants.
 - Gestion du plein écran.
+
+TP2.4
+
 - Gestion différenciée des pointer-events.
 - Synchronisation des dessins s'appuyant sur un middleware.
 - Gestion des gestes pour des commandes suivant, précédent.
