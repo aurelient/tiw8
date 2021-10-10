@@ -162,33 +162,102 @@ Si ce n'est pas encore fait, ou que vous n'avez pas automatisé, c'est le moment
 
 ## TP2.2 Redux
 
-Nous allons maintenant gérer l’état de l’application sur plusieurs dispositifs en utilisant Redux et des Websockets. L’objectif est que vous puissiez changer l’état de votre application de présentation sur un dispositif (ex: mobile), et que l’état de l’application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre mur à distance sur sa machine…)
-
-Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.
+Nous allons maintenant gérer l’état de l’application avec Redux. Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.
 
 Afin de vous faciliter le debug du TP, vous pouvez activer la création d’un Source Map dans votre webpack.config.js : `devtool: 'eval-source-map'.`
 
-### Redux
+Utilisez aussi [Redux DevTools](https://github.com/reduxjs/redux-devtools) pour Chrome ou Firefox, il nécessite quelques légères [modifications de votre code](https://github.com/zalmoxisus/redux-devtools-extension#usage). Rajoutez `redux-devtools-extension` au projet.
 
 Installez Redux et les dépendances associées pour React (redux, react-redux). Par défaut Redux n’est pas lié à React et peut être utilisé avec d’autres frameworks.
 
-Créez dans src des dossiers pour organiser votre store, vos reducers, actions, et containers.
+Nous allons utiliser [Redux Toolkit](https://redux-toolkit.js.org/) pour nous faciliter la vie (installez `@reduxjs/toolkit`).
+
+Vous pouvez suivre le [guide de démarrage de Redux Toolkit](https://redux-toolkit.js.org/tutorials/typescript) en l'adaptant à notre application
 
 #### Création d’un store
 
-#### Création d’un reducer
+Nous allons commencer par créer le store qui va gérer les états.
+
+```js
+import { configureStore } from "@reduxjs/toolkit";
+import slideshowReducer from "../slices/slideshowSlice"; // chemin à adapter
+
+export const store = configureStore({ reducer: slideshowReducer });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;
+```
+
+On importe `configureStore` depuis redux-toolkit et aussi `slideshowReducer` dont on verra juste en dessous la définition.
+
+`configureStore` peut aussi prendre un état initial en entrée, mais c'est les reducers qui vont produire l'état de l'application (y compris l'état initial).
+
+#### Création d'une slice, des reducers et actions associés
+
+On va ensuite s'appuyer sur Redux Toolkit pour générer automatiquement les createurs d'actions et les types d'actions: des "slices" elles prennent en entrée, un état initial, un ensemble de reducers et un nom de slice. Redux Toolkit vise à supprimer beaucoup de "boilerplate code" et à déléguer la fabrication des actions.
+
+1. Comme nous utilisons Typescript il faudra définir [les types associés aux hooks Redux](https://redux-toolkit.js.org/tutorials/typescript#define-typed-hooks).
+
+2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `slideshowSlice`. Cette slice aura trois actions :
+
+```js
+// TODO compléter en s'appuyant sur le tutoriel lié au dessus
+...
+export const slideshowSlice = createSlice({
+    name: 'slidesApp',
+    // `createSlice` will infer the state type from the `initialState` argument
+    initialState,
+    reducers: {
+        nextSlide: (state) => {
+            // TODO
+        },
+        previousSlide: (state) => {
+            // TODO
+        },
+        // Use the PayloadAction type to declare the contents of `action.payload`
+        setSlide: (state, action: PayloadAction<number>) => {
+            // TODO à adapter au besoin
+            state.currentSlide = action.payload
+        },
+    },
+})
+
+export const { nextSlide, previousSlide, setSlide } = slideshowSlice.actions
+export default slideshowSlice.reducer
+```
 
 #### Tester Redux et le store
 
-#### Creation des actions
+Dans votre `index.tsx` principal exposez le store pour pouvoir l'afficher via la console du navigateur.
+Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à votre application React.
 
-#### Tester les actions
+```js
+import { Provider } from 'react-redux'
+import { store } from './store/index' // verifiez que le chemin est correct
 
-#### Lien Redux / React
+declare global {
+    interface Window {
+        mystore: unknown
+    }
+}
+window.mystore = store
+```
 
-#### Lien Redux / React Router
+Et enveloppez votre application dans une balise :
 
-Normalement l’intégration avec React Router se passe bien (pas de changements nécessaire). Si jamais ce n’était pas le cas, suivez l’utilisation de Redux avec React Router telle que présentée dans la documentation de React Router ou celle de Redux pour configurer votre projet.
+```xml
+<Provider store={store}>`
+  ...
+</Provider>`
+```
+
+#### Lien Redux / React / Router
+
+TODO Gérer à la main
+
+Supprimer : `connected-react-router history @types/history`
 
 ## TP2.3 Distribution d’interface multi-dispositif
 
