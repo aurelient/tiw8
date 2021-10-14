@@ -200,7 +200,7 @@ On va ensuite s'appuyer sur Redux Toolkit pour générer automatiquement les cre
 
 1. Comme nous utilisons Typescript il faudra définir [les types associés aux hooks Redux](https://redux-toolkit.js.org/tutorials/typescript#define-typed-hooks).
 
-2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `slideshowSlice`. Cette slice aura trois actions :
+2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `slideshowSlice`. Cette slice aura quatre actions :
 
 ```js
 // TODO compléter en s'appuyant sur le tutoriel lié au dessus
@@ -221,14 +221,18 @@ export const slideshowSlice = createSlice({
             // TODO à adapter au besoin
             state.currentSlide = action.payload
         },
+        changeVisibilitySlide: (state, action: PayloadAction<number>) => {
+            // TODO changer la propriété visible de true à false et inversement
+        },
+
     },
 })
 
-export const { nextSlide, previousSlide, setSlide } = slideshowSlice.actions
+export const { nextSlide, previousSlide, setSlide, changeVisibilitySlide } = slideshowSlice.actions
 export default slideshowSlice.reducer
 ```
 
-#### Tester Redux et le store
+#### Brancher l'application à Redux et au store
 
 Dans votre `index.tsx` principal exposez le store pour pouvoir l'afficher via la console du navigateur.
 Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à votre application React.
@@ -253,11 +257,52 @@ Et enveloppez votre application dans une balise :
 </Provider>`
 ```
 
-#### Lien Redux / React / Router
+#### Lien React - Redux
 
-TODO Gérer à la main
+Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton à Toolbar. Quand on clique dessus, il va modifier la propriété `visible` du slide courant. Si le slide est visible il deviendra invisible et inversement.
 
-Supprimer : `connected-react-router history @types/history`
+Pour vous faciliter la vie, on ne va pas le rendre vraiment invisible mais simplement changer son opacité de 100% à 10%.
+
+Pour faire cela nous allons devoir modifier trois fichiers
+
+1. Le composant toolbar
+2. le composant d'affichage d'un transparent
+3. la slice qui gère l'état de l'application
+
+Ajoutez d'abord un bouton à la toolbar.
+On va importer les éléments suivants dans la Toolbar:
+
+```js
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { changeVisibilitySlide } from "../slices/slideshowSlice";
+```
+
+Lorsque l'on clique sur le bouton on va dispatcher une action :
+
+```js
+  // dans votre composant on branche le dispatch au store :
+  const dispatch = useDispatch<AppDispatch>()
+  ...
+  // lors du click sur le bouton
+  onClick={() => {
+      dispatch(
+          changeVisibilitySlide(
+              currentSlide // vient de la route dans la barre de navigateur via react-router
+          )
+      )
+  }}
+```
+
+Dans le composant transparent (`SlideView` chez moi), récupérez l'état de visibilité du slide. S'il est visible l'opacité est normale sinon à 10%. Rajoutez un div enveloppant pour gérer ça.
+
+```js
+    const opacity: string = isVisible ? 'opacity-10' : 'opacity-100'
+    ...
+    <div className={opacity}>
+```
+
+Enfin, si ce n'est pas encore fait dans le code de votre slice, définissez `changeVisibilitySlide` pour que l'état global de votre application soit bien mis à jour.
 
 ## TP2.3 Distribution d’interface multi-dispositif
 
@@ -267,7 +312,7 @@ Nous allons maintenant travailler à la distribution de l'application sur plusie
 
 Nous allons définir une route par situations d'usage :
 
-- `controler` : route pour dispositif mobile qui va controler la présentation et afficher les notes de présentation.
+- `controler` : route pour dispositif mobile qui va contrôler la présentation et afficher les notes de présentation.
 - `present` : route pour le mode présentation plein écran, seule une diapositive plein écran sera affichée (pas de toolbar).
 - `edit`: mode actuel permettant l'édition des transparents
 
@@ -275,50 +320,43 @@ Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière sim
 
 Rajouter des `Redirect` [(doc)](https://reacttraining.com/react-router/web/api/Redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état.
 
-Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour controler le plein écran.
+Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour contrôler le plein écran.
 
 Déployez et tester.
 
 ### Créez une vue controler
 
-Cette vue pour mobile affiche les notes de présentation associées à un transparet ainsi que les boutons suivant précédent.
+Cette vue pour mobile affiche les notes de présentation associées à un transparent ainsi que les boutons suivant précédent.
 
 Nous allons travailler sur la synchronisation entre les dispositifs ci-dessous. Pour l'instant la vue doit simplement afficher les notes correspondant au transparent courant.
 
-### Gestion "à la main" des routes des transparents.
+### Gestion "à la main" des routes des transparents
 
 Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le transparent courant dans notre état (`currentSlide` dans le store).
 `ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état. Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
 
 #### Changer l'état à partir de la route
 
-En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans le numéro de transparent à afficher, nous allons déclencher l'action `setSlide`, avec le numéro de transparent approprié.
-
-Si vous n'avez pas encore définit l'action `setSlide`, créez le action creator correspondant, et le traitement associé dans le reducer.
+En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans le numéro de transparent à afficher, nous allons déclencher l'action `setSlide` avec le numéro de transparent approprié.
 
 #### Changer la route à partir de l'état
 
-En écoutant les changements dans le store nous allons pouvoir être notifiés de changement de l'état et les répercuter dans la barre d'url (utile pour la suite, quand nous allons synchroniser des dispositifs):
+Dans votre composant principal (là ou vous utilisez `useAppSelector`), en cas de changement de currentSlide dans le store, on change l'url du navigateur
 
 ```javascript
-// The other part of the two-way binding is updating the displayed
-// URL in the browser if we change it inside our app state in Redux.
-// We can simply subscribe to Redux and update it if it's different.
-store.subscribe(() => {
-  const hash = "#/" + store.getState().currentSlide;
-  if (location.hash !== hash) {
-    window.location.hash = hash;
-    // Force scroll to top this is what browsers normally do when
-    // navigating by clicking a link.
-    // Without this, scroll stays wherever it was which can be quite odd.
-    document.body.scrollTop = 0;
-  }
-});
+const hash = "#/" + slides.currentSlide;
+if (location.hash !== hash) {
+  window.location.hash = hash;
+  // Force scroll to top this is what browsers normally do when
+  // navigating by clicking a link.
+  // Without this, scroll stays wherever it was which can be quite odd.
+  document.body.scrollTop = 0;
+}
 ```
 
-### Refactorisation
+# TP vérifié jusqu'ici
 
-Avant de passer à la suite, nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_SLIDE` et `PREVIOUS_SLIDE` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_SLIDE` avec une incrémentation ou une décrémentation de l'index courant.
+Redux toolkit va induire des changements ci-dessous.
 
 ### Middleware et websockets
 
