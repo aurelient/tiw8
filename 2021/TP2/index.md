@@ -354,56 +354,100 @@ if (location.hash !== hash) {
 }
 ```
 
-# TP vérifié jusqu'ici
+### Un premier Middleware de logging
 
-Redux toolkit va induire des changements ci-dessous.
-
-### Middleware et websockets
-
-Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/advanced/middleware). Faites un essai qui reprend l'idée et logue dans la console toutes les actions déclenchées (voir [ici](https://redux.js.org/advanced/middleware#the-final-approach) _sans le crashReporter_).
-
-Nous allons maintenant faire communiquer plusieurs navigateurs entre eux gràce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
-
-Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/)) et mettez en place le callback permettant de recevoir les messages `set_slide` provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
-
-Côté client créez un [Middleware](https://redux.js.org/advanced/middleware#the-final-approach) dans lequel vous importerez `socket.io-client`. Le middleware devra, dès qu'il intercepte une action de type `SET_SLIDE`, propager un message adéquat via le socket, avant de faire appel à `next(action)`
-
-Toujours dans le middleware, configurez la socket pour qu'à la réception des messages `set_slide`, les actions soient dispatchées au store.
+Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware). Faites un essai qui reprend en suivante [cette courte vidéo](https://www.youtube.com/watch?v=6AGdeO28UKY)) (pensez juste à installer `@types/redux-logger` en plus).
 
 ```js
-const propagateSocket = (store) => (next) => (action) => {
-  if (action.meta.propagate) {
-    if (action.type === SET_SLIDE) {
-      socket.emit("action", { type: "set_slide", value: action.hash });
-    }
-  }
-  next(action);
+export const store = configureStore({
+  reducer: slideshowReducer,
+  middleware: [logger],
+});
+```
+
+Nous allons maintenant créer un logger similaire "à la main" (vous pouvez faire ça dans le fichier de base de votre store). Un middleware a une signature un peu particulière. [Il s'agit en fait de 3 fonctions imbriquées](https://redux.js.org/tutorials/fundamentals/part-4-store#writing-custom-middleware):
+
+```js
+const myLoggerMiddleware: Middleware<Dispatch> = (store: Store) => (next) => {
+  return (action: AnyAction) => {
+    console.log("State Before:", store.getState());
+    return next(action);
+  };
 };
 ```
+
+- La fonction externe est le middleware lui-même, appelée par `applyMiddleware` (voir ci-dessous), elle reçoit un objet de type `Store` qui contient les fonctions {dispatch, getState} du store.
+- La fonction centrale reçoit une fonction `next` comme argument, qui appellera le prochain middleware du pipeline. S'il c'est le dernier (ou l'unique), alors la fonction `store.dispatch`
+- La fonction interne reçoit l'action courante en argument et sera appelée à chaque fois qu'une action est dispatchée.
+
+Vous pouvez importer tous les types nécessaire depuis `@reduxjs/toolkit`
+
+### Notre Middleware de diffusion des actions avec des websockets
+
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand la slide courante sera changée, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur slide courante.
+
+#### Websockets côté serveur
+
+Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/#integrating-socketio)) et mettez en place le callback permettant de recevoir les messages d'action provenant d'un client et de les propager à tous les autres clients. Ce [guide permet de créer et tester une micro-application express utilisant socket.io](https://devcenter.heroku.com/articles/node-websockets#option-2-socket-io) en local et sur Heroku.
+
+Le serveur ne va quasi rien faire, quand il reçoit un message d'action, il le broadcast à tous les clients connectés:
+
+```js
+socket.on("action", (msg) => {
+  console.log("action received", msg);
+  socket.broadcast.emit("action", msg);
+});
+```
+
+#### Websockets côté client
+
+Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setSlide` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
+
+```js
+import io from "socket.io-client";
+import { store } from "./index";
+import { setSlide, changeVisibilitySlide } from "../slices/slideshowSlice";
+import { Middleware, Dispatch, AnyAction } from "redux";
+
+// on se connecte au serveur
+const socket = io();
+
+export const propagateSocketMiddleware: Middleware<Dispatch> =
+  () => (next) => (action: AnyAction) => {
+    // Explorez la structure de l'objet action :
+    console.log("propagateSocketMiddleware", action);
+
+    // TODO traiter et propager les actions au serveur.
+    // Vous pourrez utiliser
+    // socket.emit('type_du_message', 'contenu du message, peut être un objet JS');
+
+    // Après diffusion au serveur on fait suivre l'action au prochain middleware
+    next(action);
+  };
+```
+
+Toujours dans le middleware, configurez la socket pour qu'à la réception des messages, les actions soient dispatchées au store.
 
 ```js
 socket.on("action", (msg) => {
   console.log("action", msg);
-  switch (msg.type) {
-    case "set_slide":
+  switch (
+    msg.type // ajuster le msg.type pour qu'il corresponde bien à celui dédifit pour l'action votre reducer
+  ) {
+    case "set_slide": // <- probablement autre chose à vous de trouver
       store.dispatch(setSlide(msg.value, false));
       break;
   }
 });
 ```
 
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions `SET_SLIDE` peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
 
-N'oubliez pas d'utiliser `applyMiddleware` lors de la création du votre store. Si vous avez précédement installé le devtool Redux, référez-vous [à cette page](http://extension.remotedev.io/#12-advanced-store-setup) pour modifier de nouveau votre code.
+Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` callback [comme décrit ici](https://redux-toolkit.js.org/usage/usage-with-typescript#defining-action-contents-with-prepare-callbacks)
 
-```js
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+### On déploie
 
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(propagateSocket))
-);
-```
+Branchez tout et déployez. Corriger la connexion websocket au besoin.
 
 ## TP2.4 Modalité d’entrées (gestes, stylet)
 
