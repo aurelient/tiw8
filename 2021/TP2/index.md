@@ -726,22 +726,6 @@ Utiliser cette sortie pour ajouter deux nouveaux gestes: '>' et '<' (partant du 
 
 Une fois le geste exécute, s'il correspond à un de ces deux nouveaux gestes (`recognized == true`), dispatcher les actions suivant ou précédent.
 
-Pour faire cela, nous allons nous appuyer sur un `mapDispatchToProps` qu'il faudra connecter à votre composant.
-
-```js
-const matchDispatchProps = dispatch => {
-  return {
-    nextSlide: () => {
-      dispatch(setSlide(store.getState().currentSlide+1, true))
-    },
-    previousSlide: () => {
-      dispatch(setSlide(store.getState().currentSlide-1, true))
-    }
-  }
-```
-
-`resetDrawPoints` est l'action associée à l'effaçage des dessins effectué sur le transparent.
-
 Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 
 #### FIN
