@@ -459,23 +459,19 @@ Nous allons maintenant ajouter un espace pour faire des gestes sur son télépho
 
 Pour cette partie, nous prendrons exemple sur ce tutoriel [W. Malone](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple).
 
-Dans votre composant dédié au mobile, ajoutez un élément `canvas` avec avec les handlers d'événements onPointerDown, onPointerMove et onPointerUp ainsi qu'en déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref):
+Dans votre composant dédié au mobile, ajoutez un élément `canvas` déclarant une [Référence React](https://reactjs.org/docs/hooks-reference.html#useref):
 
 ```jsx
-<canvas
-  className="stroke"
-  ref={refCanvas}
-  onPointerDown={pointerDownHandler}
-  onPointerMove={pointerMoveHandler}
-  onPointerUp={pointerUpEvent}
-></canvas>
+<canvas className="stroke" ref={refCanvas}></canvas>
 ```
 
-Ces handlers nous permettront de d'écouter les événements provenant de `pointer`.
+Vous pouvez ajouter la propriété css `touch-action: none;` à votre canvas pour bloquer le zoom par défaut dans certains navigateurs.
+
+On déclarera une fonction `useEffect` qui va gérer le dessin du geste au fur et à mesure que les événements de pointer (touch, souris, pen/stylus) arrivent. Associer les handlers d'événements `pointerdown, pointermove et pointerup au canvas dans useEffect. Déclenchez la fonction de `redraw`.
 
 Afin de vous faciliter la tâche, voici le code _presque_ complet pour faire marcher le dessin sur le canvas.
 
-Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessous. Faites en sortes que l'on ne dessine que si c'est un [stylet qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
+Assurez-vous de bien faire les imports nécessaires au bon fonctionnement du code ci-dessous. Faites en sortes que l'on ne dessine que si c'est la [souris ou du touch qui est utilisé](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType).
 
 ```jsx
 var clickX = new Array();
@@ -484,11 +480,12 @@ var clickDrag = new Array();
 var paint = false;
 
 // Cette ligne permet d'avoir accès à notre canvas après que le composant aie été rendu. Le canvas est alors disponible via refCanvas.current
-// Si vous utilisez des Class Components plutôt que des function Components, voir ici https://stackoverflow.com/a/54620836
 let refCanvas = useRef(null);
 
 function addClick(x, y, dragging) {
-  clickX.push(x), clickY.push(y), clickDrag.push(dragging);
+  clickX.push(x);
+  clickY.push(y);
+  clickDrag.push(dragging);
 }
 
 function redraw() {
@@ -500,7 +497,6 @@ function redraw() {
   refCanvas.current.setAttribute("width", width);
   refCanvas.current.setAttribute("height", height);
   context.clearRect(0, 0, context.width, context.height); // Clears the canvas
-
   context.strokeStyle = "#df4b26";
   context.lineJoin = "round";
   context.lineWidth = 2;
@@ -513,7 +509,6 @@ function redraw() {
       context.moveTo(clickX[i] * width - 1, clickY[i] * height);
     }
     context.lineTo(clickX[i] * width, clickY[i] * height);
-    context.closePath();
     context.stroke();
   }
 }
@@ -555,7 +550,7 @@ function pointerUpEvent(ev) {
 
 Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évènements touch.
 
-Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module JS récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](../code/onedollar.js) dans le dossier `src/` pour qu'elle soit facilement bundlée par Webpack.
+Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module TypeScript (ou JS) récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](../code/onedollar.js) dans le dossier `client/` pour qu'elle soit facilement bundlée par Webpack.
 
 #### Gérer le recognizer
 
@@ -705,7 +700,26 @@ Vous devrez être **vigilant à convertir vos points pour être dans le référe
 Quand le geste se termine (`pointerUpHandler`), vous pouvez lancer la reconnaissance du geste.
 
 ```js
-let gesture = recognizer.check(gesturePoints);
+let gesture = recognizer.check(gesturePoints) as Gesture
+```
+
+`as Gesture` permettant de caster le résultat dans un type que vous pouvez rajouter à votre fichier, ou à `type.d.ts` la fonction check peut aussi renvoyer un résultat booleen ou un -1. Vérifiez donc que le cast s'est bien passé, avant de traiter `gesture`.
+
+```js
+type Gesture = {
+    name: string
+    score: number
+    recognized: boolean
+    path: {
+        start: any[]
+        end: any[]
+        centroid: any
+    }
+    ranking: {
+        name: string
+        score: number
+    }[]
+}
 ```
 
 Inspectez l'objet gesture dans la console, et vérifiez que vous arrivez bien à reconnaitre un cercle et un triangle.
