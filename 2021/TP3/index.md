@@ -38,6 +38,19 @@ Nous allons nous appuyer sur la [simple-peer](https://github.com/feross/simple-p
 On aura besoin des dépendances suivantes :
 - Tailwind
 - [simple-peer](https://github.com/feross/simple-peer/)
+- @types/simple-peer
+
+### Mise en place d'un serveur
+
+Comme dans les TP précédents nous allons utliser express. Nous allons adjoindre au serveur, un mécanisme facilitant la découverte des pairs : le signaling.
+
+Voici une base de code sur laquelle vous pouvez vous appuyer côté serveur : [https://gist.github.com/adammw/d9bf021c395835427aa0](https://gist.github.com/adammw/d9bf021c395835427aa0) Ignorez les lignes 3 et 12 qui font un bundling du code du client avec browserify. Nous utilisons webpack et servons le contenu du dossier `dist` (comme dans les TP précédents). 
+
+Quand vous lancez le serveur vous pourrez vérifier que votre application s'affiche bien en local.
+
+Testez un déploiement sur Heroku. 
+
+Voir aussi [ce cours de NYU](https://github.com/lisajamhoury/The-Body-Everywhere-And-Here/blob/master/syllabus.md) et [la discussion sur le signaling avec simple-peer](https://javascript.plainenglish.io/building-a-signaling-server-for-simple-peer-f92d754edc85) si vous souhaitez aller plus loin. 
 
 ### Création du composant parent
 
@@ -80,42 +93,33 @@ function DataChat()  {
 export default DataChat
 ```
 
-Vous devriez à ce stade avoir un cadre d'application non fonctionelle
+Vous devriez à ce stade avoir un cadre d'application non fonctionelle.
 
-### Mise en place d'un serveur
 
-Comme dans les TP précédents nous allons utliser express.
-
-Nous allons y adjoindre un serveur facilitant la découverte des pairs : le signaling. Voir aussi [ce cours de NYU](https://github.com/lisajamhoury/The-Body-Everywhere-And-Here/blob/master/syllabus.md) et [la discussion sur le signaling avec simple-peer](https://javascript.plainenglish.io/building-a-signaling-server-for-simple-peer-f92d754edc85). 
-
-Voici une base de code sur laquelle vous pouvez vous appuyer côté serveur : https://gist.github.com/adammw/d9bf021c395835427aa0 Ignorez les lignes 3 et 12 qui font un bundling du code du client avec browserify. Nous utilisons webpack et servons le contenu du dossier `dist` (comme dans les TP précédents). 
-
-Quand vous lancez le serveur vous pourrez vérifier que votre application s'affiche bien en local
-
-Testez un déploiement sur Heroku. 
 
 ### Mise en relation de deux clients
 
 ⚠️ ATTENTION ⚠️
 
-Nous allons gérer pour ce qui a trait à `simple-peer`, en déclarant les objets `simple-peer` comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref). En effet peerjs est une abstraction d'interfaces de communication réseau on veut tout garder actif indépendemment du cycle de vie des composants React de notre application.
+Nous allons gérer ce qui a trait à `simple-peer` dans un middleware. En effet peerjs est une abstraction d'interfaces de communication réseau qu'on veut tout garder active. *Alternativement,* il serait aussi possible de déclarer les objets `simple-peer` comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref).
 
 En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients.
 
 Le déroulé est le suivant :
 - Ouvrir deux fenêtres de navigateur sur votre application
-- Généer automatiquement un identifiant sur chaque client, et les échanger via le serveur
+- Généer automatiquement un identifiant sur chaque client, et les échanger via le serveur (vous pouvez utiliser la bibliothèque [uuid](https://www.npmjs.com/package/uuid))
 - Lors du clic sur Start créez une connexion entre les deux clients (il faudra que les deux clients cliquent sur Start pour que la connexion soit établie). La création sera constituée des étapes suivantes
   - création/initialisation de l'objet Peer avec l'identifiant de votre client local.
   - ajout d'un listener d'ouverture de connexion (on open)
   - ajout d'un listener en cas de réception d'une demande de connexion (on connection)
   - connexion au client distant
-
 - Lors d'un déplacement du personnage, envoi du message.
   - Vous pouvez vous brancher directement sur les événements pour commencer. 
   - Puis basculer sur un middleware comme au TP précédent pour être intégré au lifecycle de React.
 - (Rajouter) un listener à la connexion sur l'arrivée d'un message (on data) pour l'ajouter à la liste des messages reçus.
 - Lors du clic sur HangUp, femer la connexion
+
+
 
 
 ## TP3.2 WebRTC et vidéo
