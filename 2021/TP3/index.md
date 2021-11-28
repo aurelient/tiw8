@@ -49,7 +49,7 @@ Comme dans les TP précédents nous allons utliser express. Pour le mécanisme d
 
 On part du principe que tous les clients qui se connectent au serveur veulent se connecter les un aux autres, d'abord en data, puis en audio/vidéo. En bonus vous pouvez mettre en place un principe de salon: chaque salon a sa propre carte seuls les utilisateurs sur un salon donné sont connectés les uns aux autres.
 
-Côté client, nous allons gérer ce qui a trait à `simple-peer` dans un middleware. En effet peerjs est une abstraction d'interfaces de communication réseau qu'on veut tout garder active. *Alternativement,* il est possible de déclarer les objets `simple-peer` comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref), et de les gérer par exemple dans le composant Board.
+Côté client, nous allons gérer ce qui a trait à `simple-peer` dans un middleware. En effet simple-peer est une abstraction d'interfaces de communication réseau qu'on veut tout garder active. *Alternativement,* il est possible de déclarer les objets `simple-peer` comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref), et de les gérer par exemple dans le composant Board.
 
 Les étapes sont les suivantes : 
 - côté client on ouvre une connexion (socket) vers le serveur
@@ -178,17 +178,6 @@ function VideoChat()  {
             <track kind="captions" srcLang="en" label="english_captions"/>
           </video>
 
-          <div>
-            <Button onClick={start} disabled={!startAvailable}>
-              Start
-            </Button>
-            <Button onClick={call} disabled={!callAvailable}>
-              Call
-            </Button>
-            <Button onClick={hangUp} disabled={!hangupAvailable}>
-              Hang Up
-            </Button>
-          </div>
         </div>
     )
 }
@@ -198,15 +187,12 @@ export default VideoChat
 
 ### Récupération du flux vidéo
 
-Avant de transmettre notre flux local à notre correspondant, nous allons tout d'abord faire en sorte de récupérer le flux vidéo du navigateur, lorsqu'on clique sur `Start`
+Avant de transmettre notre flux local à notre correspondant, nous allons tout d'abord faire en sorte de récupérer le flux vidéo du navigateur.
 
 Utilisez l'API mediaDevices pour récupérer le `stream` vidéo et le visualiser dans votre composant.
 
 ```js
     const start = () => {
-        // TODO initialisation de peerjs
-
-        setStart(false)
         navigator.mediaDevices
             .getUserMedia({
                 audio: true,
@@ -218,12 +204,11 @@ Utilisez l'API mediaDevices pour récupérer le `stream` vidéo et le visualiser
 
     const gotStream = stream => {
         localVideoRef.current.srcObject = stream
-        setCall(true) // On fait en sorte d'activer le bouton permettant de commencer un appel
         localStreamRef.current = stream
     }
 ```
 
-Plutôt que des déclarer des variables hors du scope du composant, comme précédemment, nous allons faire les choses plus proprement en déclarant certaines objets comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref).
+Nous allons déclarer certains objets comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref).
 
 Vous aurez globalement besoin de gérer trois objets (déclarer au début du composant après vos variables d'état) :
 
@@ -235,15 +220,15 @@ Vous aurez globalement besoin de gérer trois objets (déclarer au début du com
 
 #### Mise en relation des clients
 
-Le click sur le bouton `Call` initiera la connexion entre les deux pairs.
+Lorsque deux personnages sont proche l'un de l'autre nous allons basculer sur une connexion audio+vidéo entre les deux pairs.
 
-Référez vous à la [documentation de peerjs](https://peerjs.com/) pour l'émission et la réception du flux vidéo.
+Référez vous à la documentation de simple-peer pour l'émission et la réception du flux vidéo.
 
-Vous pourrez appelez `gotRemoteStream(stream_de_peerjs);` dans votre événement `on call` pour cabler le flux à l'interface.
+Vous pourrez appelez `gotRemoteStream(stream_de_simple-peer);` dans votre événement `on call` pour cabler le flux à l'interface.
 
 ```js
     const call = () => {
-        // TODO voir la doc de peerjs
+        // TODO voir la doc de simple-peer
 
         setCall(false);
         setHangup(true);
@@ -318,4 +303,5 @@ Bonus:
 
 - Gestion de plus de deux pairs. 
 - Gestion de salon
+- Gestion de l'audio et de la vidéo séparé : quand on s'éloigne, la vidéo se coupe, mais l'audio diminue progressivement avec la distance avant de se couper.
 
