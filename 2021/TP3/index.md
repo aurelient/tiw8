@@ -39,28 +39,60 @@ On aura besoin des dépendances suivantes :
 - Tailwind
 - [simple-peer](https://github.com/feross/simple-peer/)
 - @types/simple-peer
+- socket.io
 
-### Mise en place d'un serveur
+### Mise en place du signaling
 
-Comme dans les TP précédents nous allons utliser express. Nous allons adjoindre au serveur, un mécanisme facilitant la découverte des pairs : le signaling.
+Le signaling consiste en la mise en relation des différents clients entre eux. Pour cette phase nous allons utiliser un serveur qui servira d'entremetteur. Les clients vont se déclarer au serveur, puis ouvrir un canal de communication direct entre eux. 
 
-Voici une base de code sur laquelle vous pouvez vous appuyer côté serveur : [https://gist.github.com/adammw/d9bf021c395835427aa0](https://gist.github.com/adammw/d9bf021c395835427aa0) Ignorez les lignes 3 et 12 qui font un bundling du code du client avec browserify. Nous utilisons webpack et servons le contenu du dossier `dist` (comme dans les TP précédents). 
+Comme dans les TP précédents nous allons utliser express. Pour le mécanisme de la découverte des pairs nous allons utiliser des websockets (avec socket.io côté client et côté serveur). Nous utilisons webpack et servons le contenu du dossier `dist` (comme dans les TP précédents). Vous pouvez reprendre le code serveur du TP précédent.
 
-Quand vous lancez le serveur vous pourrez vérifier que votre application s'affiche bien en local.
+On part du principe que tous les clients qui se connectent au serveur veulent se connecter les un aux autres, d'abord en data, puis en audio/vidéo. En bonus vous pouvez mettre en place un principe de salon: chaque salon a sa propre carte seuls les utilisateurs sur un salon donné sont connectés les uns aux autres.
 
-Testez un déploiement sur Heroku. 
+Côté client, nous allons gérer ce qui a trait à `simple-peer` dans un middleware. En effet peerjs est une abstraction d'interfaces de communication réseau qu'on veut tout garder active. *Alternativement,* il est possible de déclarer les objets `simple-peer` comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref), et de les gérer par exemple dans le composant Board.
 
-Voir aussi [ce cours de NYU](https://github.com/lisajamhoury/The-Body-Everywhere-And-Here/blob/master/syllabus.md) et [la discussion sur le signaling avec simple-peer](https://javascript.plainenglish.io/building-a-signaling-server-for-simple-peer-f92d754edc85) si vous souhaitez aller plus loin. 
+Les étapes sont les suivantes : 
+- côté client on ouvre une connexion (socket) vers le serveur
 
-### Création du composant parent
+- côté serveur, `socket.io` gère déjà la liste de tous les clients qui lui sont connectés (`io.sockets`). En cas de `connection` on va diffuser à tous les clients connectés la présence d'un nouveau pair en émettant un message ayant pour `eventName` `peer`, et pour argument un objet décrivant le pair. À la différence d'un appel ou l'un des utilisateurs enclenche la connection vers un autre, dans notre situation, c'est le serveur qui va décider arbitrairement quel pair est le `initiator`.  
 
-Nous allons créer un composant React qui va assembler les composants suivants :
+  ```json
+  {
+    peerId: socket.id,
+    initiator: true, // ou false selon la situation
+  }
+  ```
+
+- côté client on écoute l'annonce de la connexion de nouveaux pairs aux serveurs `socket.on('peer', (data) => {})`. C'est à cette annonce qu'on crée un nouveau `peer`
+
+  ```json
+  const peer: SimplePeer.Instance = new SimplePeer({
+          initiator: data.initiator,
+          trickle: useTrickle,
+          config: {
+              iceServers: [
+                  { urls: 'stun:stun.l.google.com:19302' },
+                  { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+              ],
+          },
+  })
+  
+  ... ajouter tous les listeners au peer, ajouter ce peer à une liste de tous les pairs auxquels vous êtes connecté
+  ```
+
+  
+
+En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. Commencez par gérer seulement deux pairs pour simplifier. La gestion de 3 ou à 5 pairs sera en bonus. 
+
+### Augmentation du composant Board
+
+Pour vous aider à débugger (ce n'est pas obligatoire) il peut être utile de cabler des boutons sur les différentes Nous allons créer un composant React qui va assembler les composants suivants :
 - Le `Board` qui contient la carte
 - Un div par personne connectée 
   - Au début un seul div, celui de l'utilisateur du navigateur
   - Plus tard un div par participant connecté
   - Ensuite pour chaque div la liste des déplacements du participant
-  - Encore plus tard une vidéo du participant
+  - Encore plus tard une vidéo du participant (prochain TP)
 - Un bouton pour démarrer la mise entre relation entre les deux clients
 - Un bouton mettant fin à la connexion
 
@@ -95,19 +127,6 @@ export default DataChat
 
 Vous devriez à ce stade avoir un cadre d'application non fonctionelle.
 
-
-
-### Mise en relation de deux clients
-
-⚠️ ATTENTION ⚠️
-
-Nous allons gérer ce qui a trait à `simple-peer` dans un middleware. En effet peerjs est une abstraction d'interfaces de communication réseau qu'on veut tout garder active. *Alternativement,* il serait aussi possible de déclarer les objets `simple-peer` comme mutable et persistant tout au long du cycle de vie [grâce au hook useref](https://reactjs.org/docs/hooks-reference.html#useref).
-
-En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients.
-
-Le déroulé est le suivant :
-- Ouvrir deux fenêtres de navigateur sur votre application
-- Généer automatiquement un identifiant sur chaque client, et les échanger via le serveur (vous pouvez utiliser la bibliothèque [uuid](https://www.npmjs.com/package/uuid))
 - Lors du clic sur Start créez une connexion entre les deux clients (il faudra que les deux clients cliquent sur Start pour que la connexion soit établie). La création sera constituée des étapes suivantes
   - création/initialisation de l'objet Peer avec l'identifiant de votre client local.
   - ajout d'un listener d'ouverture de connexion (on open)
@@ -264,10 +283,13 @@ Vous pouvez faire du code code conditionnel et tester `location` côté client p
   - Le lien vers Heroku pointe vers une page permettant d'aller sur le composant de chaque TP (ou sur une version intégrant les deux).
   - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/yyy.git)
 
+## Références en plus :
+
+Voir aussi [ce cours de NYU](https://github.com/lisajamhoury/The-Body-Everywhere-And-Here/blob/master/syllabus.md) et [la discussion sur le signaling avec simple-peer](https://javascript.plainenglish.io/building-a-signaling-server-for-simple-peer-f92d754edc85) si vous souhaitez aller plus loin. 
 
 ## Evaluation
 
-Malus (points négatifs)
+Malus (points négatifs) 
 - linter original qui ne passe pas (ou trop d'exceptions dans le code) -2pt
 - la séquence `yarn install`, `yarn build` et `yarn start`qui ne passe pas -2pt
 - README pas clair sur les spécificité du projet (build, déploiement, ce qui marche et ce qui ne marche pas, sur comment tester...) -2pt
@@ -291,3 +313,9 @@ Points
   - le tout fonctionne sur localhost
   - la fermeture de l'appel se passe correctement
 - Déploiement sur Heroku qui fonctionne (2pt) 
+
+Bonus: 
+
+- Gestion de plus de deux pairs. 
+- Gestion de salon
+
