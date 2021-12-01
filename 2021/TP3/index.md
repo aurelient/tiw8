@@ -68,7 +68,7 @@ Les étapes sont les suivantes :
   ```json
   const peer: SimplePeer.Instance = new SimplePeer({
           initiator: data.initiator,
-          trickle: useTrickle,
+          trickle: useTrickle, // useTrickle doit être a true pour que le peer persiste
           config: {
               iceServers: [
                   { urls: 'stun:stun.l.google.com:19302' },
@@ -77,75 +77,80 @@ Les étapes sont les suivantes :
           },
   })
   
-  ... ajouter tous les listeners au peer, ajouter ce peer à une liste de tous les pairs auxquels vous êtes connecté
+  // TODO ajouter tous les listeners au peer, 
+  
+  socket.on('signal', function (data) {
+    console.log('received signal on socket')
+  	// TODO propagate signal from socket to peer
+  })
+  
+  peer.on('signal', function (data) {
+    console.log(
+      'Advertising signaling data' + data + 'to Peer ID:' + peerId
+    )
+    // TODO propagate signal from peer to socket
+  })
+  peer.on('error', function (e) {
+    console.log('Error sending connection to peer :' + peerId + e)
+  })
+  peer.on('connect', function () {
+    console.log('Peer connection established')
+    // vous pouvez essayer d'envoyer des donnees au pair avec send("hello") pour voir si ça marche
+  })
+  peer.on('data', function (data) {
+    console.log('Received data from peer:' + data)
+    // les donnees arrivent sous forme de string, 
+    // si le string est un objet JSON serialise avec JSON.stringify(objet)
+    // JSON.parse(string) permet de reconstruire l'objet
+    const restructuredData = JSON.parse(data) 
+    // TODO take action after receiving data from peer 
+  })
+  peer.on('stream', (stream): void => {
+  	//   TP suivant 3.3
+  	console.log('got stream ' + stream)
+  })
+  
+  // TODO ajouter ce peer à une liste de tous les pairs auxquels vous êtes connecté
+  
+  
   ```
 
   
 
-En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. Commencez par gérer seulement deux pairs pour simplifier. La gestion de 3 ou à 5 pairs sera en bonus. 
+En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. Commencez par gérer seulement deux pairs pour simplifier. La gestion de 3 ou à 5 pairs est en bonus si jamais vous vous ennuyez fin décembre.
 
-### Augmentation du composant Board
+Voici un diagramme de séquence de la mise en relation.
 
-Pour vous aider à débugger (ce n'est pas obligatoire) il peut être utile de cabler des boutons sur les différentes Nous allons créer un composant React qui va assembler les composants suivants :
-- Le `Board` qui contient la carte
-- Un div par personne connectée 
-  - Au début un seul div, celui de l'utilisateur du navigateur
-  - Plus tard un div par participant connecté
-  - Ensuite pour chaque div la liste des déplacements du participant
-  - Encore plus tard une vidéo du participant (prochain TP)
-- Un bouton pour démarrer la mise entre relation entre les deux clients
-- Un bouton mettant fin à la connexion
-
-Voilà un exemple de composant dont vous pouvez vous inspirer.
-
-```js
-function DataChat()  {
-
-    const [startAvailable, setStart] = useState(true)
-    const [sendAvailable, setSend] = useState(false)
-    const [hangupAvailable, setHangup] = useState(false)
-
-    return (
-        // TODO rajouter les champs textes correspondants
-        // Vous pouvez utiliser des TextField de material-UI
-        // Et une Grid plutôt que des div pour la mise en page
-        <div>
-          <Button onClick={start} disabled={!startAvailable}>
-            Start
-          </Button>
-          <Button onClick={send} disabled={!callAvailable}>
-            Send
-          </Button>
-          <Button onClick={hangUp} disabled={!hangupAvailable}>
-            Hang Up
-          </Button>
-        </div>
-    )
-}
-export default DataChat
-```
-
-Vous devriez à ce stade avoir un cadre d'application non fonctionelle.
-
-- Lors du clic sur Start créez une connexion entre les deux clients (il faudra que les deux clients cliquent sur Start pour que la connexion soit établie). La création sera constituée des étapes suivantes
-  - création/initialisation de l'objet Peer avec l'identifiant de votre client local.
-  - ajout d'un listener d'ouverture de connexion (on open)
-  - ajout d'un listener en cas de réception d'une demande de connexion (on connection)
-  - connexion au client distant
-- Lors d'un déplacement du personnage, envoi du message.
-  - Vous pouvez vous brancher directement sur les événements pour commencer. 
-  - Puis basculer sur un middleware comme au TP précédent pour être intégré au lifecycle de React.
-- (Rajouter) un listener à la connexion sur l'arrivée d'un message (on data) pour l'ajouter à la liste des messages reçus.
-- Lors du clic sur HangUp, femer la connexion
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F30I32CQBdqwdMxK6mUCPRw%2Ftiw8-tp3%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
 
 
+
+### Partage de la position du même joueur
+
+A ce stade vous devrions être capable de partager des données entre deux pairs qui se sont auto-découverts.
+
+Maitenant nous allons reprendre le principe du TP précédent: lorsqu'on bouge le personnage, le déplacement va être capturé par le middleware (c'est là qu'est localisé tout le code ci-dessus) et propagé. 
+
+A la place de propager par un socket, on va partager avec un `peer.send()` et recevoir de l'autre côté avec un `peer.on('data', data => {})
+
+En suivant le même principe que le TP 2 vous devriez pouvoir déplacer le personnage entre deux navigateurs.
+
+### Rajouter un deuxieme personnage dans l'état
+
+Maintenant nous allons rajouter un deuxième personnage. Pour simplifier vous pouvez "hardcoder" l'avatar du personnage en fonction de la valeur peer.initiator.
+
+Au lieu de partager les déplacements du même personnage faites en sorte que chaque pair controle son propre personnage : en plus du deplacement partagez l'identifiant du personnage.
+
+### Déployez sur Heroku
+
+Et testez...
 
 
 ## TP3.2 WebRTC et vidéo
 
-Nous allons maintenant créer un nouveau composant dédié à la vidéo.
+Nous allons maintenant créer un nouveau composant dédié à la vidéo. La vidéo va se déclencher quand les deux personnages sont à moins de deux cases de distance, et se couper quand ils sont à plus de 5 cases de distance.
 
-Comme pour le TP précédent, nous allons démarrer par établir une connexion WebRTC entre 2 peers en local.
+Nous allons continuer le TP précédent.
 
 
 ### Création du composant VideoChat
@@ -154,7 +159,9 @@ Nous allons maintenant transmettre des flux vidéos en plus des data.
 
 Voici un composant vidéo pouvant servir d'inspiration. 
 
-Vous pouvez commencer par avoir des boutons pour déclencher l'appel. Puis l'appel se déclenchera et se coupera si les deux personnages sont à moins de 2 ou 3 cases l'un de l'autre. Vous pouvez établir d'autre modes de connexion, par exemple en "entrant" dans une salle. Le composant Board vient avec une grille de `div` au-dessus de la carte, vous pouvez utiliser ces divs pour faire des effets d'activation (par exemple mettre en rouge une salle active si des personnes sont dedans, ou indiquer la zone dans laquelle l'appel va rester actif). 
+Vous pouvez commencer par avoir des boutons pour déclencher l'appel. Puis l'appel se déclenchera et se coupera si les deux personnages sont à moins de 2 ou 3 cases l'un de l'autre. 
+
+Vous pouvez établir d'autre modes de connexion, par exemple en "entrant" dans une salle. Le composant Board vient avec une grille de `div` au-dessus de la carte, vous pouvez utiliser ces divs pour faire des effets d'activation (par exemple mettre en rouge une salle active si des personnes sont dedans, ou indiquer la zone dans laquelle l'appel va rester actif). 
 
 ```js
 function VideoChat()  {
