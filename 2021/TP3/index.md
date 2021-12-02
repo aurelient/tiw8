@@ -54,18 +54,18 @@ Côté client, nous allons gérer ce qui a trait à `simple-peer` dans un middle
 Les étapes sont les suivantes : 
 - côté client on ouvre une connexion (socket) vers le serveur
 
-- côté serveur, `socket.io` gère déjà la liste de tous les clients qui lui sont connectés (`io.sockets`). En cas de `connection` on va diffuser à tous les clients connectés la présence d'un nouveau pair en émettant un message ayant pour `eventName` `peer`, et pour argument un objet décrivant le pair. À la différence d'un appel ou l'un des utilisateurs enclenche la connection vers un autre, dans notre situation, c'est le serveur qui va décider arbitrairement quel pair est le `initiator`.  
+- côté serveur, `socket.io` gère déjà la liste de tous les clients qui lui sont connectés (`io.sockets`). En cas de `connection` on va diffuser à tous les clients connectés la présence d'un nouveau pair en émettant un message ayant pour `eventName`: `peer`, et pour argument un objet décrivant le pair. À la différence d'un appel ou l'un des utilisateurs enclenche la connection vers un autre, dans notre situation, c'est le serveur qui va décider arbitrairement quel pair est le `initiator`.  
 
-  ```json
+```json
   {
     peerId: socket.id,
     initiator: true, // ou false selon la situation
   }
-  ```
+```
 
 - côté client on écoute l'annonce de la connexion de nouveaux pairs aux serveurs `socket.on('peer', (data) => {})`. C'est à cette annonce qu'on crée un nouveau `peer`
 
-  ```json
+```jsx
   const peer: SimplePeer.Instance = new SimplePeer({
           initiator: data.initiator,
           trickle: useTrickle, // useTrickle doit être a true pour que le peer persiste
@@ -111,18 +111,14 @@ Les étapes sont les suivantes :
   })
   
   // TODO ajouter ce peer à une liste de tous les pairs auxquels vous êtes connecté
-  
-  
-  ```
+```
 
   
-
 En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. Commencez par gérer seulement deux pairs pour simplifier. La gestion de 3 ou à 5 pairs est en bonus si jamais vous vous ennuyez fin décembre.
 
 Voici un diagramme de séquence de la mise en relation.
 
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F30I32CQBdqwdMxK6mUCPRw%2Ftiw8-tp3%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
-
 
 
 ### Partage de la position du même joueur
@@ -131,7 +127,7 @@ A ce stade vous devrions être capable de partager des données entre deux pairs
 
 Maitenant nous allons reprendre le principe du TP précédent: lorsqu'on bouge le personnage, le déplacement va être capturé par le middleware (c'est là qu'est localisé tout le code ci-dessus) et propagé. 
 
-A la place de propager par un socket, on va partager avec un `peer.send()` et recevoir de l'autre côté avec un `peer.on('data', data => {})
+A la place de propager par un socket, on va partager avec un `peer.send()` et recevoir de l'autre côté avec un `peer.on('data', data => {})`
 
 En suivant le même principe que le TP 2 vous devriez pouvoir déplacer le personnage entre deux navigateurs.
 
@@ -144,6 +140,12 @@ Au lieu de partager les déplacements du même personnage faites en sorte que ch
 ### Déployez sur Heroku
 
 Et testez...
+
+Depuis l'université notamment, il est possible que des ports de mise en relation soient bloqués, et que les deux pairs ne puissent pas bien se parler. Dans ce cas, il faut passer par un serveur turn qui relaiera le traffic (de la data, mais au prochain TP de la vidéo). Vu que c'est du volume, cela devient couteux, il n'existe donc pas de serveurs TURN public. 
+
+Toutefois vous pouvez vous créer un compte sur [Twilio.com](https://www.twilio.com/), et [voir ici comment récupérer un accès à leurs serveurs Stun/Turn](https://www.twilio.com/docs/stun-turn). Vous aurez 15$ de crédits en ouvrant le compte. Ce qui devrait largement aller pour le TP. 
+
+**J'évaluerai le TP3 d'abord en local** (= chez moi sur mon réseau interne), le déploiement fonctionnel sur Heroku c'est bien, mais ne perdez pas trop de temps dessus si ça vous bloque.
 
 
 ## TP3.2 WebRTC et vidéo
