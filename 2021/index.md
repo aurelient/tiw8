@@ -27,20 +27,20 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 
 ## Plan du cours
 
-|          | Date  | Cours                          | Supports                                     | Intervenant |
-| -------- | ----- | ------------------------------ | -------------------------------------------- | ----------- |
-| CM 0     | 17/09 | Présentation de l'UE           | [pdf](cours/cm0-intro.pdf)                   | A. Tabard   |
-| CM 1     | 17/09 | Informatique Ubiquitaire       | [pdf](cours/cm1-introUbicomp.pdf)            | A. Tabard   |
-| CM 1 bis | 17/09 | Stack                          | [pdf](cours/cm1-stack.pdf)                   | A. Tabard   |
-| CM 2     | 08/10 | Programmation Réactive         | [pdf](cours/cm2-reactivity.pdf)              | A. Tabard   |
-|          | 15/10 | _séance de TP supplémentaire_  |                                              |             |
-| CM 3     | 05/11 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf) | A. Tabard   |
-|          | 12/11 | _séance de TP supplémentaire_  |                                              |             |
-| CM 4     | 03/12 | Temps réel & Collaboration     | [pdf](cours/cm4-collaboration.pdf)           | A. Tabard   |
-| CM 5     | 10/12 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)           | A. Tabard   |
-| CM 6     | 07/01 | Web of Things                  |                                              | L. Medini   |
-|          | 14/01 | —                              |                                              |             |
-| CM 7     | 04/02 | _séance de TP supplémentaire_  |                                              |             |
+|          | Date  | Cours                          | Supports                                                             | Intervenant |
+| -------- | ----- | ------------------------------ | -------------------------------------------------------------------- | ----------- |
+| CM 0     | 17/09 | Présentation de l'UE           | [pdf](cours/cm0-intro.pdf)                                           | A. Tabard   |
+| CM 1     | 17/09 | Informatique Ubiquitaire       | [pdf](cours/cm1-introUbicomp.pdf)                                    | A. Tabard   |
+| CM 1 bis | 17/09 | Stack                          | [pdf](cours/cm1-stack.pdf)                                           | A. Tabard   |
+| CM 2     | 08/10 | Programmation Réactive         | [pdf](cours/cm2-reactivity.pdf)                                      | A. Tabard   |
+|          | 15/10 | _séance de TP supplémentaire_  |                                                                      |             |
+| CM 3     | 05/11 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
+|          | 12/11 | _séance de TP supplémentaire_  |                                                                      |             |
+| CM 4     | 03/12 | Temps réel & Collaboration     | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
+| CM 5     | 10/12 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)                                   | A. Tabard   |
+| CM 6     | 07/01 | Web of Things                  | [site](https://perso.liris.cnrs.fr/lionel.medini/enseignement/TIW8/) | L. Medini   |
+|          | 14/01 | —                              |                                                                      |             |
+| CM 7     | 04/02 | _séance de TP supplémentaire_  |                                                                      |             |
 
 ## TP
 
@@ -51,11 +51,11 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 2.2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 15/10 | Redux + websockets / multi-dispositif     |         |
 | [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif)             | 05/11 | Distribution d'interface multi-dispositif |         |
 | [TP 2.4](TP2/#4-suite)                                                   | 12/11 | Modalité d'entrée (gestes, stylet)        | rendu 1 |
-| [TP 3.1](TP3)                                                            | 03/12 | WebRTC: chat p2p local                    |         |
+| [TP 3.1](TP3)                                                            | 03/12 | WebRTC: p2p data                          |         |
 | [TP 3.2](TP3/#tp32-webrtc-et-vidéo)                                      | 10/12 | WebRTC: audio et video                    | rendu 2 |
-| [TP 4.1](TP4)                                                            | 07/01 | WoT et capteurs Arduino                   |         |
-| [TP 4.2](TP4/#2-suite)                                                   | 14/01 | WoT et CrowdSensing                       |         |
-| [TP 4.3](TP4/#3-suite)                                                   | 04/02 | WoT et Performance                        | rendu 3 |
+| [TP 4](https://perso.liris.cnrs.fr/lionel.medini/enseignement/TIW8/)     | 07/01 | WoT et capteurs Arduino                   |         |
+| TP 4                                                                     | 14/01 | WoT et CrowdSensing                       |         |
+| TP 4                                                                     | 04/02 | WoT et Performance                        | rendu 3 |
 
 ## Evaluation
 
@@ -63,7 +63,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
   - TP1 : 10% (PASS/FAIL)
   - TP2 : 40%
   - TP3 : 20%
-  - TP3 : 30%
+  - TP4 : 30%
 - 1 contrôle écrit (33%)
   - 90 minutes
   - 3 feuilles A4 de supports autorisées.
@@ -81,7 +81,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 - [Your Mouse is a Database](https://queue.acm.org/detail.cfm?id=2169076)
 - [A Survey on Reactive Programming](http://soft.vub.ac.be/Publications/2012/vub-soft-tr-12-13.pdf)
 - [Dynamics of Change: Why Reactivity Matters](https://queue.acm.org/detail.cfm?id=2971330)
-- [Immuntability is not enough](https://codewords.recurse.com/issues/six/immutability-is-not-enough)
+- [Immutability is not enough](https://codewords.recurse.com/issues/six/immutability-is-not-enough)
 - [What is FRP?](https://stackoverflow.com/questions/1028250/what-is-functional-reactive-programming)
 
 ## Calendrier
