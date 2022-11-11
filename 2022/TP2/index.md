@@ -160,86 +160,73 @@ Dans vos composants (ici SlideShow et AppToolbar), vous pouvez récupérer la ro
 
 Si ce n'est pas encore fait, ou que vous n'avez pas automatisé, c'est le moment de tester le déploiement sur Heroku.
 
-## TP2.2 Redux
+## TP2.2 Easy Peasy
 
-Nous allons maintenant gérer l’état de l’application avec Redux. Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.
+Nous allons maintenant gérer l’état de l’application avec Easy-Peasy. Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.
+Historiquement nous utilisions Redux, mais Easy-Peasy permet une implémentation vraiment simplifiée et très légère.
 
 Afin de vous faciliter le debug du TP, vous pouvez activer la création d’un Source Map dans votre webpack.config.js : `devtool: 'eval-source-map'.`
 
-Utilisez aussi [Redux DevTools](https://github.com/reduxjs/redux-devtools) pour Chrome ou Firefox, il nécessite quelques légères [modifications de votre code](https://github.com/zalmoxisus/redux-devtools-extension#usage). Rajoutez `redux-devtools-extension` au projet.
-
-Installez Redux et les dépendances associées pour React (redux, react-redux). Par défaut Redux n’est pas lié à React et peut être utilisé avec d’autres frameworks.
-
-Nous allons utiliser [Redux Toolkit](https://redux-toolkit.js.org/) pour nous faciliter la vie (installez `@reduxjs/toolkit`).
-
-Vous pouvez suivre le [guide de démarrage de Redux Toolkit](https://redux-toolkit.js.org/tutorials/typescript) en l'adaptant à notre application
+Installez le package `easy-peasy`, vous pourrez trouver plus d'informations et la documentation à cette adresse: https://easy-peasy.dev/
 
 #### Création d’un store
 
 Nous allons commencer par créer le store qui va gérer les états.
 
-```js
-import { configureStore } from "@reduxjs/toolkit";
-import slideshowReducer from "../slices/slideshowSlice"; // chemin à adapter
+Créez la suite de dossiers `application/store` dans lequel il y aura un fichier `index.ts`. Notre application étant assez simple, nous allons utiliser un seul store.
+Puisque nous sommes en TypeScript, nous devons définir le type du store et les types des actions.
 
-export const store = configureStore({ reducer: slideshowReducer });
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
-```
-
-On importe `configureStore` depuis redux-toolkit et aussi `slideshowReducer` dont on verra juste en dessous la définition.
-
-`configureStore` peut aussi prendre un état initial en entrée, mais c'est les reducers qui vont produire l'état de l'application (y compris l'état initial).
-
-#### Création d'une slice, des reducers et actions associés
-
-On va ensuite s'appuyer sur Redux Toolkit pour générer automatiquement les createurs d'actions et les types d'actions: des "slices" elles prennent en entrée, un état initial, un ensemble de reducers et un nom de slice. Redux Toolkit vise à supprimer beaucoup de "boilerplate code" et à déléguer la fabrication des actions.
-
-1. Comme nous utilisons Typescript il faudra définir [les types associés aux hooks Redux](https://redux-toolkit.js.org/tutorials/typescript#define-typed-hooks).
-
-2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `slideshowSlice`. Cette slice aura quatre actions :
+Le contenu du fichier pour créer le store va ressembler à ceci: 
 
 ```js
-// TODO compléter en s'appuyant sur le tutoriel lié au dessus
-...
-export const slideshowSlice = createSlice({
-    name: 'slidesApp',
-    // `createSlice` will infer the state type from the `initialState` argument
-    initialState,
-    reducers: {
-        nextSlide: (state) => {
-            // TODO
-        },
-        previousSlide: (state) => {
-            // TODO
-        },
-        // Use the PayloadAction type to declare the contents of `action.payload`
-        setSlide: (state, action: PayloadAction<number>) => {
-            // TODO à adapter au besoin
-            state.currentSlide = action.payload
-        },
-        changeVisibilitySlide: (state, action: PayloadAction<number>) => {
-            // TODO changer la propriété visible de true à false et inversement
-        },
+import { Action, action, createStore } from "easy-peasy";
 
-    },
-})
+interface SlideStore {
+  name: string
+  currentSlide: number
+  nextSlide: Action<SlideStore>
+  previousSlide: Action<SlideStore>
+  setSlide: Action<SlideStore, SetSlideAction>
+  changeSlideVisibility: Action<SlideStore, SlideVisibilityAction>
+}
 
-export const { nextSlide, previousSlide, setSlide, changeVisibilitySlide } = slideshowSlice.actions
-export default slideshowSlice.reducer
+interface SetSlideAction {
+  slideNumber: number
+}
+
+interface SlideVisibilityAction {
+  isVisible: boolean
+}
+
+const store = createStore<SlideStore>({
+  name: 'slidesApp',
+  currentSlide: 0,
+  nextSlide: action((state, payload) => {
+    // TODO
+  }),
+  previousSlide: action((state, payload) => {
+    // TODO
+  }),
+  setSlide: action((state, payload) => {
+    // TODO
+  }),
+  changeSlideVisibility: action((state, payload) => {
+    // TODO
+  })
+});
+
+export default store;
 ```
 
-#### Brancher l'application à Redux et au store
+Vous remarquerez que le store spécifie à travers son interface les différentes "Actions" qu'il peut appeler afin de modifier son état.
+
+#### Utiliser le store
 
 Dans votre `index.tsx` principal exposez le store pour pouvoir l'afficher via la console du navigateur.
-Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à votre application React.
+Cela permettra d'effectuer les premiers tests de easy-peasy, sans l'avoir branché à votre application React.
 
 ```js
-import { Provider } from 'react-redux'
-import { store } from './store/index' // verifiez que le chemin est correct
+import { store } from './application/store' // verifiez que le chemin est correct
 
 declare global {
     interface Window {
@@ -252,9 +239,9 @@ window.mystore = store
 Et enveloppez votre application dans une balise :
 
 ```xml
-<Provider store={store}>`
+<StoreProvider store={store}>`
   ...
-</Provider>`
+</StoreProvider>`
 ```
 
 #### Lien React - Redux
