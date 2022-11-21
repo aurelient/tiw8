@@ -184,6 +184,7 @@ import { Action, action, createStore } from "easy-peasy";
 interface SlideStore {
   name: string
   currentSlide: number
+  isVisible: boolean
   nextSlide: Action<SlideStore>
   previousSlide: Action<SlideStore>
   setSlide: Action<SlideStore, SetSlideAction>
@@ -195,12 +196,13 @@ interface SetSlideAction {
 }
 
 interface SlideVisibilityAction {
-  isVisible: boolean
+  slideNumber: number
 }
 
-const store = createStore<SlideStore>({
+const storeModel: SlideStore = {
   name: 'slidesApp',
   currentSlide: 0,
+  isVisible: true,
   nextSlide: action((state, payload) => {
     // TODO
   }),
@@ -211,14 +213,16 @@ const store = createStore<SlideStore>({
     // TODO
   }),
   changeSlideVisibility: action((state, payload) => {
-    // TODO
+    // TODO: Maniupuler le state, par exemple ici: state.isVisible = !state.isVisible
   })
-});
+}
+
+const store = createStore<SlideStore>(storeModel);
 
 export default store;
 ```
 
-Vous remarquerez que le store spécifie à travers son interface les différentes "Actions" qu'il peut appeler afin de modifier son état.
+Vous remarquerez que le store spécifie à travers son interface les différentes "Action"s qu'il peut appeler afin de modifier son état. Chaque "Action" est templaté avec l'interface du store et une interface pour son payload.
 
 #### Utiliser le store
 
@@ -236,7 +240,7 @@ declare global {
 window.mystore = store
 ```
 
-Et enveloppez votre application dans une balise :
+Et toujours dans le `index.tsx`, enveloppez votre application dans une balise :
 
 ```xml
 <StoreProvider store={store}>`
@@ -244,9 +248,9 @@ Et enveloppez votre application dans une balise :
 </StoreProvider>`
 ```
 
-#### Lien React - Redux
+#### Lien React - EasyPeasy
 
-Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton à Toolbar. Quand on clique dessus, il va modifier la propriété `visible` du slide courant. Si le slide est visible il deviendra invisible et inversement.
+Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton à Toolbar. Quand on cliquera dessus, il ira modifier la propriété `visible` du slide courant. Si le slide est visible il deviendra invisible et inversement.
 
 Pour vous faciliter la vie, on ne va pas le rendre vraiment invisible mais simplement changer son opacité de 100% à 10%.
 
@@ -254,42 +258,37 @@ Pour faire cela nous allons devoir modifier trois fichiers
 
 1. Le composant toolbar
 2. le composant d'affichage d'un transparent
-3. la slice qui gère l'état de l'application
+3. l'action dans le store
 
 Ajoutez d'abord un bouton à la toolbar.
-On va importer les éléments suivants dans la Toolbar:
+On va importer l'élément suivants dans la Toolbar:
 
 ```js
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
-import { changeVisibilitySlide } from "../slices/slideshowSlice";
+import { useStoreActions } from 'easy-peasy';
 ```
 
-Lorsque l'on clique sur le bouton on va dispatcher une action :
+Lorsque l'on clique sur le bouton on va appeler une action du store :
 
 ```js
-  // dans votre composant on branche le dispatch au store :
-  const dispatch = useDispatch<AppDispatch>()
+  // on récupère l'action désirée dans le store
+  const changeSlideVisibility = useStoreActions((actions) => actions.changeSlideVisibility);
   ...
-  // lors du click sur le bouton
-  onClick={() => {
-      dispatch(
-          changeVisibilitySlide(
-              currentSlide // vient de la route dans la barre de navigateur via react-router
-          )
-      )
-  }}
+  // et on s'en sert lors du clic sur le bouton
+  <button onClick={changeSlideVisibility}></button>
 ```
 
-Dans le composant transparent (`SlideView` chez moi), récupérez l'état de visibilité du slide. S'il est visible l'opacité est normale sinon à 10%. Rajoutez un div enveloppant pour gérer ça.
+Dans le composant transparent (`SlideView` chez moi), récupérez l'état de visibilité du slide. S'il est visible l'opacité est normale sinon à 10%. Rajoutez un div enveloppant pour gérer ça. Ajouter aussi l'import permettant d'accéder à l'état à un instant T du store.
 
 ```js
-    const opacity: string = isVisible ? 'opacity-10' : 'opacity-100'
-    ...
-    <div className={opacity}>
+  import { useStoreState } from 'easy-peasy';
+  ...
+  const isVisible = useStoreState((state) => state.isVisible);
+  const opacity: string = isVisible ? 'opacity-100' : 'opacity-10';
+  ...
+  <div className={opacity}>
 ```
 
-Enfin, si ce n'est pas encore fait dans le code de votre slice, définissez `changeVisibilitySlide` pour que l'état global de votre application soit bien mis à jour.
+Enfin, si ce n'est pas encore fait dans le code de votre slice, définissez `changeSlideVisibility` pour que l'état global de votre application soit bien mis à jour.
 
 ## TP2.3 Distribution d’interface multi-dispositif
 
@@ -330,7 +329,7 @@ En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changeme
 
 Dans votre composant principal (là ou vous utilisez `useAppSelector`), en cas de changement de currentSlide dans le store, on change l'url du navigateur
 
-```javascript
+```js
 const hash = "#/" + slides.currentSlide;
 if (location.hash !== hash) {
   window.location.hash = hash;
@@ -343,27 +342,24 @@ if (location.hash !== hash) {
 
 ### Un premier Middleware de logging
 
-Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware). Faites un essai qui reprend en suivante [cette courte vidéo](https://www.youtube.com/watch?v=6AGdeO28UKY)) (pensez juste à installer `@types/redux-logger` en plus).
+En ce qui concerne les `Middleware`, `easy-peasy` manipule directement les types de `Redux`, car `easy-peasy` est construit par dessus `Redux`.
 
-```js
-export const store = configureStore({
-  reducer: slideshowReducer,
-  middleware: [logger],
-});
-```
+Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware). Faites un essai qui reprend en suivante [cette courte vidéo](https://www.youtube.com/watch?v=6AGdeO28UKY)) (pensez juste à installer `@types/redux-logger` en plus).
 
 Nous allons maintenant créer un logger similaire "à la main" (vous pouvez faire ça dans le fichier de base de votre store). Un middleware a une signature un peu particulière. [Il s'agit en fait de 3 fonctions imbriquées](https://redux.js.org/tutorials/fundamentals/part-4-store#writing-custom-middleware):
 
+Dans le fichier où vous avez créé votre store, ajoutez:
+
 ```js
-const myLoggerMiddleware: Middleware<Dispatch> = (store: Store) => (next) => {
-  return (action: AnyAction) => {
-    console.log("State Before:", store.getState());
-    return next(action);
-  };
+const myLoggerMiddleware: Middleware<Dispatch, StoreModel> = (api) => (next) => {
+    return (action: AnyAction) => {
+        console.log("State Before:", api.getState());
+        return next(action);
+    };
 };
 ```
 
-- La fonction externe est le middleware lui-même, appelée par `applyMiddleware` (voir ci-dessous), elle reçoit un objet de type `Store` qui contient les fonctions {dispatch, getState} du store.
+- La fonction externe est le middleware lui-même, elle reçoit un objet de type `MiddlewareAPI` qui contient les fonctions {dispatch, getState} du store.
 - La fonction centrale reçoit une fonction `next` comme argument, qui appellera le prochain middleware du pipeline. S'il c'est le dernier (ou l'unique), alors la fonction `store.dispatch`
 - La fonction interne reçoit l'action courante en argument et sera appelée à chaque fois qu'une action est dispatchée.
 
