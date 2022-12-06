@@ -181,14 +181,14 @@ Le contenu du fichier pour créer le store va ressembler à ceci:
 ```js
 import { Action, action, createStore } from "easy-peasy";
 
-interface SlideStore {
+interface SlideStoreModel {
   name: string
   currentSlide: number
   isVisible: boolean
-  nextSlide: Action<SlideStore>
-  previousSlide: Action<SlideStore>
-  setSlide: Action<SlideStore, SetSlideAction>
-  changeSlideVisibility: Action<SlideStore, SlideVisibilityAction>
+  nextSlide: Action<SlideStoreModel>
+  previousSlide: Action<SlideStoreModel>
+  setSlide: Action<SlideStoreModel, SetSlideAction>
+  changeSlideVisibility: Action<SlideStoreModel, SlideVisibilityAction>
 }
 
 interface SetSlideAction {
@@ -199,7 +199,7 @@ interface SlideVisibilityAction {
   slideNumber: number
 }
 
-const storeModel: SlideStore = {
+const storeModel: SlideStoreModel = {
   name: 'slidesApp',
   currentSlide: 0,
   isVisible: true,
@@ -217,7 +217,9 @@ const storeModel: SlideStore = {
   })
 }
 
-const store = createStore<SlideStore>(storeModel);
+const store = createStore<SlideStoreModel>(storeModel,{
+  middlewares: []
+});
 
 export default store;
 ```
@@ -329,17 +331,6 @@ En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changeme
 
 Dans votre composant principal (là ou vous utilisez `useAppSelector`), en cas de changement de currentSlide dans le store, on change l'url du navigateur
 
-```js
-const hash = "#/" + slides.currentSlide;
-if (location.hash !== hash) {
-  window.location.hash = hash;
-  // Force scroll to top this is what browsers normally do when
-  // navigating by clicking a link.
-  // Without this, scroll stays wherever it was which can be quite odd.
-  document.body.scrollTop = 0;
-}
-```
-
 ### Un premier Middleware de logging
 
 En ce qui concerne les `Middleware`, `easy-peasy` manipule directement les types de `Redux`, car `easy-peasy` est construit par dessus `Redux`.
@@ -351,13 +342,15 @@ Nous allons maintenant créer un logger similaire "à la main" (vous pouvez fair
 Dans le fichier où vous avez créé votre store, ajoutez:
 
 ```js
-const myLoggerMiddleware: Middleware<Dispatch, StoreModel> = (api) => (next) => {
+const myLoggerMiddleware: Middleware<Dispatch, SlideStoreModel> = (api) => (next) => {
     return (action: AnyAction) => {
         console.log("State Before:", api.getState());
         return next(action);
     };
 };
 ```
+
+Et ajoutez le dans le tableau des middlewares qui était vide jusqu'à présent.
 
 - La fonction externe est le middleware lui-même, elle reçoit un objet de type `MiddlewareAPI` qui contient les fonctions {dispatch, getState} du store.
 - La fonction centrale reçoit une fonction `next` comme argument, qui appellera le prochain middleware du pipeline. S'il c'est le dernier (ou l'unique), alors la fonction `store.dispatch`

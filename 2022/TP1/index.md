@@ -98,7 +98,7 @@ Voici l'architecture du projet express que nous allons créer:
 
 Dans notre `index.ts`, nous allons créer le serveur:
 
-```javascript
+```js
 import express from 'express';
 import { HelloRouteur } from './routes/hello.router';
 
