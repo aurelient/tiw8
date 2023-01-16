@@ -4,7 +4,7 @@
 
 - Aurélien Tabard (responsable)
 - Louis Le Brun
-
+jau
 ### Présentation du TP
 
 L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework TS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP serait peu ou presque la même pour Angular ou Vue.
@@ -217,13 +217,13 @@ Dans ce fichier de configuration, pointez vers le point d'entée React (le fichi
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require('path');
 const htmlPlugin = new HtmlWebPackPlugin({
-  template: "./client/index.html",
+  template: "./src/index.html",
   filename: "./index.html"
 });
 module.exports = (env, argv) => {
   console.log(argv.mode);
   return {
-    entry: "./client/index.tsx",
+    entry: "./src/index.tsx",
     output: {
       path: path.join(__dirname, 'dist'),
       filename: "bundle.js"
