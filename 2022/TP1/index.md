@@ -211,7 +211,7 @@ yarn add --dev ts-loader css-loader html-webpack-plugin mini-css-extract-plugin 
 
 Même si les dernières versions de webpack peuvent fonctionner sans fichier de configuration (avec des défauts), vous aurez de toutes façons à spécifier une config dans ce TP. Mettez donc en place un fichier `webpack.config.js` avec une configuration minimale (entry, output), que vous allez modifier par la suite.
 
-Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.jsx) et indiquez ou l'appliquer (`template: "./client/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
+Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.jsx) et indiquez ou l'appliquer (`template: "./src/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
 
 ```javascript
 const HtmlWebPackPlugin = require("html-webpack-plugin");
@@ -266,7 +266,7 @@ Configurez le transpileur Typescript à l'aide d'un fichier `tsconfig.json` à l
     "sourceMap": true,
     "target": "es5"
   },
-  "include": ["client"],
+  "include": ["src"],
   "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
 }
 ```
@@ -303,11 +303,12 @@ Pour cela on utilise la directive [resolve](https://webpack.js.org/configuration
 
 Il faut maintenant assembler le code React.
 
-Dans `package.json` ajouter une commande `build` (dans `scripts`)
+Dans `package.json` ajouter une commande `production` et une commande `dev` (dans `scripts`)
 
 ```json
 "scripts": {
-  "build": "webpack --mode production"
+  "production": "webpack --mode production",
+  "dev": "webpack --mode development"
 }
 ```
 
@@ -316,23 +317,17 @@ Cette commande doit vous générer un fichier HTML et un fichier JS dans `dist`.
 ### Servir le contenu
 
 Il faut maintenant dire à Express où aller chercher le contenu.
-Pour cela il faut lui dire que sa route `/` est maintenant `dist/index.html`
+Pour cela il faut lui dire que sa route `/` est maintenant `../../client/dist/index.html`
 
 Rajouter les constantes suivantes (selon vos noms de fichiers et de dossiers) :
 
 ```js
 const path = require("path");
 
-const DIST_DIR = path.join(__dirname, "../dist");
+const DIST_DIR = path.join(__dirname, "../../client/dist/index.html");
 const HTML_FILE = path.join(DIST_DIR, "index.html");
 
 // TODO Modifier la route '/' pour qu'elle pointe sur HTML_FILE
-```
-
-Nous allons aussi rajouter la commande suivante dans `package.json` pour distinguer un build de dev et un de production.
-
-```
-  "dev": "webpack --mode development && node server/index.js",
 ```
 
 #### Gérer les fichiers statiques
