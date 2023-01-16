@@ -340,7 +340,7 @@ app.use(express.static(DIST_DIR));
 
 Installez le module `file-loader` (toujours en dev).
 
-Et rajoutez la règle suivante dans `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
+Et rajoutez la règle suivante dans la partie `rules` du fichier `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
 
 ```js
 {
