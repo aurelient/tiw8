@@ -32,7 +32,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 |          | Date  | Cours                          | Supports                                                             | Intervenant |
 | -------- | ----- | ------------------------------ | -------------------------------------------------------------------- | ----------- |
 | CM 0     | 16/01 | Présentation de l'UE           | [pdf](cours/cm0-intro.pdf)                                           | L. Le Brun  |
-| CM 1     | 16/09 | Stack                          | [pdf](cours/cm1-stack.pdf)                                           | L. Le Brun  |
+| CM 1     | 16/01 | Stack                          | [pdf](cours/cm1-stack.pdf)                                           | L. Le Brun  |
 |          | 16/01 | _séance de TP supplémentaire_  |                                                                      |             |
 | CM 2     | 18/01 | Programmation Réactive         | [pdf](cours/cm2-reactivity.pdf)                                      | L. Le Brun  |
 |          | 23/01 | _pas de CM que du TP_          |                                                                      |             |
