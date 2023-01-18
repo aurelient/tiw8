@@ -324,7 +324,7 @@ Rajouter les constantes suivantes (selon vos noms de fichiers et de dossiers) :
 ```js
 const path = require("path");
 
-const DIST_DIR = path.join(__dirname, "../../client/dist/index.html");
+const DIST_DIR = path.join(__dirname, "../../client/dist");
 const HTML_FILE = path.join(DIST_DIR, "index.html");
 
 // TODO Modifier la route '/' pour qu'elle pointe sur HTML_FILE
@@ -381,19 +381,7 @@ Nous allons utiliser une bibliothèque dérivée de [Tailwind CSS](https://tailw
 
 Pour vérifier que votre code se conforme aux bonnes pratiques, nous allons utiliser eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
 
-Pour créer votre fichier de configuration `eslint` taper `yarn run eslint --init` votre configuration devrait ressembler à cela
-
-```
-✔ How would you like to use ESLint? · style
-✔ What type of modules does your project use? · require
-✔ Which framework does your project use? · react
-✔ Does your project use TypeScript? · Yes
-✔ Where does your code run? · browser
-✔ How would you like to define a style for your project? · guide
-✔ Which style guide do you want to follow? · standard
-✔ What format do you want your config file to be in? · JSON
-```
-
+Pour créer votre fichier de configuration `eslint` taper `yarn run eslint --init`
 Vous pouvez tester eslint à la "main" avec
 
 ```
