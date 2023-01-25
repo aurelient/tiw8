@@ -139,7 +139,7 @@ Dans votre composant `App` de base rajoutez un Switch qui s'occupera de capturer
 ```jsx
 <Switch>
   <Route
-    path="/:id"
+    path=":id"
     render={() => (
         <SlideShow slides={slides} />
         <AppToolbar slides={slides} />
@@ -147,6 +147,8 @@ Dans votre composant `App` de base rajoutez un Switch qui s'occupera de capturer
   />
 </Switch>
 ```
+> Attention cependant, il vous faudra modifier votre serveur pour que celui ci retourne le index.html sur n'importe quelle requête.
+> Pour se faire, remplacez dans le code du serveur ('/') par ('/\*') pour retourner le `index.html` afin que react puisse g
 
 Dans vos composants (ici SlideShow et AppToolbar), vous pouvez récupérer la route en utilisant `useParams` de `react-router`. Importez le puis à l'intérieur déclarez:
 
