@@ -724,7 +724,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ## Rendu
 
-À rendre pour le dimanche 14/11 à 23h59.
+À rendre pour le vendredi 03/02 à 23h59.
 
 1. Déployez votre code sur Heroku
 2. Pousser votre code sur la forge
