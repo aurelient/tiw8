@@ -23,7 +23,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 #### Encadrants
 
 - Louis Le Brun (responsable)
-- Jérôme Puget Gil
+- Jey Puget Gil
 - Abdelaziz Sbaai
 - En cas de soucis : Aurélien Tabard (aurelien.tabard@univ-lyon1.fr)
 
