@@ -3,8 +3,7 @@
 #### Encadrants
 
 - Aurélien Tabard (responsable)
-- Louis Le Brun
-jau
+
 ### Présentation du TP
 
 L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework TS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP serait peu ou presque la même pour Angular ou Vue.
@@ -435,15 +434,15 @@ Inspectez l'application.
 
 ### Rendu et évaluation
 
-Le TP est individuel. **Il est évalué sur une base binaire PASS/FAIL** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour dimanche 19 23h59.
+Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour lundi 08 23h59.
 
-Les critères d'évaluation sont les suivants pour avoir un PASS (=20), si un des critères n'est pas rempli c'est un FAIL (=0):
+Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un des critères n'est pas rempli c'est un RATE (=0):
 
-- Le rendu est effectué avant ce soir minuit. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien heroku).
-- Les responsables de l'UE sont ajoutés au projet forge (le projet est clonable)
-- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification
+- Le rendu est effectué avant la deadline. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien gitlab pages).
+- Les responsables de l'UE sont ajoutés au projet forge (ils/elles peuvent cloner le projet)
+- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification de l'url
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
 - `yarn run build` construit le projet
 - `yarn run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
-- l'application Web est bien déployée sur Heroku au lien fournit dans le rendu
+- l'application Web est bien déployée sur gitlab pages au lien fournit dans le rendu
