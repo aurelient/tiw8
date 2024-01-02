@@ -28,12 +28,13 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 
 |          | Date  | Cours                          | Supports                                                             | Intervenant |
 | -------- | ----- | ------------------------------ | -------------------------------------------------------------------- | ----------- |
-| CM 0     | 03/01 | Présentation de l'UE           | [pdf](cours/cm0-intro.pdf)                                           | A. Tabard   |
-| CM 1     | 03/01 | Stack                          | [pdf](cours/cm1-stack.pdf)                                           | A. Tabard   |
-| CM 2     | 08/01 | Programmation Réactive         | [pdf](cours/cm2-reactivity.pdf)                                      | A. Tabard   |
-|          | 10/01 | Informatique Ubiquitaire       | [pdf](cours/cm1-introUbicomp.pdf)                                    | A. Tabard   |
-| CM 3     | 29/01 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
+| CM 0     | 08/01 | Présentation de l'UE           | [pdf](cours/cm0-intro.pdf)                                           | A. Tabard   |
+| CM 1     | 08/01 | Stack                          | [pdf](cours/cm1-stack.pdf)                                           | A. Tabard   |
+| CM 2     | 10/01 | Informatique Ubiquitaire       | [pdf](cours/cm1-introUbicomp.pdf)                                    | A. Tabard   |
+| CM 3     | 29/01 | Programmation Réactive         | [pdf](cours/cm2-reactivity.pdf)                                      | A. Tabard   |
 |          | 31/01 | _pas de CM que du TP_          |                                                                      |             |
+|          | 05/02 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
+|          | 07/02 | _pas de CM que du TP_          |                                                                      |             |
 | CM 4     | 26/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
 |          | 28/02 | _pas de CM que du TP_          |                                                                      |             |
 |          | 06/03 | —                              |                                                                      |             |
@@ -47,13 +48,12 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 
 | Sujet                                                                    | Date  | Thème                                     | Rendu   |
 | ------------------------------------------------------------------------ | ----- | ----------------------------------------- | ------- |
-| [TP 1](TP1)                                                              | 03/01 | Mise en place d'une Stack JavaScript      |         |
-| [TP 1](TP1)                                                              | 08/01 | Mise en place d'une Stack JavaScript      | rendu 0 |
-| [TP 2.1](TP2/)                                                           | 08/01 | Introduction à React                      |         |
-| [TP 2.2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 10/01 | State management + websockets             |         |
-| [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif)             | 29/01 | Distribution d'interface multi-dispositif |         |
-| [TP 2.4](TP2/#4-suite)                                                   | 31/01 | Modalité d'entrée (gestes, stylet)        |         |
-| TP 2 finalisation                                                        | 05/02 |                                           | rendu 1 |
+| [TP 1](TP1)                                                              | 08/01 | Mise en place d'une Stack JavaScript      |         |
+| [TP 1](TP1)                                                              | 10/01 | Mise en place d'une Stack JavaScript      | rendu 0 |
+| [TP 2.1](TP2/)                                                           | 29/01 | Introduction à React                      |         |
+| [TP 2.2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 31/01 | State management + websockets             |         |
+| [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif)             | 05/02 | Distribution d'interface multi-dispositif |         |
+| [TP 2.4](TP2/#4-suite)                                                   | 07/02 | Modalité d'entrée (gestes, stylet)        | rendu 1 |
 | [TP 3.1](TP3)                                                            | 26/02 | WebRTC: p2p data                          |         |
 | [TP 3.2](TP3/#tp32-webrtc-et-vidéo)                                      | 28/02 | WebRTC: audio et video                    |         |
 | TP 3 finalisation                                                        | 06/03 |                                           | rendu 2 |
