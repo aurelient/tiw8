@@ -135,7 +135,7 @@ helloRouteur.get('/', (request, response) => {
 });
 
 export {
-  helloRouter as HelloRouteur
+  helloRouteur as HelloRouteur
 };
 ```
 
@@ -210,7 +210,7 @@ yarn add --dev ts-loader css-loader html-webpack-plugin mini-css-extract-plugin 
 
 Même si les dernières versions de webpack peuvent fonctionner sans fichier de configuration (avec des défauts), vous aurez de toutes façons à spécifier une config dans ce TP. Mettez donc en place un fichier `webpack.config.js` avec une configuration minimale (entry, output), que vous allez modifier par la suite.
 
-Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.jsx) et indiquez ou l'appliquer (`template: "./src/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
+Dans ce fichier de configuration, pointez vers le point d'entée React (le fichier index.tsx) et indiquez ou l'appliquer (`template: "./src/index.html"`). Ci-dessous une partie de ce fichier, qui sera complétée par la suite :
 
 ```javascript
 const HtmlWebPackPlugin = require("html-webpack-plugin");
@@ -384,7 +384,7 @@ Pour créer votre fichier de configuration `eslint` taper `yarn run eslint --ini
 Vous pouvez tester eslint à la "main" avec
 
 ```
-yarn run eslint client/*.tsx
+yarn run eslint src/*.tsx
 ```
 
 Ajouter ensuite eslint à Webpack. Installez le module `eslint-webpack-plugin` en dev. Importez le dans votre webpack config et rajouter les lignes suivantes au blog plugin. eslint se lancera maintenant lors du build (vous pouvez rajouter une erreur dans votre index.tsx et tester le build).
