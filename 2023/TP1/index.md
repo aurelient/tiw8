@@ -178,17 +178,22 @@ Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par Reac
   </body>
 </html>
 ```
-3
+
 Dans le même dossier nous allons créer un premier composant React, on l'appellera `index.tsx` (l'extension de fichier est très importante):
 
 ```javascript
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client'
 
-const Index = () => {
-  return <div>TIW 8 TP1!</div>;
-};
-ReactDOM.render(<Index />, document.getElementById("root"));
+const Index = () => (
+    <div className="container">
+        <h1>Hello World</h1>
+    </div>
+)
+
+const container = document.getElementById('root')
+const root = createRoot(container)
+root.render(<Index />)
 ```
 
 ### Générer un bundle avec Webpack
@@ -374,7 +379,9 @@ declare module '*.jpg';
 
 ### CSS
 
-Nous allons utiliser une bibliothèque dérivée de [Tailwind CSS](https://tailwindcss.com/) qui fonctionne bien avec React: [Windmill React UI](https://windmillui.com/react-ui). Cette bibliothèque fournit des composants, mais permet aussi de s'appuyer sur Tailwind pour la création de nouveaux composants/widgets.
+Je conseille d'utiliser une surcouche à [Tailwind CSS](https://tailwindcss.com/). 
+Par exemple [shadcn/ui](https://ui.shadcn.com/docs). 
+
 
 ### Linting
 
@@ -397,6 +404,9 @@ Ajouter ensuite eslint à Webpack. Installez le module `eslint-webpack-plugin` e
     }),
   ],
 ```
+
+Si vous utilisez Prettier dans votre editeur de code vous risquez de rencontrer des conflits avec ESlint . J'ai suivi [la documentation de Prettier](https://prettier.io/docs/en/comparison.html), et ces deux posts [1](https://javascript.plainenglish.io/setting-eslint-and-prettier-on-a-react-typescript-project-2021-22993565edf9), [2](https://khalilstemmler.com/blogs/tooling/prettier/) pour corriger ça.
+
 
 ### Déployer sur GitLab Pages
 
