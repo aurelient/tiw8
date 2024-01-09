@@ -18,7 +18,6 @@ Nous allons voir :
 - Gérer le bundling avec Webpack
 - Utiliser un linter pour vérifier votre code
 - Assembler et servir le contenu
-- Déployer via une image Docker sur GitLab Pages
 
 Ce TP fera l'objet d'un premier rendu **individuel** et d'une note binaire (PASS/FAIL). Voir les critères d'évaluation en bas de la page.
 
@@ -456,3 +455,5 @@ Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un 
 - `yarn run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
 - l'application Web est bien déployée sur gitlab pages au lien fournit dans le rendu
+
+Le rendu est pour vendredi 12/01 - 23h.
