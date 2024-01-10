@@ -153,7 +153,8 @@ Comme pour le projet serveur, il faut installer quelques dépendances avant tout
 
 ```bash
 yarn add typescript --dev 
-yarn add react-dom react @types/react-dom @types/react --dev
+yarn add react-dom react 
+yarn add @types/react-dom @types/react --dev
 ```
 
 Dans le dossier `src`, créez un `index.html`.
@@ -423,8 +424,8 @@ On placera ces composants dans un dossier `components`.
 ```js
 import React from "react";
 import ReactDOM from "react-dom";
-import Header from "./components/Header/index.jsx";
-import Content from "./components/Content/index.jsx";
+import Header from "./components/Header.tsx";
+import Content from "./components/Content.tsx";
 const Index = () => {
   return (
     <div className="container">
