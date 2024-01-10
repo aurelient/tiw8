@@ -444,7 +444,7 @@ Inspectez l'application.
 
 ### Rendu et évaluation
 
-Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour lundi 08 23h59.
+Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour vendredi 12 23h59.
 
 Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un des critères n'est pas rempli c'est un RATE (=0):
 
@@ -456,5 +456,3 @@ Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un 
 - `yarn run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
 - l'application Web est bien déployée sur gitlab pages au lien fournit dans le rendu
-
-Le rendu est pour vendredi 12/01 - 23h.
