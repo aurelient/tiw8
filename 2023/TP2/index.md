@@ -138,7 +138,7 @@ Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en co
 
 [React router](https://reacttraining.com/react-router/web/guides/primary-components) requiert d'envelopper votre application dans un composant `Router`.
 
-En l'occurrence `HashRouter` (et non `BrowserRouter` qui demande une configuration côté serveur). L'idée est que charger un url de type [http://monsite.net/#/3](http://monsite.net/#/3) charge le 3e mur. Importez bien `react-router-dom`.
+On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index). L'idée est que charger un url de type [http://monsite.net/3](http://monsite.net/3) charge le 3e mur. Importez bien `react-router-dom`.
 
 <!-- Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter) -->
 
