@@ -155,7 +155,9 @@ On va utiliser `BrowserRouter` qui demande une configuration côté serveur (tou
 
 <!-- Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter) -->
 
-Si vous utilisez des `functional components`, vous pouvez utiliser le hook `useParams();` pour récupérer des informations sur la route. [Suivez cet exemple](https://reacttraining.com/react-router/web/example/url-params). Vous pouvez aussi passer cette information with `routeProps`, du côté du composant parent [voir la documentation ici](https://reactrouter.com/web/api/Route/render-func).
+Si vous utilisez des `functional components`, vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params). 
+
+<!-- Vous pouvez aussi passer cette information with `routeProps`, du côté du composant parent [voir la documentation ici](https://reactrouter.com/web/api/Route/render-func).
 
 ```jsx
 <Switch>
@@ -165,12 +167,14 @@ Si vous utilisez des `functional components`, vous pouvez utiliser le hook `useP
   />
 </Switch>
 ```
+-->
 
 Une fois la valeur de la route récupérée pour qu'il corresponde au mur à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
 
 <!-- Puis implémenter une route et une n'affichant qu'un post-it. -->
 
-<!-- Déployez et testez sur mobile (faites les adaptations nécessaires). -->
+#### Nettoyage
+Déployez et testez sur mobile (faites les adaptations nécessaires).
 
 ## TP2.2 Easy peasy
 
