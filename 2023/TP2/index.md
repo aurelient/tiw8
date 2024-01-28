@@ -56,7 +56,7 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
     type: "board",
     id: "1",
     title: "TIW 8",
-    notes: ""
+    notes: "",
     postits:[
       {
         type: "postit",
@@ -93,7 +93,7 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
     ]},
   {
     type: "board",
-    board: "2",
+    id: "2",
     title: "Courses",
     notes: "",
     postits: [],
@@ -108,24 +108,37 @@ Voici une structure pour démarrer, basée sur des composants material-ui.
 
 Pour démarrer voilà un `index.tsx` le reste des composants que vous allez créer est rangé dans un sous-dossier `components`.
 
-```JSX
-TODO
+```tsx
+import { createRoot } from 'react-dom/client'
+import * as React from 'react'
+import Board from './components/Board'
+import AppToolbar from './components/AppToolbar'
+
+const App = () => (
+    <div>
+        <AppToolbar />
+        <Board />
+    </div>
+)
+
+const container = document.getElementById('root')!
+const root = createRoot(container)
+root.render(<App />)
 ```
 
 Ce code est donné à titre indicatif. Commencez progressivement et testez régulièrement.
 
 ### Créer des composants passifs
 
-Créer des composants fonctionnels passifs (on rajoutera de l'interaction par la suite. Vous pouvez vous inspirer de la syntaxe et de la structure de cette <a href="https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks">mini todo app</a> [TODO lien à mettre à jour]
+Créer des composants fonctionnels passifs (on rajoutera de l'interaction par la suite. Vous pouvez vous inspirer de la syntaxe et de la structure de cette <a href=https://github.com/laststance/react-typescript-todomvc-2022">mini todo app</a>
+
+Il est <a href="https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/function_components/">conseillé de ne pas typer vos composants fonctionnels.</a> Si vous souhaitez le faire, vous pouvez soit créer un type dédié, soit utiliser `React.FC`.
 
 
 ### Gérer la logique de l'application
 
 La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre tous les murs. Rajouter à l'état de l'App, une balise indiquant le mur courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un mur, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents).
 Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
-
-Pour comprendre comment cela fonctionne avec des functionals components et non des class components [référez vous à l'exemple de todo app mentionné plus haut](https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks#step-5-%E2%80%94-updating-to-do-items) [TODO lien à mettre à jour]
-
 
 Pour démarrer vous pouvez utiliser l'extension react dev tools, et modifier l'état à la main pour vérifier que la vue change bien.
 
