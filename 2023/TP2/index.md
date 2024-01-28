@@ -134,7 +134,6 @@ Créer des composants fonctionnels passifs (on rajoutera de l'interaction par la
 
 Il est <a href="https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/function_components/">conseillé de ne pas typer vos composants fonctionnels.</a> Si vous souhaitez le faire, vous pouvez soit créer un type dédié, soit utiliser `React.FC`.
 
-
 ### Gérer la logique de l'application
 
 La toolbar doit afficher le titre du mur et un menu permettant de naviguer entre tous les murs. Rajouter à l'état de l'App, une balise indiquant le mur courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un mur, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents).
@@ -142,20 +141,39 @@ Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/
 
 Pour démarrer vous pouvez utiliser l'extension react dev tools, et modifier l'état à la main pour vérifier que la vue change bien.
 
+Voici à quoi ressemblerait la structure de `AppToolbar` :
+`Board` est définit comme une interface dans un fichier `models.d.ts` contenant les types / interfaces utilisées dans l'application que j'importe ici.
+
+```tsx
+TODO imports
+
+interface Props {
+    boards: Board[]
+    index: number
+}
+
+const AppToolbar = (props: Props): JSX.Element => {
+    return (
+      <div>ma toolbar pour le board numéro {props.index}</div>
+    )
+}
+
+export default AppToolbar
+```
+
 ### React Router
 
 Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu'il soit possible d'avoir un chemin dédié à chaque mur.
 En plus d'avoir un état interne à l'application pour savoir quel post-it afficher, nous allons utiliser une route qui pointe vers le mur en question. En chargeant cette route, l'état sera modifié.
 
-Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à lire [cette page](https://reactrouter.com/en/main/start/concepts) (pas super à jour).
+Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à parcourir les tutoriels [sur cette page](https://reactrouter.com/en/main/start/tutorial).
 
 [React router](https://reacttraining.com/react-router/web/guides/primary-components) requiert d'envelopper votre application dans un composant `Router`.
 
 On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index). L'idée est que charger un url de type [http://monsite.net/3](http://monsite.net/3) charge le 3e mur. Importez bien `react-router-dom`.
 
-<!-- Si vous utilisez des `class components`, vous pouvez récupérer la valeur de la route en utilisant un props dédié passé par le routeur. [Suivez cet exemple](https://reacttraining.com/react-router/core/api/withRouter) -->
 
-Si vous utilisez des `functional components`, vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params). 
+Vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params). 
 
 <!-- Vous pouvez aussi passer cette information with `routeProps`, du côté du composant parent [voir la documentation ici](https://reactrouter.com/web/api/Route/render-func).
 
@@ -169,12 +187,12 @@ Si vous utilisez des `functional components`, vous pouvez utiliser le hook `useP
 ```
 -->
 
-Une fois la valeur de la route récupérée pour qu'il corresponde au mur à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
-
-<!-- Puis implémenter une route et une n'affichant qu'un post-it. -->
+Une fois la valeur de la route récupérée pour qu'elle corresponde au mur à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
 
 #### Nettoyage
 Déployez et testez sur mobile (faites les adaptations nécessaires).
+
+En anticipation du TP 2.3, vous pouvez déjà préparer la gestion d'une route de type `monappli.net/board/1/postit/2` qui n'affiche que le post-it à l'id `2` du board `1`. Sur cette vue, vous pouvez rajouter des flèches `<` `>` à la toolbar (ou ailleurs) qui permettent de naviguer entre les postits d'un même board. 
 
 ## TP2.2 Easy peasy
 
