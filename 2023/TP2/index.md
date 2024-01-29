@@ -35,7 +35,9 @@ Pensez à remplir les champs de rendu sur Tomuss.
 
 Nous allons repartir du TP1 pour ce projet, vous pouvez donc le cloner, puis le pousser dans un nouveau repo dédié au TP2 (pour les 4 séances du TP).
 
-Vous pourrez utiliser Tailwind, [chakra-ui](https://chakra-ui.com/) ou [material-ui](https://material-ui.com/). 
+Vous pourrez utiliser Tailwind, [chakra-ui](https://chakra-ui.com/), [material-ui](https://material-ui.com/) ou autre. 
+
+Si vous avez des soucis avec Typescript et React, [regardez par ici](https://react-typescript-cheatsheet.netlify.app/)
 
 ### Structurer une application React en composants
 
@@ -208,16 +210,68 @@ Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs
 
 Nous allons commencer par créer le store qui va gérer les états.
 
-```js
-TODO
+```ts
+import { type Action, action, createStore } from 'easy-peasy'
+import { type Board } from './models/models'
+import { boards } from './data/data'
+
+interface BoardStoreModel {
+    name: string
+    index: number
+    boards: Board[]
+    isVisible: boolean
+    setBoard: Action<BoardStoreModel, SetBoardAction>
+}
+
+interface SetBoardAction {
+    boardNumber: number
+}
+
+
+const storeModel: BoardStoreModel = {
+    name: 'boardApp',
+    index: 0,
+    boards,
+    setBoard: action((state, payload) => {
+        // TODO
+    }),
+}
+
+const store = createStore<BoardStoreModel>(storeModel, {
+    // middlewares: [], // pour plus tard
+})
+
+export default store
+
 ```
 
 #### Utiliser le store
 
-Dans votre index.tsx principal exposez le store pour pouvoir l’afficher via la console du navigateur. Cela permettra d’effectuer les premiers tests de easy-peasy, sans l’avoir branché à votre application React.
+Dans votre `index.tsx` principal exposez le store pour pouvoir l'afficher via la console du navigateur.
+Cela permettra d'effectuer les premiers tests de easy-peasy, sans l'avoir branché à votre application React.
+
+```js
+import { store } from './application/store' // verifiez que le chemin est correct
+
+declare global {
+    interface Window {
+        mystore: unknown
+    }
+}
+window.mystore = store
+```
+
+Et toujours dans le `index.tsx`, enveloppez votre application dans une balise :
+
+```xml
+<StoreProvider store={store}>`
+  ...
+</StoreProvider>`
+```
+
 
 #### Lien React - EasyPeasy
-
+<!-- 
 
 
 1. Importer connect de `react-redux`, et les actions depuis votre fichier de définition d'action.
@@ -239,9 +293,41 @@ const mapDispatchToProps = (dispatch) => {
 // ... VOTRE_COMPOSANT
 
 export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
-```
+``` 
 
 3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions `onClick={() => {this.props.previousBoard}`
+-->
+
+Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton `hide` aux post-its. Quand on cliquera dessus, il ira modifier la propriété `visibility` du post-it en question. Si le post-it est visible il deviendra invisible et inversement.
+
+Pour vous faciliter la vie, on ne va pas le rendre vraiment invisible mais simplement changer son opacité de 100% à 10%.
+
+Pour faire cela nous allons devoir modifier le composant post-it et le store
+
+```js
+import { useStoreActions } from 'easy-peasy';
+```
+
+Lorsque l'on clique sur le bouton on va appeler une action du store :
+
+```js
+  // on récupère l'action désirée dans le store
+  const changePostitVisibility = useStoreActions((actions) => actions.changePostitVisibility);
+  ...
+  // et on s'en sert lors du clic sur le bouton
+  <button onClick={changePostitVisibility}></button>
+```
+
+Dans le composant transparent (`AppPostit` chez moi), récupérez l'état de visibilité du slide. S'il est visible l'opacité est normale sinon à 10%. Rajoutez un div enveloppant pour gérer ça. Ajouter aussi l'import permettant d'accéder à l'état à un instant T du store.
+
+```js
+  import { useStoreState } from 'easy-peasy';
+  ...
+  const isVisible = useStoreState((state) => state.isVisible);
+  const opacity: string = isVisible ? 'opacity-100' : 'opacity-10';
+  ...
+  <div className={opacity}>
+```
 
 #### Lien Easy-Peasy / React Router
 
