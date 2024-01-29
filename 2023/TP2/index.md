@@ -235,6 +235,12 @@ const storeModel: BoardStoreModel = {
     setBoard: action((state, payload) => {
         // TODO
     }),
+    addPostit: action((state, payload) => {
+        // TODO
+    }),
+    changePostitVisibility: action((state, payload) => {
+        // TODO
+    })
 }
 
 const store = createStore<BoardStoreModel>(storeModel, {
@@ -298,7 +304,7 @@ export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
 3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions `onClick={() => {this.props.previousBoard}`
 -->
 
-Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton `hide` aux post-its. Quand on cliquera dessus, il ira modifier la propriété `visibility` du post-it en question. Si le post-it est visible il deviendra invisible et inversement.
+Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton `hide` aux post-its. Quand on cliquera dessus, il ira modifier la propriété `visible` du post-it en question. Si le post-it est visible il deviendra invisible et inversement.
 
 Pour vous faciliter la vie, on ne va pas le rendre vraiment invisible mais simplement changer son opacité de 100% à 10%.
 
@@ -329,7 +335,7 @@ Dans le composant transparent (`AppPostit` chez moi), récupérez l'état de vis
   <div className={opacity}>
 ```
 
-#### Lien Easy-Peasy / React Router
+<!-- #### Lien Easy-Peasy / React Router -->
 
 
 ## TP2.3 Distribution d’interface multi-dispositif Middleware et websockets
