@@ -417,6 +417,12 @@ Vous pouvez importer tous les types nécessaire depuis `@reduxjs/toolkit`
 
 Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand on change de board, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur board courant.
 
+### Synchronisation des changements sur les postits entre les appareils
+
+Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de propager des nouveaux postits créés aux autres appareils, les suppressions aussi, et les modifications.
+
+
+<!--
 ## TP2.4 Modalité d’entrées (gestes, stylet)
 
 ### Gestion de modalités d'entrée
@@ -572,7 +578,8 @@ Faites en sorte que tous les post-its affichent leurs dessins associés au charg
 
 <!-- Vous remarquerez qu'à l'ouverture sur un autre appareil, votre dessin n'apparait que si vous dessinez aussi sur cet appareil. Pour remédier à ce problème, utilisez [useEffect](https://reactjs.org/docs/hooks-effect.html) afin d'exécuter `redraw()` au moment opportun. -->
 
-### Reconnaissance de gestes
+<!--
+### Reconnaissance de gestes 
 
 Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évènements touch.
 
@@ -670,6 +677,8 @@ const matchDispatchProps = dispatch => {
 
 Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 
+-->
+
 #### FIN
 
 Vous pouvez maintenant tester, nettoyer le code, et rendre.
@@ -686,24 +695,26 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ### Critères d'évaluation
 
-- Fichier `README.md` décrivant le process de build en dev, en prod, et de déploiement.
+- Fichier `README.md` décrivant le process de build en dev, en prod, et de déploiement (expliquez les cas et comment lancer).
 - Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
 - Linting bien configuré et respecté
-- Déploiement sur Heroku
-- Composants React pour le `Board`, les `Postits`, la `Toolbar`.
+- Types Typescript correctement définis
+- Déploiement sur une VM de l'université ou Railapp
+- Composants React pour le `Board`, les `Postit`, la `Toolbar`.
 - Utilisation de composants fonctionnels.
 - Store qui contient l'état de l'application
 - Le flux de données suit le flow React, des actions sont déclarées, et les changements d'états passent par des actions unitaires qui modifient le store.
 - Les changements sont des fonctions qui renvoient un nouvel état (immutabilité) dans le reducer.
-- Redux pour la gestion avancée des états
+- Easy Peasy, Redux ou Redux Toolkit pour la gestion avancée des états
 - Gestions des routes pour les boards et post-its
 - Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'état de l'application.
 - Implémentation des Websockets côté client et serveur
 - Synchronisation du board affiché entre les dispositifs s'appuyant sur un middleware
+- Synchronisation des changements sur un post-its s'appuyant sur un middleware.
 - Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons composants.
 - Gestion du plein écran.
-- Gestion différenciée des pointer-events.
-- Synchronisation des dessins s'appuyant sur un middleware.
-- Gestion des gestes pour des commandes suivant, précédent.
-- Les commandes associées aux gestes sont bien propagées et permettent de contrôler un dispositif à distance.
+<!-- - Gestion différenciée des pointer-events. -->
+<!-- - Synchronisation des dessins s'appuyant sur un middleware. -->
+<!-- - Gestion des gestes pour des commandes suivant, précédent. -->
+<!-- - Les commandes associées aux gestes sont bien propagées et permettent de contrôler un dispositif à distance. -->
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
