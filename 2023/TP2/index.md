@@ -168,10 +168,7 @@ En plus d'avoir un état interne à l'application pour savoir quel post-it affic
 
 Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à parcourir les tutoriels [sur cette page](https://reactrouter.com/en/main/start/tutorial).
 
-[React router](https://reacttraining.com/react-router/web/guides/primary-components) requiert d'envelopper votre application dans un composant `Router`.
-
-On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index). L'idée est que charger un url de type [http://monsite.net/3](http://monsite.net/3) charge le 3e mur. Importez bien `react-router-dom`.
-
+On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index, [https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3](voir un exemple ici, à adapter à vos besoins)). L'idée est que charger un url de type [http://monsite.net/board/3](http://monsite.net/board/3) charge le 3e board. Importez bien `react-router-dom`.
 
 Vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params). 
 
