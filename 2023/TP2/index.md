@@ -103,6 +103,8 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
 ]
 ```
 
+### Créer des composants passifs
+
 Créez la structure des composants correspondant à cette application, en suivant le guide et l'exemple de [Thinking in React](https://react.dev/learn/thinking-in-react#step-1-break-the-ui-into-a-component-hierarchy).
 
 Voici une structure pour démarrer, basée sur des composants material-ui.
@@ -130,11 +132,7 @@ root.render(<App />)
 
 Ce code est donné à titre indicatif. Commencez progressivement et testez régulièrement.
 
-### Créer des composants passifs
-
-Créer des composants fonctionnels passifs (on rajoutera de l'interaction par la suite. Vous pouvez vous inspirer de la syntaxe et de la structure de cette <a href=https://github.com/laststance/react-typescript-todomvc-2022">mini todo app</a>
-
-Il est <a href="https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/function_components/">conseillé de ne pas typer vos composants fonctionnels.</a> Si vous souhaitez le faire, vous pouvez soit créer un type dédié, soit utiliser `React.FC`.
+Créer des composants fonctionnels (on rajoutera de l'interaction par la suite). Vous pouvez vous inspirer de la syntaxe et de la structure de cette <a href="https://github.com/laststance/react-typescript-todomvc-2022">mini todo app</a>
 
 ### Gérer la logique de l'application
 
