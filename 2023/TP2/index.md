@@ -191,6 +191,9 @@ Déployez et testez sur mobile (faites les adaptations nécessaires).
 
 En anticipation du TP 2.3, vous pouvez déjà préparer la gestion d'une route de type `monappli.net/board/1/postit/2` qui n'affiche que le post-it à l'id `2` du board `1`. Sur cette vue, vous pouvez rajouter des flèches `<` `>` à la toolbar (ou ailleurs) qui permettent de naviguer entre les postits d'un même board. 
 
+Si ce n'est pas fait, vous pouvez activer la création d'un Source Map dans votre `webpack.config.js` : `devtool: 'eval-source-map'`.
+
+
 ## TP2.2 Easy peasy
 
 Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Easy peasy et des Websockets. L'objectif est que vous puissiez changer l'état de votre application de présentation sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre mur à distance sur sa machine...)
@@ -199,7 +202,6 @@ Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs
 
 **Pensez à relire le cours et les ressources associées pour être au clair sur ce que vous êtes en train de faire.**
 
-Afin de vous faciliter le debug du TP, vous pouvez activer la création d'un Source Map dans votre `webpack.config.js` : `devtool: 'eval-source-map'`.
 
 
 #### Création d'un store
@@ -241,7 +243,7 @@ export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
 
 3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions `onClick={() => {this.props.previousBoard}`
 
-#### Lien Redux / React Router
+#### Lien Easy-Peasy / React Router
 
 
 ## TP2.3 Distribution d’interface multi-dispositif Middleware et websockets
