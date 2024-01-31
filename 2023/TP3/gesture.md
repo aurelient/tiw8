@@ -161,8 +161,8 @@ Pour ce faire nous allons utiliser le [\$1 recognizer](http://depts.washington.e
 
 #### Gérer le recognizer
 
-Au niveau de votre `Postit`, importer et initialiser votre le One Dollar Recognizer.
-
+<!-- Au niveau de votre `Postit`, importer et initialiser votre le One Dollar Recognizer. -->
+Dans votre composant contenant le `canvas`, importer et initialiser votre le One Dollar Recognizer.
 [TODO à faire...]
 
 #### Traitement différencié selon le type du pointerEvent.
