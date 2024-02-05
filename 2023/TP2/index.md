@@ -322,7 +322,7 @@ Lorsque l'on clique sur le bouton on va appeler une action du store :
   <button onClick={changePostitVisibility}></button>
 ```
 
-Dans le composant transparent (`AppPostit` chez moi), récupérez l'état de visibilité du slide. S'il est visible l'opacité est normale sinon à 10%. Rajoutez un div enveloppant pour gérer ça. Ajouter aussi l'import permettant d'accéder à l'état à un instant T du store.
+Dans le composant transparent (`AppPostit` chez moi), récupérez l'état de visibilité du board. S'il est visible l'opacité est normale sinon à 10%. Rajoutez un div enveloppant pour gérer ça. Ajouter aussi l'import permettant d'accéder à l'état à un instant T du store.
 
 ```js
   import { useStoreState } from 'easy-peasy';
@@ -354,7 +354,7 @@ Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière sim
 
 Rajouter des `Redirect` [(doc)](https://reactrouter.com/en/main/fetch/redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état.
 
-Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) [TODO à vérifier] pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour contrôler le plein écran.
+Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour contrôler le plein écran.
 
 Déployez et tester.
 
@@ -365,43 +365,39 @@ Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela n
 
 #### Changer l'état à partir de la route
 
-En écoutant l'évènement `popstate` nous pouvons êtres informé d'un changement dans l'url du navigateur. Si ce changement correspond à un changement dans l'index du board à afficher, nous allons déclencher l'action `setBoard`, avec l'index du board approprié.
-
-```javascript
-TODO
-```
-
-Si vous n'avez pas encore définit l'action `setBoard`, créez le action creator correspondant, et le traitement associé dans le reducer.
-
-#### Changer la route à partir de l'état
-
-En écoutant les changements dans le store nous allons pouvoir être notifiés de changement de l'état et les répercuter dans la barre d'url (utile pour la suite, quand nous allons synchroniser des dispositifs):
-
-```javascript
-TODO
-```
-
-### Refactorisation
-
-Avant de passer à la suite, c'est un bon moment pour nettoyer votre projet.
-<!-- nous allons simplifier les ACTIONS de Redux. Supprimez les actions `NEXT_BOARD` et `PREVIOUS_BOARD` de votre liste d'actions et de votre Reducer. Aux endroits où ces actions étaient utilisées, remplacer par l'action `SET_BOARD` avec un changement de l'index courant. -->
+Au chargement d'une route, assurez vous que l'état est bien modifié pour refléter le board courant et éventuellement le post-it courant
 
 ### Un premier Middleware de logging
 
 En ce qui concerne les `Middleware`, `easy-peasy` manipule directement les types de `Redux`, car `easy-peasy` est construit par dessus `Redux`.
 
-Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware). Faites un essai qui reprend en suivante [cette courte vidéo](https://www.youtube.com/watch?v=6AGdeO28UKY)) (pensez juste à installer `@types/redux-logger` en plus).
+<!-- Pour comprendre la logique du Middleware [suivez la documentation Redux](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware). `Faites un essai qui reprend en suivante [cette courte vidéo](https://www.youtube.com/watch?v=6AGdeO28UKY)) (pensez juste à installer `@types/redux-logger` en plus).` -->
 
 Nous allons maintenant créer un logger similaire "à la main" (vous pouvez faire ça dans le fichier de base de votre store). Un middleware a une signature un peu particulière. [Il s'agit en fait de 3 fonctions imbriquées](https://redux.js.org/tutorials/fundamentals/part-4-store#writing-custom-middleware):
 
 Dans le fichier où vous avez créé votre store, ajoutez:
 
 ```js
-const myLoggerMiddleware: Middleware<Dispatch, myStoreModel> = (api) => (next) => { // myStoreModel doit être changé pour votre store
-    return (action: AnyAction) => {
-        console.log("State Before:", api.getState());
-        return next(action);
-    };
+import {
+    type Middleware,
+    type MiddlewareAPI,
+    type Dispatch,
+    type AnyAction,
+} from 'redux'
+
+const loggerMiddleware: Middleware =
+    (api: MiddlewareAPI) => (next: Dispatch) => (action: AnyAction) => {
+        console.log('Dispatching action:', action)
+
+        // Call the next middleware in the chain
+        const result = next(action)
+
+        console.log('State after action:', api.getState())
+
+        return result
+    }
+
+export default loggerMiddleware
 };
 ```
 
@@ -411,15 +407,72 @@ Et ajoutez le dans le tableau des middlewares qui était vide jusqu'à présent.
 - La fonction centrale reçoit une fonction `next` comme argument, qui appellera le prochain middleware du pipeline. S'il c'est le dernier (ou l'unique), alors la fonction `store.dispatch`
 - La fonction interne reçoit l'action courante en argument et sera appelée à chaque fois qu'une action est dispatchée.
 
-Vous pouvez importer tous les types nécessaire depuis `@reduxjs/toolkit`
 
 ### Notre Middleware de diffusion des actions avec des websockets
 
 Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand on change de board, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur board courant.
 
-### Synchronisation des changements sur les postits entre les appareils
+Pareil en mobile si on change de post-its.
 
-Vous pouvez maintenant ajouter à votre Middleware de nouveaux cas permettant de propager des nouveaux postits créés aux autres appareils, les suppressions aussi, et les modifications.
+#### Socket.io côté serveur
+Côté serveur, importez `socket.io` ([tuto officiel](https://socket.io/get-started/chat/#integrating-socketio)) et mettez en place le callback permettant de recevoir les messages d'action provenant d'un client et de les propager à tous les autres clients. 
+
+Le serveur ne va quasi rien faire, quand il reçoit un message d'action, il le broadcast à tous les clients connectés:
+
+```js
+socket.on("action", (msg) => {
+  console.log("action received", msg);
+  socket.broadcast.emit("action", msg);
+});
+```
+
+#### Synchronisation des changements sur les postits entre les appareils
+
+Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setBoard` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
+
+```js
+import io from "socket.io-client";
+import { store } from "./index";
+// TODO importer les actions nécessaires
+import { Middleware, Dispatch, AnyAction } from "redux";
+
+// on se connecte au serveur
+const socket = io();
+
+export const propagateSocketMiddleware: Middleware<Dispatch> =
+  () => (next) => (action: AnyAction) => {
+    // Explorez la structure de l'objet action :
+    console.log("propagateSocketMiddleware", action);
+
+    // TODO traiter et propager les actions au serveur.
+    // Vous pourrez utiliser
+    // socket.emit('type_du_message', 'contenu du message, peut être un objet TS');
+
+    // Après diffusion au serveur on fait suivre l'action au prochain middleware
+    next(action);
+  };
+```
+
+Toujours dans le middleware, configurez la socket pour qu'à la réception des messages, les actions soient dispatchées au store.
+
+```js
+socket.on("action", (msg) => {
+  console.log("action", msg);
+  switch (
+    msg.type // ajuster le msg.type pour qu'il corresponde bien à celui dédinit pour l'action de votre reducer
+  ) {
+    case "setBoard": // <- probablement autre chose selon la façon dont vous avez nommé vos actions
+      store.dispatch(setBoard(msg.value, false));
+      break;
+  }
+});
+```
+
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
+
+<!-- Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` callback [comme décrit ici](https://redux-toolkit.js.org/usage/usage-with-typescript#defining-action-contents-with-prepare-callbacks) -->
+
+
 
 #### FIN
 
@@ -427,11 +480,11 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ## Rendu
 
-À rendre pour le dimanche 11/02 à 23h59.
+À rendre pour le dimanche 28/02 à 23h59.
 
-1. Déployez votre code sur une VM ou votre plateforme préférée (type Heroku)
+1. Déployez votre code sur une VM ou votre plateforme préférée (type Railapp)
 2. Pousser votre code sur la forge
-3. Déposer les liens sur Tomuss :
+3. Déposer les liens sur Tomuss
 
 - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/yyy.git)
 
