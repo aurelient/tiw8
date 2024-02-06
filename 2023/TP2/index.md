@@ -352,20 +352,25 @@ Les boutons `<` et `>` permettent de naviguer entre les post-its. Le menu du hau
 
 Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière simple de la distribution d'interface, nous allons donc devoir le faire "à la main".
 
-Rajouter des `Redirect` [(doc)](https://reactrouter.com/en/main/fetch/redirect) à la racine de votre application pour faire une redirection vers une route en fonction du dispositif utilisé et de son état.
+À la création du `BrowserRouter` faites une redirection vers une route en fonction du dispositif utilisé et de son état.
 
 Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour contrôler le plein écran.
 
-Déployez et tester.
+Au besoin vous pouvez aussi vous appuyer sur des appels à `redirect` [(doc)](https://reactrouter.com/en/main/fetch/redirect) à la racine de votre application pour
 
 ### Gestion "à la main" des routes des Boards
 
 Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le board courant dans notre état (`currentBoard` dans le store).
-`ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état. Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
+`ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état (même si cela s'est bien amélioré avec la v6).
+Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
 
-#### Changer l'état à partir de la route
+#### Changer la route en cas de changement de board
 
-Au chargement d'une route, assurez vous que l'état est bien modifié pour refléter le board courant et éventuellement le post-it courant
+Lors d'un changement de board, plutôt que d'utiliser `<Link to={`/board/${i}`}>` créer un listener. 
+
+Ce listener sera en charge de déclenche une action modifiant le store (la valeur du board courant), puis déclenchera une navigation vers le board sélectionné grace au hook [useNavigate()](https://reactrouter.com/en/main/hooks/use-navigate)
+
+A ce stade maintenant vous ne devriez plus passer de props depuis vos parents mais utiliser le store de votre application pour remplir vos composants
 
 ### Un premier Middleware de logging
 
@@ -455,32 +460,57 @@ export const propagateSocketMiddleware: Middleware<Dispatch> =
 
 Toujours dans le middleware, configurez la socket pour qu'à la réception des messages, les actions soient dispatchées au store.
 
+Pour pouvoir être dispatchées nous allons devoir utiliser redux. Pour ce faire il va falloir faire un double wrapping de **votre composant racine** avec le même objet store fournit au Provider de easy-peasy et de redux
+
+```jsx
+        <Provider store={store}>
+            <StoreProvider store={store}>
+                <RouterProvider router={router} />
+            </StoreProvider>
+        </Provider>
+```
+
+Et de retour dans le middle-ware :
+
 ```js
 socket.on("action", (msg) => {
   console.log("action", msg);
   switch (
     msg.type // ajuster le msg.type pour qu'il corresponde bien à celui dédinit pour l'action de votre reducer
   ) {
-    case "setBoard": // <- probablement autre chose selon la façon dont vous avez nommé vos actions
-      store.dispatch(setBoard(msg.value, false));
+    case "set_board": // <- probablement autre chose selon la façon dont vous avez nommé vos actions
+      store.dispatch(
+                // action à dispatcher
+            )
       break;
   }
 });
 ```
 
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. Pour éviter cela, les actions peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). Faites en sorte que seuls les dispatchs provenant d'un clic sur un bouton ou d'une modification de l'URL provoquent la propagation d'un message via Websocket.
+<!-- Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. 
+
+Pour éviter cela, les actions Redux peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). 
+Mais surprise le mainteneur de [Easy-peasy est pas motivé pour l'implémenter](https://github.com/ctrlplusb/easy-peasy/issues/241), nous allons donc surcharger notre payload avec cette information.  -->
+
+Une fois la synchronisation des stores réalisée. Reste à s'assurer que les routes soient bien mises à jour.
+
+Pour cela nous allons utiliser `navigate()` de nouveau depuis le middleware. Idéalement nous voudrions faire `dispatch(...).then(() => navigate())` mais avec l'intégration redux/easy-peasy cela devient compliqué. Nous allons donc simplement appeler navigate après dispatch sans attendre.
+
+Dans le middle vous n'avez pas accès aux hooks react, il faut donc appeler `navigate()` "à la main" en exportant votre `router = createBrowserRouter()`. Le plus simple est de définir votre routeur dans un fichier `router.tsx` dédié, qui se terminera par `export default router`. Vous pourrez importer cet objet `router` et appeler `router.navigate('monchemin')` dans votre middleware.
 
 <!-- Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` callback [comme décrit ici](https://redux-toolkit.js.org/usage/usage-with-typescript#defining-action-contents-with-prepare-callbacks) -->
 
+#### Finalisation
 
+Vous avez maintenant le poc de votre application.
 
-#### FIN
+Rajoutez des actions pour ajouter/supprimer des boards, et des post-its, et éditer leur titre.
 
 Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ## Rendu
 
-À rendre pour le dimanche 28/02 à 23h59.
+À rendre pour le dimanche 03/03 à 23h59.
 
 1. Déployez votre code sur une VM ou votre plateforme préférée (type Railapp)
 2. Pousser votre code sur la forge
