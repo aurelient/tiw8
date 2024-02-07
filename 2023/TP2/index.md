@@ -431,7 +431,7 @@ socket.on("action", (msg) => {
 });
 ```
 
-#### Synchronisation des changements sur les postits entre les appareils
+#### Synchronisation des changements de navigation entre les appareils
 
 Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setBoard` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
 
@@ -458,7 +458,35 @@ export const propagateSocketMiddleware: Middleware<Dispatch> =
   };
 ```
 
-Toujours dans le middleware, configurez la socket pour qu'à la réception des messages, les actions soient dispatchées au store.
+Toujours dans le middleware, configurez la socket pour qu'à la réception des messages les actions soient dispatchées au store, ou pour que vous naviguiez à la bonne route.
+
+```js
+socket.on("action", (msg) => {
+  console.log("action", msg);
+  switch (
+    msg.type // ajuster le msg.type pour qu'il corresponde bien à celui dédinit pour l'action de votre reducer
+  ) {
+    case "set_board": // <- probablement autre chose cela dépend du 'type_de_message' définit dans votre emit ci-dessus
+          // action à dispatcher
+      break
+  }
+});
+```
+
+Pour changer le board courant, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
+<!-- Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. 
+
+Pour éviter cela, les actions Redux peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). 
+Mais surprise le mainteneur de [Easy-peasy est pas motivé pour l'implémenter](https://github.com/ctrlplusb/easy-peasy/issues/241), nous allons donc surcharger notre payload avec cette information.  -->
+
+Pour cela nous allons utiliser `navigate()` de nouveau depuis le middleware. Idéalement nous voudrions faire `dispatch(...).then(() => navigate())` mais avec l'intégration redux/easy-peasy cela devient compliqué. Nous allons donc simplement appeler navigate après dispatch sans attendre.
+
+Dans le middle vous n'avez pas accès aux hooks react, il faut donc appeler `navigate()` "à la main" en exportant votre `router = createBrowserRouter()`. Le plus simple est de définir votre routeur dans un fichier `router.tsx` dédié, qui se terminera par `export default router`. Vous pourrez importer cet objet `router` et appeler `router.navigate('monchemin')` dans votre middleware.
+
+
+#### Synchronisation des actions entre les appareils
+
+Pour synchroniser votre store plus généralement (exemple: édition du titre d'un board ou d'un postit, ajout d'un post-it, etc.) nous allons diffuser les actions via le même middleware. Les actions vont ensuite être récupée et dispatchée au store.
 
 Pour pouvoir être dispatchées nous allons devoir utiliser redux. Pour ce faire il va falloir faire un double wrapping de **votre composant racine** avec le même objet store fournit au Provider de easy-peasy et de redux
 
@@ -472,31 +500,21 @@ Pour pouvoir être dispatchées nous allons devoir utiliser redux. Pour ce faire
 
 Et de retour dans le middle-ware :
 
+
 ```js
 socket.on("action", (msg) => {
   console.log("action", msg);
   switch (
     msg.type // ajuster le msg.type pour qu'il corresponde bien à celui dédinit pour l'action de votre reducer
   ) {
-    case "set_board": // <- probablement autre chose selon la façon dont vous avez nommé vos actions
+    case "set_postit_title": // <- probablement autre chose
       store.dispatch(
                 // action à dispatcher
             )
       break;
   }
-});
+})
 ```
-
-<!-- Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. 
-
-Pour éviter cela, les actions Redux peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). 
-Mais surprise le mainteneur de [Easy-peasy est pas motivé pour l'implémenter](https://github.com/ctrlplusb/easy-peasy/issues/241), nous allons donc surcharger notre payload avec cette information.  -->
-
-Une fois la synchronisation des stores réalisée. Reste à s'assurer que les routes soient bien mises à jour.
-
-Pour cela nous allons utiliser `navigate()` de nouveau depuis le middleware. Idéalement nous voudrions faire `dispatch(...).then(() => navigate())` mais avec l'intégration redux/easy-peasy cela devient compliqué. Nous allons donc simplement appeler navigate après dispatch sans attendre.
-
-Dans le middle vous n'avez pas accès aux hooks react, il faut donc appeler `navigate()` "à la main" en exportant votre `router = createBrowserRouter()`. Le plus simple est de définir votre routeur dans un fichier `router.tsx` dédié, qui se terminera par `export default router`. Vous pourrez importer cet objet `router` et appeler `router.navigate('monchemin')` dans votre middleware.
 
 <!-- Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` callback [comme décrit ici](https://redux-toolkit.js.org/usage/usage-with-typescript#defining-action-contents-with-prepare-callbacks) -->
 
@@ -512,7 +530,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 À rendre pour le dimanche 03/03 à 23h59.
 
-1. Déployez votre code sur une VM ou votre plateforme préférée (type Railapp)
+1. Déployez votre code en local
 2. Pousser votre code sur la forge
 3. Déposer les liens sur Tomuss
 
@@ -524,7 +542,7 @@ Vous pouvez maintenant tester, nettoyer le code, et rendre.
 - Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
 - Linting bien configuré et respecté
 - Types Typescript correctement définis
-- Déploiement sur une VM de l'université ou Railapp
+<!-- - Déploiement sur une VM de l'université ou Railapp -->
 - Composants React pour le `Board`, les `Postit`, la `Toolbar`.
 - Utilisation de composants fonctionnels.
 - Store qui contient l'état de l'application
