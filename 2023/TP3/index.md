@@ -268,19 +268,16 @@ Pour raccrocher plusieurs s'option sont possibles : `peer.removestream(stream)` 
 
 Si vous déployez le code sur un serveur. Il faudra donc mettre à jour votre application en conséquence.
 
-Vous pouvez faire du code conditionnel et tester `location` côté client pour savoir si vous êtes en localhost ou déployé sur heroku, et parler à un serveur peer ou un autre en conséquence.
+Vous pouvez faire du code conditionnel et tester `location` côté client pour savoir si vous êtes en localhost ou déployé, et parler à un serveur peer ou un autre en conséquence.
 
 **Dans votre README préciser bien quelle type de configuration fonctionne.**
 
 ## Rendu
 
-À rendre pour le dimanche 13 à 23h59.
+À rendre pour le dimanche 10/03 à 23h59.
 
-- Déployez votre code sur Heroku
 - Pousser votre code sur la forge
 - Déposer les liens sur Tomuss “UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs”
-
-- Le lien vers Heroku pointe vers une page permettant d'aller sur le composant de chaque TP (ou sur une version intégrant les deux).
 - Le lien vers la forge permet de faire un clone (format suivant: https://forge.univ-lyon1.fr/xxx/yyy.git)
 
 ## Références en plus :
