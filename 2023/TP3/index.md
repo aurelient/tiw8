@@ -14,7 +14,7 @@ Ce TP s'étalera sur 2 séances et fera l'objet d'un rendu en binome et d'une no
 
 ### Boilerplate
 
-Vous pouvez partir du code [fournit ici](https://forge.univ-lyon1.fr/tiw8-internal/tiw8-tp3-2023-base/) (voir le README pour les instructions de build).
+Vous pouvez partir du code [fournit ici](https://github.com/pillowinacoma/tiw8-tp3-boilerplate/tree/main) (voir le README pour les instructions de build).
 
 On continuera d'utiliser le linter et prettier.
 
