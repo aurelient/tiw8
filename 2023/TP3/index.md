@@ -111,8 +111,6 @@ peer.on("stream", (stream): void => {
 
 En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. 
 
-Si vous bloquez vous pouvez utiliser [peerjs-server](https://github.com/peers/peerjs-server) qui va abstraire la gestion de la mise en relation entre pairs (4 points).
-
 Voici un diagramme de séquence de la mise en relation.
 
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F30I32CQBdqwdMxK6mUCPRw%2Ftiw8-tp3%3Ftype%3Ddesign%26node-id%3D5287%253A2%26mode%3Ddesign%26t%3Dn7QBOsz1R6PZVmyN-1" allowfullscreen></iframe>
@@ -303,7 +301,6 @@ Points
 - Mise en relation des pairs faire par vous même
   - signalement au serveur (2pt)
   - établissement de la connexion entre les deux pairs (2pt)
-  - si vous utilisez peerjs-server plutôt que de faire la mise en relation vous même (= 1 point au lieu de 2+2 ci-dessus.)
 - Data (5pt)
   - les pairs peuvent s'envoyer des messages (2pt)
   - l'envoi de message est géré dans un middleware (2pt)
