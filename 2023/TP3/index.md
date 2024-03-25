@@ -75,7 +75,7 @@ const peer: SimplePeer.Instance = new SimplePeer({
   },
 });
 
-// TODO ajouter tous les listeners au peer,
+// TODO ajouter tous les listeners au peer, on se contentera d'avoir deux participants
 
 socket.on("signal", function (data) {
   console.log("received signal on socket");
@@ -102,22 +102,25 @@ peer.on("data", function (data) {
   // TODO take action after receiving data from peer
 });
 peer.on("stream", (stream): void => {
-  //   TP suivant 3.3
+  //   TP suivant 3.2
   console.log("got stream " + stream);
 });
 
 // TODO ajouter ce peer à une liste de tous les pairs auxquels vous êtes connecté
 ```
 
-En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. Commencez par gérer seulement deux pairs pour simplifier. La gestion de 3 ou à 5 pairs est en bonus si jamais vous vous ennuyez fin décembre.
+En vous référent à la [documentation de simple-peer](https://github.com/feross/simple-peer) mettez en relation les deux clients. 
+
+Si vous bloquez vous pouvez utiliser [peerjs-server](https://github.com/peers/peerjs-server) qui va abstraire la gestion de la mise en relation entre pairs (4 points).
 
 Voici un diagramme de séquence de la mise en relation.
 
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F30I32CQBdqwdMxK6mUCPRw%2Ftiw8-tp3%3Fnode-id%3D0%253A1" allowfullscreen></iframe>
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F30I32CQBdqwdMxK6mUCPRw%2Ftiw8-tp3%3Ftype%3Ddesign%26node-id%3D5287%253A2%26mode%3Ddesign%26t%3Dn7QBOsz1R6PZVmyN-1" allowfullscreen></iframe>
+
 
 ### Partage de la position du même joueur
 
-A ce stade vous devrions être capable de partager des données entre deux pairs qui se sont auto-découverts.
+A ce stade vous devriez être capable de partager des données entre deux pairs qui se sont auto-découverts.
 
 Maitenant nous allons reprendre le principe du TP précédent: lorsqu'on bouge le personnage, le déplacement va être capturé par le middleware (c'est là qu'est localisé tout le code ci-dessus) et propagé.
 
@@ -131,7 +134,7 @@ Maintenant nous allons rajouter un deuxième personnage. Pour simplifier vous po
 
 Au lieu de partager les déplacements du même personnage faites en sorte que chaque pair controle son propre personnage : en plus du deplacement partagez l'identifiant du personnage.
 
-### En cas de déploiement
+### Pas de déploiement
 
 **J'évaluerai le TP3 en local** (= chez moi sur mon réseau interne), le déploiement fonctionnel c'est super, mais ne perdez pas trop de temps dessus si ça vous bloque.
 
@@ -144,7 +147,7 @@ Toutefois vous pouvez vous créer un compte sur [Twilio.com](https://www.twilio.
 
 Nous allons maintenant créer un nouveau composant dédié à la vidéo. La vidéo va se déclencher quand les deux personnages sont à moins de deux cases de distance, et se couper quand ils sont à plus de 5 cases de distance.
 
-On va donc transmettre des flux vidéos en plus des data. La documentation de simple-peer traite de ce cas de figure : [dynamic video voice](https://nicedoc.io/feross/simple-peer#user-content-dynamic-videovoice). NB: on s'intéresse à la vidéo pour commender ne perdez pas de temps sur l'audio au début.
+On va donc transmettre des flux vidéos en plus des data. La documentation de simple-peer traite de ce cas de figure : [dynamic video voice](https://nicedoc.io/feross/simple-peer#user-content-dynamic-videovoice). NB: on s'intéresse à la vidéo pour commencer ne perdez pas de temps sur l'audio au début.
 
 Vous pouvez commencer par avoir des boutons pour déclencher l'appel, cela permet de tester les différentes étapes de l'établissement d'un appel. Une fois que cela marche avec des boutons, vous pourrez faire en sorte que l'appel se déclenche et se coupe si les deux personnages sont à moins de 2 ou 3 cases l'un de l'autre.
 
@@ -274,7 +277,7 @@ Vous pouvez faire du code conditionnel et tester `location` côté client pour s
 
 ## Rendu
 
-À rendre pour le dimanche 10/03 à 23h59.
+À rendre pour le samedi 30/03 à 23h59.
 
 - Pousser votre code sur la forge
 - Déposer les liens sur Tomuss “UE-INF2427M Technologies Web Synchrones Et Multi-Dispositifs”
@@ -297,14 +300,15 @@ Points
 - Un style Tailwind (ou autre) est utilisé de manière judicieuse (aka l'application ressemble à quelque chose) (2pt)
 - Les states et props de React sont bien utilisées (1pt).
 - Utilisation des hooks appropriés (2pt).
-- Mise en relation des pairs
+- Mise en relation des pairs faire par vous même
   - signalement au serveur (2pt)
   - établissement de la connexion entre les deux pairs (2pt)
+  - si vous utilisez peerjs-server plutôt que de faire la mise en relation vous même (= 1 point au lieu de 2+2 ci-dessus.)
 - Data (5pt)
   - les pairs peuvent s'envoyer des messages (2pt)
   - l'envoi de message est géré dans un middleware (2pt)
   - plusieurs participants bougent de manière cohérente (1pt)
-- VidéoChat (5pt)
+- VidéoChat (6pt)
   - le flux local s'affiche
   - le flux distant est bien récupéré
   - le flux distant s'affiche
