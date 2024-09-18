@@ -33,13 +33,13 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | CM 2     | 08/01 | Informatique Ubiquitaire       | [pdf](cours/cm1-introUbicomp.pdf)                                    | A. Tabard   |
 | CM 3     | 13/01 | Programmation Réactive         | [pdf](cours/cm2-reactivity.pdf)                                      | A. Tabard   |
 |          | 15/01 | _pas de CM que du TP_          |                                                                      |             |
-|          | 03/02 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
+| CM 4     | 03/02 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
 |          | 05/02 | _pas de CM que du TP_          |                                                                      |             |
-|          | 10/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
+| CM 5     | 10/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
 |          | 12/02 | _pas de CM que du TP_          |                                                                      |             |
-| CM 4     | 03/03 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)                                   | A. Tabard   |
+| CM 6     | 03/03 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)                                   | A. Tabard   |
 |          | 05/03 | _pas de CM que du TP_          |                                                                      |             |
-|          | 10/03 | ? Performance ?                |                                                                      | A. Tabard   |
+| CM 7     | 10/03 | ? Performance ?                |                                                                      | A. Tabard   |
 |          | 12/03 | Examen                         |                                                                      |             |
 
 
@@ -58,7 +58,8 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 3.2](TP3/#tp32-webrtc-et-vidéo)                                      | 12/02 | 3h    |                                           |         |
 | TP 3 finalisation                                                        | 03/03 | 1h30  | WebRTC: audio et video                    |         |
 | TP 3 finalisation                                                        | 05/03 | 3h    |                                           | rendu 2 |
-| TP 4                                                                     | 1O/03 | 1O/03 |                                           |         |
+| TP 4                                                                     | 10/03 | 1h30  |                                           |         |
+| Examen                                                                   | 12/03 | 1h30  |                                           |         |
 
 
 ## Evaluation
