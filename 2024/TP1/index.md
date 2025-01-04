@@ -6,25 +6,25 @@
 
 ### Présentation du TP
 
-L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger, et un framework JS côté client. Pour l'UE le client sera développé avec React, mais la "stack" que nous allons voir dans ce TP serait peu ou presque la même pour Angular ou Vue.
+L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger en Typescript, et client React. La "stack" que nous allons voir dans ce TP serait peu ou presque la même pour Angular ou Vue.
 
 Nous allons voir :
 
 - La mise en place d'un serveur Node/Express basique
+- Comment configurer la transpilation du code Typescript côté serveur
 - L'automatisation d'un build
-- Comment configurer la transpilation du code Typescript et des composants TSX en code interprétable par n'importe quel navigateur
 - Créer un projet React
 - Créer deux composants React basiques
 - Gérer le bundling avec Vite
 - Utiliser un linter pour vérifier votre code
-- Assembler et servir le contenu avec un serveur node/express simple.
+- Assembler et servir le contenu avec notre serveur
 
 Ce TP fera l'objet d'un premier rendu **individuel** et d'une note binaire (PASS/FAIL). Voir les critères d'évaluation en bas de la page.
 
 Vous ferez le rendu sur la forge (ce mercredi 8/01).
 
 
-🔓 Si vous êtes déjà familier de la stack ci-dessus, vous pouvez utiliser Typescript et des composants TSX, et utiliser Webpack à la place de Vite (voir le [TP de l'année dernière](https://aurelient.github.io/tiw8/2023/TP1/))
+🔓 Si vous êtes déjà familier de la stack ci-dessus, vous pouvez utiliser Typescript et des composants TSX côté client. Si vous ne l'avez jamais utilisé vous pouvez tester Webpack à la place de Vite (voir le [TP de l'année dernière](https://aurelient.github.io/tiw8/2023/TP1/)).
 
 ### Initialisation du projet
 
@@ -150,7 +150,7 @@ Vérifier que le serveur fonctionne et versionnez le sur la forge.
 
 ### Projet React
 
-Allez maintenant dans le dossier `client`.
+Allez maintenant créer un projet React dans le dossier client en utilisant [Vite](https://vite.dev/)
 
 Nous verrons plus en détail le fonctionnement de React lors de la prochaine séance.
 Pour le moment nous allons créer un projet simple.
@@ -158,56 +158,15 @@ Pour le moment nous allons créer un projet simple.
 Comme pour le projet serveur, il faut installer quelques dépendances avant tout:
 
 ```bash
-yarn add react-dom react 
+yarn create vite client --template react
 ```
 
-Dans le dossier `src`, créez un `index.html`.
-Ce sera le seul fichier HTML du projet, il sera "peuplé" dynamiquement par React.
+Familiarisez vous avec le contenu créé, pour cela [lire Getting Started de Vite](https://vite.dev/guide/) et personnalisez le.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>React TP1</title>
-  </head>
-  <body>
-    <!-- L'id de ce div est important -->
-    <div id="root"></div>
-  </body>
-</html>
-```
-
-Dans le même dossier nous allons créer un premier composant React, on l'appellera `index.tsx` (l'extension de fichier est très importante):
-
-```javascript
-import * as React from "react";
-import { createRoot } from 'react-dom/client'
-
-const Index = () => (
-    <div className="container">
-        <h1>Hello World</h1>
-    </div>
-)
-
-const container = document.getElementById('root')
-const root = createRoot(container)
-root.render(<Index />)
-```
-
-
-
-#### Bundling
-
-Il faut maintenant assembler le code .
-
-
-Cette commande doit vous générer un fichier HTML et un fichier JS dans `dist`.
+  1. Modifiez le titre de la page 
+  2. Modifiez le contenu de la page
+  3. Changez ou rajoutez des assets dans `src/assets` et `public`. Lire [la documentation pour comprendre la différence](https://vite.dev/guide/assets#the-public-directory)
+  4. Modifiez une règle CSS
 
 ### Servir le contenu
 
@@ -225,49 +184,6 @@ const HTML_FILE = path.join(DIST_DIR, "index.html");
 // TODO Modifier la route '/' pour qu'elle pointe sur HTML_FILE
 ```
 
-#### Gérer les fichiers statiques
-
-Pour que Express trouve plus tard son chemin "de base" et les fichiers statiques générés par Webpack (images, css...) rajouter la ligne suivante:
-
-```js
-app.use(express.static(DIST_DIR));
-```
-
-Installez le module `file-loader` (toujours en dev).
-
-Et rajoutez la règle suivante dans la partie `rules` du fichier `webpack.config.js:` pour que webpack place les images dans un dossier `/static/`.
-
-```js
-{
-  test: /\.(png|svg|jpg|gif)$/,
-  loader: "file-loader",
-  options: { name: '/static/[name].[ext]' }
-}
-```
-
-> Note: depuis Webpack 5, vous pouvez préférer [Asset Modules](https://webpack.js.org/guides/asset-modules/) qui évite d'utiliser un loader externe.
-
-Il faudra les importer dans vos composants. Voici comment cela se fait au sein d'un composant React:
-
-```js
-// Import de l'image
-import LOGO from "./logo.png";
-
-// Utilisation
-<img src={LOGO} alt="Logo" />;
-```
-
-Pour que l'import marche, il faut spécifier à Typescript et Webpack de traiter les images comme des modules:
-
-- Créer un fichier `index.d.ts` qui contient la définition des modules/types associé aux extensions de fichiers :
-
-```
-declare module '*.png';
-declare module '*.jpg';
-```
-
-- Dans `tsconfig.json`, modifier la ligne d'include en rajoutant le fichier créé : `["client", "index.d.ts"],`
-
 ### CSS
 
 Je conseille d'utiliser une surcouche à [Tailwind CSS](https://tailwindcss.com/). 
@@ -278,26 +194,14 @@ Par exemple [shadcn/ui](https://ui.shadcn.com/docs).
 
 Pour vérifier que votre code se conforme aux bonnes pratiques, nous allons utiliser eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
 
-Pour créer votre fichier de configuration `eslint` taper `yarn run eslint --init`
+Vite a normalement déjà créé un configuration `eslint` sinon taper `yarn run lint`
 Vous pouvez tester eslint à la "main" avec
 
-```
-yarn run eslint src/*.tsx
-```
-
-Ajouter ensuite eslint à Webpack. Installez le module `eslint-webpack-plugin` en dev. Importez le dans votre webpack config et rajouter les lignes suivantes au blog plugin. eslint se lancera maintenant lors du build (vous pouvez rajouter une erreur dans votre index.tsx et tester le build).
-
-```
-  plugins: [
-    ...,
-    new ESLintPlugin({
-      extensions: ["js", "jsx", "ts", "tsx"],
-    }),
-  ],
+```bash
+yarn run eslint src/*.jsx
 ```
 
-Si vous utilisez Prettier dans votre editeur de code vous risquez de rencontrer des conflits avec ESlint . J'ai suivi [la documentation de Prettier](https://prettier.io/docs/en/comparison.html), et ces deux posts [1](https://javascript.plainenglish.io/setting-eslint-and-prettier-on-a-react-typescript-project-2021-22993565edf9), [2](https://khalilstemmler.com/blogs/tooling/prettier/) pour corriger ça.
-
+Si vous utilisez Prettier dans votre editeur de code, il est possible de rencontrer des conflits avec ESlint, si les deux n'appliquent pas les même règles. Prenez le temps nécessaire pour configurer les deux, cela sera utile pour tout le reste de l'UE.
 
 ### Déployer sur GitLab Pages
 
@@ -335,13 +239,13 @@ Inspectez l'application.
 
 ### Rendu et évaluation
 
-Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour vendredi 12 23h59.
+Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour mercredi 8/01 à 20h.
 
 Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un des critères n'est pas rempli c'est un RATE (=0):
 
 - Le rendu est effectué avant la deadline. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien gitlab pages).
 - Les responsables de l'UE sont ajoutés au projet forge (ils/elles peuvent cloner le projet)
-- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification de l'url
+- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification de l'url TESTEZ cela 
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
 - `yarn run build` construit le projet
 - `yarn run start` lance le serveur.
