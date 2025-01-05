@@ -6,7 +6,7 @@
 
 ### Présentation du TP
 
-L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger en Typescript, et client React. La "stack" que nous allons voir dans ce TP serait peu ou presque la même pour Angular ou Vue.
+L'objectif du TP est de mettre en place "l'enveloppe" d'une application Web avec un serveur Node/Express léger en Typescript, et client React en Typescript. La "stack" que nous allons voir dans ce TP serait peu ou presque la même pour Angular ou Vue.
 
 Nous allons voir :
 
@@ -23,8 +23,7 @@ Ce TP fera l'objet d'un premier rendu **individuel** et d'une note binaire (PASS
 
 Vous ferez le rendu sur la forge (ce mercredi 8/01).
 
-
-🔓 Si vous êtes déjà familier de la stack ci-dessus, vous pouvez utiliser Typescript et des composants TSX côté client. Si vous ne l'avez jamais utilisé vous pouvez tester Webpack à la place de Vite (voir le [TP de l'année dernière](https://aurelient.github.io/tiw8/2023/TP1/)).
+🔓 Si vous êtes déjà familier de la stack ci-dessus, vous pouvez tester l'utilisation de Webpack à la place de Vite (voir le [TP de l'année dernière](https://aurelient.github.io/tiw8/2023/TP1/)).
 
 ### Initialisation du projet
 
@@ -158,7 +157,7 @@ Pour le moment nous allons créer un projet simple.
 Comme pour le projet serveur, il faut installer quelques dépendances avant tout:
 
 ```bash
-yarn create vite client --template react
+yarn create vite client --template react-ts
 ```
 
 Familiarisez vous avec le contenu créé, pour cela [lire Getting Started de Vite](https://vite.dev/guide/) et personnalisez le.
@@ -186,34 +185,11 @@ const HTML_FILE = path.join(DIST_DIR, "index.html");
 
 ### CSS
 
-Je conseille d'utiliser une surcouche à [Tailwind CSS](https://tailwindcss.com/). 
-Par exemple [shadcn/ui](https://ui.shadcn.com/docs). 
-
-
-### Linting
-
-Pour vérifier que votre code se conforme aux bonnes pratiques, nous allons utiliser eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
-
-Vite a normalement déjà créé un configuration `eslint` sinon taper `yarn run lint`
-Vous pouvez tester eslint à la "main" avec
-
-```bash
-yarn run eslint src/*.jsx
-```
-
-Si vous utilisez Prettier dans votre editeur de code, il est possible de rencontrer des conflits avec ESlint, si les deux n'appliquent pas les même règles. Prenez le temps nécessaire pour configurer les deux, cela sera utile pour tout le reste de l'UE.
-
-### Déployer sur GitLab Pages
-
-Afin de rendre notre application disponible sur le Web, nous allons la déployer sur le GitLab Pages de votre projet.
-
-Depuis la page de votre projet GitLab, allez dans `settings > pages` et suivez les indications pour héberger le site.
-
-N'oubliez pas de désactiver l'option `watch` de webpack si vous lancez Webpack en `--mode production` [voir ici](https://webpack.js.org/configuration/mode/).
+Nous allons maintenant incorporer [Tailwind CSS](https://tailwindcss.com/) et une bibliothèque de composants associés, par exemple [shadcn/ui](https://ui.shadcn.com/docs) ou des composants material design.
 
 ### Des composants Reacts
 
-Créer deux composants basiques sans aucune logique. Le premier affichera un titre. Le deuxième affichera des images prises dans un dossier statique.
+Restructurer l'application pour qu'elle utilise plusieurs composants. Le premier affichera le titre et les images. Le deuxième contiendra le compteur. Un dernier contiendra un Footer qui utilise un composant venant de [shadcn/ui](https://ui.shadcn.com/docs) ou d'une bibliothèque de composant type Material.
 On placera ces composants dans un dossier `components`.
 
 ```js
@@ -237,6 +213,101 @@ ReactDOM.render(<Index />, document.getElementById("root"));
 Installez l'extension [React Developer Tools](https://addons.mozilla.org/en-US/firefox/addon/react-devtools/) dans votre navigateur préféré.
 Inspectez l'application.
 
+### Linting
+
+Pour vérifier que votre code se conforme aux bonnes pratiques, nous allons utiliser eslint, et son [plugin react](https://github.com/yannickcr/eslint-plugin-react).
+
+Vite a normalement déjà créé un configuration `eslint` sinon taper `yarn run lint`
+Vous pouvez tester eslint à la "main" avec
+
+```bash
+yarn run eslint src/*.jsx
+```
+
+Si vous utilisez Prettier dans votre editeur de code, il est possible de rencontrer des conflits avec ESlint, si les deux n'appliquent pas les même règles. Prenez le temps nécessaire pour configurer les deux, cela sera utile pour tout le reste de l'UE.
+
+```c
+--------------------------------------------------------------
+|                                                             |
+| ⚠️ A partir d'ici il est possible de travailler en binome 👨‍❤️‍👨 |
+|                                                             |
+--------------------------------------------------------------
+```
+
+### Configurer votre VM et déployer via gitlab-ci
+_La partie suivante peut se faire ne binome et avec l'aide de LLM_
+
+Les instructions ci-dessous n'utilisent pas docker. Si vous préférez utiliser docker, libre à vous, mais mon expérience avec est limitée, je répondrais donc en priorité aux questions sans docker.
+
+#### Configuration de Nginx et node
+Vous pouvez [configurer votre VM pour utiliser un reverse proxy nginx](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-22-04) qui pointera vers chacun de vos TPs.
+
+#### Créer un compte gitlab-ci
+
+Créer un compte gitlab-ci qui aura des droits limités
+
+```bash
+sudo adduser gitlab-ci
+```
+
+Créer le dossier ssh avec les droits appropriés.
+
+```bash
+sudo su - gitlab-ci
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+exit
+```
+
+Sur votre machine locale créer un clé ssh. La clé privée sera stockée dans une variable GitLab CI `SSH_PRIVATE_KEY`.
+La clé publique sera ajoutée aux public key de l'utilisateur gitlab-ci:
+
+```bash
+echo "public-key-content" >> /home/gitlab-ci/.ssh/authorized_keys
+```
+
+Configurez les droits pour cet utilisateur puisse accéder au dossier de déploiement (le créer si ce n'a pas déjà été fait):
+
+```bash
+sudo chown gitlab-ci:gitlab-ci /var/www/tp1
+```
+
+Pour plus de sécurité on restraint les accès SSH dans `/etc/ssh/sshd_config` en ajoutant les lignes suivants:
+
+```bash
+Match User gitlab-ci
+  PasswordAuthentication no
+  AllowTcpForwarding no
+  X11Forwarding no
+  ForceCommand internal-sftp
+```
+
+Redémarrer les service ssh:
+
+```bash
+sudo systemctl restart sshd
+```
+
+Testez la connection ssh depuis votre machine.
+Tentez de déployer depuis votre machine comme vous allez le faire ensuite depuis la CI:
+
+```bash
+scp -r server/dist/* gitlab-ci@VOTRE_IP:/var/www/tp1
+scp -r client/dist/* gitlab-ci@VOTRE_IP:/var/www/tp1
+```
+
+Corrigez au besoin votre configuration ngninx, ou votre processus de build pour que serveur et client soient bien trouvés.
+
+#### Déployez votre projet sur votre VM avec la CI de gitlab
+
+Créer un GitLab CI pour votre utilisateur qui reprenne [ces grandes lignes](https://forge.univ-lyon1.fr/snippets/75.git)
+
+Dans cet exemple seul le client est déployé, veillez à aussi déployer la partie serveur.
+
+Veillez à ce que les variables soient bien définies, et votre VM bien configurée.
+
 ### Rendu et évaluation
 
 Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour mercredi 8/01 à 20h.
@@ -245,9 +316,10 @@ Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un 
 
 - Le rendu est effectué avant la deadline. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien gitlab pages).
 - Les responsables de l'UE sont ajoutés au projet forge (ils/elles peuvent cloner le projet)
-- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification de l'url TESTEZ cela 
+- Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification de l'url TESTEZ le clone
+- Le projet contient un README clair sur ce qui a été réalisé, les commandes disponibles (pour build, dev, tester, et toute autre commande utile)
 - Le projet ne contient que des éléments nécessaire (.gitignore est bien défini)
-- `yarn run build` construit le projet
+- `yarn build` construit le projet côté client
 - `yarn run start` lance le serveur.
 - `eslint` ne retourne pas d'erreur
-- l'application Web est bien déployée sur gitlab pages au lien fournit dans le rendu
+- l'application Web est bien déployée sur votre VM pages au lien fournit dans le rendu Tomuss.
