@@ -27,7 +27,7 @@ Vous ferez le rendu sur la forge (ce mercredi 8/01).
 
 ### Initialisation du projet
 
-Nous vous recommandons chaudement de vous servir d'un `version manager` pour NodeJS comme `Node Version Manager` [NVM](https://github.com/nvm-sh/nvm) afin de pouvoir changer de version de Node facilement ou installer la dernière version `long term support (LTS)` avec `nvm install --lts`. Ce conseil s'applique à toutes les autres technologies peu importe le langage (venv pour python, sdkman! pour le sdk android, ...) 
+Nous vous recommandons chaudement de vous servir d'un `version manager` pour NodeJS comme `Node Version Manager` [NVM](https://github.com/nvm-sh/nvm) afin de pouvoir changer de version de Node facilement ou installer la dernière version `long term support (LTS)` avec `nvm install --lts`. Ce conseil s'applique à toutes les autres technologies peu importe le langage (venv pour python, sdkman! pour le sdk android, ...)
 
 Créez un projet git sur la forge dès maintenant. Remplissez le champ Tomuss associé.
 
@@ -36,6 +36,7 @@ Installer [Node](https://nodejs.org/) dans sa dernière version `lts` et [Expres
 (Optionel) Selon votre OS, la version de node et d'Express que vous allez installer, il sera peut être nécessaire d'installer `express-generator` qui gère le "cli" d'Express (la possibilité de l'invoquer depuis la ligne de commande). Installez le globalement avec npm ou yarn.
 
 À la racine de votre projet, créez deux dossiers:
+
 - un dossier `server` avec un dossier `src` qui contiendra le code Nodejs + Express côté serveur
 - un dossier `client` avec un dossier `src` qui contiendra le code React côté navigateur
 
@@ -51,7 +52,7 @@ On va en premier configurer le serveur.
 
 Allez dans le dossier `server`.
 
-Créez un projet node (`yarn init`), en le liant à votre dépôt Git sur la forge via le champs `repository` du `package.json`. 
+Créez un projet node (`yarn init`), en le liant à votre dépôt Git sur la forge via le champs `repository` du `package.json`.
 
 Pour pouvoir travailler avec Typescript, installez quelques dépendances supplémentaires:
 
@@ -70,6 +71,7 @@ tsc --init
 ```
 
 Trouvez le fichier automatiquement généré `tsconfig.json`:
+
 - Cherchez la ligne `outDir` et décommentez là pour mettre comme valeur `./dist`.
 - Cherchez la ligne `rootDir` et décommentez là pour mettre comme valeur `./src`.
 - Dans le fichier `package.json`, dans la partie `scripts`, mettre:
@@ -146,7 +148,6 @@ Si vous avez des problèmes remontés par Typescript, cherchez à les résoudre.
 
 Vérifier que le serveur fonctionne et versionnez le sur la forge.
 
-
 ### Projet React
 
 Allez maintenant créer un projet React dans le dossier client en utilisant [Vite](https://vite.dev/)
@@ -162,7 +163,7 @@ yarn create vite client --template react-ts
 
 Familiarisez vous avec le contenu créé, pour cela [lire Getting Started de Vite](https://vite.dev/guide/) et personnalisez le.
 
-  1. Modifiez le titre de la page 
+  1. Modifiez le titre de la page
   2. Modifiez le contenu de la page
   3. Changez ou rajoutez des assets dans `src/assets` et `public`. Lire [la documentation pour comprendre la différence](https://vite.dev/guide/assets#the-public-directory)
   4. Modifiez une règle CSS
@@ -235,11 +236,13 @@ Si vous utilisez Prettier dans votre editeur de code, il est possible de rencont
 ```
 
 ### Configurer votre VM et déployer via gitlab-ci
+
 _La partie suivante peut se faire ne binome et avec l'aide de LLM_
 
 Les instructions ci-dessous n'utilisent pas docker. Si vous préférez utiliser docker, libre à vous, mais mon expérience avec est limitée, je répondrais donc en priorité aux questions sans docker.
 
 #### Configuration de Nginx et node
+
 Vous pouvez [configurer votre VM pour utiliser un reverse proxy nginx](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-22-04) qui pointera vers chacun de vos TPs.
 
 #### Créer un compte gitlab-ci
@@ -302,7 +305,7 @@ Corrigez au besoin votre configuration ngninx, ou votre processus de build pour 
 
 #### Déployez votre projet sur votre VM avec la CI de gitlab
 
-Créer un GitLab CI pour votre utilisateur qui reprenne [ces grandes lignes](https://forge.univ-lyon1.fr/snippets/75.git)
+Créer un GitLab CI pour votre utilisateur qui reprenne [ces grandes lignes](https://forge.univ-lyon1.fr/snippets/75)
 
 Dans cet exemple seul le client est déployé, veillez à aussi déployer la partie serveur.
 
