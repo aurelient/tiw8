@@ -227,7 +227,7 @@ yarn run eslint src/*.jsx
 
 Si vous utilisez Prettier dans votre editeur de code, il est possible de rencontrer des conflits avec ESlint, si les deux n'appliquent pas les même règles. Prenez le temps nécessaire pour configurer les deux, cela sera utile pour tout le reste de l'UE.
 
-Côté serveur, vous pouvez utliser [ce guide pour configurer eslint pour node et typescript](https://khalilstemmler.com/blogs/typescript/eslint-for-typescript/)
+Côté serveur, vous pouvez utliser [ce guide pour configurer eslint pour node et typescript](https://medium.com/@pushpendrapal_/how-to-setup-node-js-with-typescript-eslint-and-prettier-46bd968a97ac#0662)
 
 ```c
 --------------------------------------------------------------
