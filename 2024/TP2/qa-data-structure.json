@@ -17,67 +17,55 @@
         "profanityFilter": true,
         "requireApproval": true
       },
-      "sessions": [
+      "questions": [
         {
-          "id": "ses_789012",
-          "name": "Cast Panel Q&A",
-          "startTime": "2025-01-15T09:30:00Z",
-          "endTime": "2025-01-15T10:30:00Z",
-          "status": "active",
-          "questions": [
+          "id": "q_345678",
+          "type": "question",
+          "content": "Will we see more dragons in Season 9?",
+          "author": "usr_901234",
+          "metadata": {
+            "createdAt": "2025-01-15T09:35:00Z",
+            "updatedAt": "2025-01-15T09:35:00Z",
+            "status": "approved",
+            "position": 2,
+            "highlighted": false,
+            "answered": false
+          },
+          "isAnonymous": true,
+          "upvotes": 42,
+          "downvotes": 5
+        },
+        {
+          "id": "poll_123456",
+          "type": "poll",
+          "content": "Which House are you most excited to see in Season 9?",
+          "options": [
             {
-              "id": "q_345678",
-              "type": "question",
-              "content": "Will we see more dragons in Season 9?",
-              "author": "usr_901234",
-              "metadata": {
-                "createdAt": "2025-01-15T09:35:00Z",
-                "updatedAt": "2025-01-15T09:35:00Z",
-                "status": "approved",
-                "position": 1,
-                "highlighted": false,
-                "answered": false
-              },
-              "stats": {
-                "upvotes": 42,
-                "downvotes": 5
-              }
+              "id": "opt_1",
+              "text": "House Stark",
+              "votes": 45
             },
             {
-              "id": "poll_123456",
-              "type": "poll",
-              "question": "Which House are you most excited to see in Season 9?",
-              "options": [
-                {
-                  "id": "opt_1",
-                  "text": "House Stark",
-                  "votes": 45
-                },
-                {
-                  "id": "opt_2",
-                  "text": "House Targaryen",
-                  "votes": 32
-                },
-                {
-                  "id": "opt_3",
-                  "text": "House Lannister",
-                  "votes": 28
-                }
-              ],
-              "metadata": {
-                "createdAt": "2025-01-15T09:45:00Z",
-                "updatedAt": "2025-01-15T09:45:00Z",
-                "status": "approved",
-                "position": 1,
-                "highlighted": false,
-                "answered": false
-              },
-              "stats": {
-                "upvotes": 5,
-                "downvotes": 1
-              }
+              "id": "opt_2",
+              "text": "House Targaryen",
+              "votes": 32
+            },
+            {
+              "id": "opt_3",
+              "text": "House Lannister",
+              "votes": 28
             }
-          ]
+          ],
+          "metadata": {
+            "createdAt": "2025-01-15T09:45:00Z",
+            "updatedAt": "2025-01-15T09:45:00Z",
+            "status": "approved",
+            "position": 1,
+            "highlighted": false,
+            "answered": false
+          },
+          "upvotes": 5,
+          "downvotes": 1
         }
       ],
       "participants": [
@@ -127,12 +115,7 @@
           "name": "Alice Johnson",
           "email": "alice.j@hbo.com",
           "role": "moderator",
-          "permissions": ["approve", "reject", "highlight", "delete"],
-          "moderationStats": {
-            "questionsApproved": 15,
-            "questionsRejected": 3,
-            "questionsHighlighted": 5
-          }
+          "permissions": ["approve", "reject", "highlight", "delete"]
         },
         {
           "id": "usr_345679",
@@ -146,25 +129,14 @@
             "delete",
             "ban_users",
             "edit_questions"
-          ],
-          "moderationStats": {
-            "questionsApproved": 25,
-            "questionsRejected": 8,
-            "questionsHighlighted": 10,
-            "usersBanned": 1
-          }
+          ]
         },
         {
           "id": "usr_345680",
           "name": "Lisa Torres",
           "email": "l.torres@hbo.com",
           "role": "moderator",
-          "permissions": ["approve", "reject", "highlight", "delete"],
-          "moderationStats": {
-            "questionsApproved": 12,
-            "questionsRejected": 6,
-            "questionsHighlighted": 3
-          }
+          "permissions": ["approve", "reject", "highlight", "delete"]
         }
       ]
     }
