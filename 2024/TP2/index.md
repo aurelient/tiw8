@@ -6,7 +6,7 @@
 
 #### Présentation du TP
 
-L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de gérer des sessions de questions/réponses, sondages en temps réel. Elle sera développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en JavaScript.
+L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de gérer des sessions de questions/réponses, sondages en temps réel. Elle sera développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en Typescript.
 
 Les points suivants seront abordés
 
@@ -50,7 +50,7 @@ Les questions ont un certain nombre de propriétés : couleur, contenu (texte, i
 
 <img style="border: none;" alt="questions panel" width="400" src="slido-une.jpg"/>
 
-Imaginez que le serveur envoie [ce type de données](qa-data-structure.json.json) (qui peuvent être améliorées/modifiées selon vos besoins).
+Imaginez que le serveur envoie [ce type de données](qa-data-structure.json) (qui peuvent être améliorées/modifiées selon vos besoins), voici une [version étendue](qa-expanded-data_2.json).
 
 ### Créer des composants passifs
 
@@ -357,14 +357,10 @@ socket.on("action", (msg) => {
 ```
 
 Pour changer la question courante, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
-<!-- Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. 
+Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. 
 
 Pour éviter cela, les actions Redux peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta). 
-Mais surprise le mainteneur de [Easy-peasy est pas motivé pour l'implémenter](https://github.com/ctrlplusb/easy-peasy/issues/241), nous allons donc surcharger notre payload avec cette information.  -->
 
-Pour cela nous allons utiliser `navigate()` de nouveau depuis le middleware. Idéalement nous voudrions faire `dispatch(...).then(() => navigate())` mais avec l'intégration redux/easy-peasy cela devient compliqué. Nous allons donc simplement appeler navigate après dispatch sans attendre.
-
-Dans le middle vous n'avez pas accès aux hooks react, il faut donc appeler `navigate()` "à la main" en exportant votre `router = createBrowserRouter()`. Le plus simple est de définir votre routeur dans un fichier `router.tsx` dédié, qui se terminera par `export default router`. Vous pourrez importer cet objet `router` et appeler `router.navigate('monchemin')` dans votre middleware.
 
 #### Synchronisation des actions entre les appareils
 
