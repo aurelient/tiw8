@@ -143,7 +143,9 @@ En anticipation du TP 2.3, vous pouvez déjà préparer la gestion d'une route d
 
 ## TP2.2 Redux Toolkit
 
-Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux Toolkit et des Websockets. L'objectif est que vous puissiez changer l'état de votre application sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre mur à distance sur sa machine...)
+Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux Toolkit et des Websockets. L'objectif est que vous puissiez changer l'état de votre application sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre la liste des questions à distance sur sa machine...)
+
+Utilisez aussi [Redux DevTools](https://github.com/reduxjs/redux-devtools) pour Chrome ou Firefox, il nécessite quelques légères [modifications de votre code](https://github.com/zalmoxisus/redux-devtools-extension#usage). Rajoutez `redux-devtools-extension` au projet.
 
 <!-- Nous allons gérer l'état qui comprend la liste des murs et le mur en cours.-->
 
@@ -152,18 +154,75 @@ Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs
 ### Création d'un store
 
 Nous allons commencer par créer le store qui va gérer les états.
+Suivre le Quick Start de ReduxToolkit pour installer les dépendances, créer [le store de l'application](https://redux-toolkit.js.org/tutorials/typescript#define-root-state-and-dispatch-types), et les [(typed) hooks](https://redux-toolkit.js.org/tutorials/typescript#define-typed-hooks) qui feront le lien entre React et Redux.
 
 ```ts
-TODO
+import { configureStore } from '@reduxjs/toolkit'
+import eventsReducer from "../slices/eventsSlice"; // chemin à adapter
+
+export const store = configureStore({
+  reducer: {
+    events: eventsReducer,
+    // ...
+  },
+})
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch
 ```
 
-#### Utiliser le store
+Vous pouvez vous référer au [guide suivant](https://redux.js.org/tutorials/essentials/part-2-app-structure) voir la structure d'une app React-ReduxToolkit
+
+
+On importe `configureStore` depuis redux-toolkit et aussi `eventsReducer` dont on verra juste en dessous la définition.
+
+`configureStore` peut aussi prendre un état initial en entrée, mais c'est les reducers qui vont produire l'état de l'application (y compris l'état initial).
+
+#### Création d'une slice, des reducers et actions associés
+
+On va ensuite s'appuyer sur Redux Toolkit pour générer automatiquement les créateurs d'actions et les types d'actions: des "slices" elles prennent en entrée, un état initial, un ensemble de reducers et un nom de slice. Redux Toolkit vise à supprimer beaucoup de "boilerplate code" et à déléguer la fabrication des actions.
+
+1. Comme nous utilisons Typescript il faudra définir [les types associés aux hooks Redux](https://redux-toolkit.js.org/tutorials/typescript#define-typed-hooks).
+
+2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `eventSlice`. Cette slice aura plusieurs actions (à compléter) :
+
+```js
+// TODO compléter en s'appuyant sur le tutoriel lié au dessus
+...
+export const eventsSlice = createSlice({
+    name: 'qandaApp',
+    // `createSlice` will infer the state type from the `initialState` argument
+    initialState,
+    reducers: {
+        // Use the PayloadAction type to declare the contents of `action.payload`
+        setCurrentEvent: (state, action: PayloadAction<number>) => {
+            // TODO à adapter au besoin
+            state.currentEvent = action.payload
+        },
+        upvoteQuestion: (state, action: PayloadAction<string, string>) => {
+            // TODO incrementer les votes d'une question
+        },
+        createQuestion: (state, action: PayloadAction<Question>) => {
+            // TODO 
+        },
+        // ...
+    },
+})
+
+export const { setCurrentEvent, upvoteQuestion, createQuestion } = eventsSlice.actions
+export default eventsSlice.reducer
+```
+
+#### Brancher l'application à Redux et au store
 
 Dans votre `index.tsx` principal exposez le store pour pouvoir l'afficher via la console du navigateur.
 Cela permettra d'effectuer les premiers tests de Redux, sans l'avoir branché à votre application React.
 
 ```js
-import { store } from './application/store' // verifiez que le chemin est correct
+import { Provider } from 'react-redux'
+import { store } from './store/index' // verifiez que le chemin est correct
 
 declare global {
     interface Window {
@@ -173,55 +232,45 @@ declare global {
 window.mystore = store
 ```
 
-Et toujours dans le `index.tsx`, enveloppez votre application dans une balise :
+Et enveloppez votre application dans une balise :
 
 ```xml
-TODO
-```
-
-#### Lien React - Redux Toolkit
-<!-- 
-
-1. Importer connect de `react-redux`, et les actions depuis votre fichier de définition d'action.
-
-```js
-import { connect } from "react-redux";
-import { action1, action2 } from "..../actions/index";
-```
-
-2. Créer un `mapDispatchToProps` et le connecter avec votre composant.
-
-```js
-const mapDispatchToProps = (dispatch) => {
-  return {
-    nextBoard: () => dispatch(nextBoard(true)),
-    previousBoard: () => dispatch(previousBoard(true)),
-  };
-};
-// ... VOTRE_COMPOSANT
-
-export default withRouter(connect(null, mapDispatchToProps)(VOTRE_COMPOSANT));
-``` 
-
-3. Enfin en cas de clic sur vos boutons avant/apres appelez vos actions `onClick={() => {this.props.previousBoard}`
--->
-
-Maintenant on va tester que le flux d'information ce passe bien. On va rajouter un bouton `up` aux questions. Quand on cliquera dessus, il ira modifier la propriété `upvotes` de la question.
-
-Pour faire cela nous allons devoir modifier le composant question et le store
-
-```js
-TODO
-```
-
-Lorsque l'on clique sur le bouton on va appeler une action du store :
-
-```js
-  // on récupère l'action désirée dans le store
-  const triggerUpvote = useStoreActions((actions) => actions.triggerUpvote);
+<Provider store={store}>`
   ...
-  // et on s'en sert lors du clic sur le bouton
-  <button onClick={triggerUpvote}></button>
+</Provider>`
+```
+
+#### Lien React - Redux
+
+Maintenant on va tester que le flux d'information ce passe bien. Quand on clique sur le bouton upvote d'une question, on va modifier la propriété `votes` de la question.
+
+Pour faire cela nous allons devoir modifier trois fichiers
+
+1. Le composant Question
+2. le composant d'affichage d'un transparent
+3. la slice qui gère l'état de l'application
+
+Ajoutez un bouton au composant Question si ce n'est déjà fait.
+On va importer les éléments suivants dans le composant:
+
+```js
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { upvoteQuestion } from "../slices/eventsSlice";
+```
+
+Lorsque l'on clique sur le bouton on va dispatcher une action :
+
+```js
+  // dans votre composant on branche le dispatch au store :
+  const dispatch = useDispatch<AppDispatch>()
+  ...
+  // lors du click sur le bouton
+  onClick={() => {
+      dispatch(
+          upvote(eventid, questionid) //on pourrait ne mettre que le questionid et parcourir toutes les questions de tous les événements jusqu'à trouver la bonne question. 
+      )
+  }}
 ```
 
 ## TP2.3 Distribution d’interface multi-dispositif Middleware et websockets
