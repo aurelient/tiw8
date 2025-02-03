@@ -743,8 +743,7 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 - Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
 - Linting bien configuré et respecté
 - Types Typescript correctement définis
-- Déploiement sur une VM de l'université.
-- Composants React pour le `Event`, les `Questions`, la `Toolbar`.
+- Déploiement jusqu'à la partie 2.2 inclue sur une VM de l'université.
 - Utilisation de composants fonctionnels
 - Store qui contient l'état de l'application
 - Le flux de données suit le flow React, des actions sont déclarées, et les changements d'états passent par des actions unitaires qui modifient le store.
@@ -761,6 +760,6 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 <!-- - Synchronisation des dessins s'appuyant sur un middleware. -->
 - Intégration du canvas.
 - Définition des gestes.
-- Gestion des gestes pour des commandes suivant, précédent.
+- Gestion des gestes pour des commandes suivant, précédent, supprimer.
 - Les commandes associées aux gestes sont bien propagées et permettent de contrôler un dispositif à distance.
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
