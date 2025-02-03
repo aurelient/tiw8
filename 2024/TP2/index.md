@@ -279,6 +279,8 @@ Nous allons maintenant travailler à la distribution de l'application sur plusie
 
 L'idée est de forcer la synchronisation de tous les dispositifs.
 
+Pour tester en local, il sera possible d'utiliser [sish](https://docs.ssi.sh/) pour vous connecter à un serveur local à votre machine dev en https depuis votre smartphone.
+
 Nous allons définir une route pour chaque question. Les questions seront éditables.
 
 Les routes et vues dédiées à la réponse aux questions, peuvent être optimisées pour mobile.
@@ -358,9 +360,9 @@ Et ajoutez le dans le tableau des middlewares qui était vide jusqu'à présent.
 
 ### Notre Middleware de diffusion des actions avec des websockets
 
-Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand on change de question, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur question courante.
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand on change d'événement, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur événement courant.
 
-Pareil en mobile si on change de post-its.
+Pareil en mobile si on change d'événement.
 
 #### Socket.io côté serveur
 
@@ -763,3 +765,7 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 - Gestion des gestes pour des commandes suivant, précédent, supprimer.
 - Les commandes associées aux gestes sont bien propagées et permettent de contrôler un dispositif à distance.
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
+
+Points bonus :
+
+- Si le TP est déployé jusqu'à la partie 2.4
