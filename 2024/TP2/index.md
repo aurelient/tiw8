@@ -731,7 +731,7 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 
 ## Rendu
 
-À rendre pour le dimanche 07/02 à 23h59.
+À rendre pour le mardi 11/02 à 23h59.
 
 1. Déployez votre code en local
 2. Pousser votre code sur la forge
