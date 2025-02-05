@@ -330,24 +330,28 @@ Nous allons maintenant créer un logger similaire "à la main" (vous pouvez fair
 Dans le fichier où vous avez créé votre store, ajoutez:
 
 ```tsx
-import {
-    type Middleware,
-    type MiddlewareAPI,
-    type Dispatch,
-    type AnyAction,
-} from 'redux'
+import { PayloadAction } from '@reduxjs/toolkit';
+import { Middleware } from 'redux';
 
-const loggerMiddleware: Middleware =
-    (api: MiddlewareAPI) => (next: Dispatch) => (action: AnyAction) => {
-        console.log('Dispatching action:', action)
-
-        // Call the next middleware in the chain
-        const result = next(action)
-
-        console.log('State after action:', api.getState())
-
-        return result
-    }
+const loggerMiddleware: Middleware = (api) => (next) => (action: unknown) => {
+  // Log the previous state
+  const act = action as PayloadAction;
+  console.group(act.type);
+  console.log('Previous State:', api.getState());
+  
+  // Log the action
+  console.log('Action:', action);
+  
+  // Call next middleware/reducer
+  const result = next(action);
+  
+  // Log the next state
+  console.log('Next State:', api.getState());
+  console.groupEnd();
+  
+  // Return the result
+  return result;
+};
 
 export default loggerMiddleware;
 ```
