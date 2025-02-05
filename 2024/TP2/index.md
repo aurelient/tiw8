@@ -381,6 +381,11 @@ socket.on("action", (msg) => {
 });
 ```
 
+NB: il y a deux méthodes permettant de [broadcaster aux clients](https://socket.io/docs/v4/tutorial/step-5): 
+
+- `socket.broadcast.emit(tymsgTypepe, message);` envoie à tous les clients connectés sauf l'émetteur.
+- `io.emit(msgType, message);` envoie le message à tous les clients connectés y compris l'émetteur.
+
 #### Synchronisation des changements de navigation entre les appareils
 
 Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setQuestion` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
@@ -424,7 +429,10 @@ socket.on("action", (msg) => {
 ```
 
 Pour changer la question courante, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
-Vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages.
+
+#### En cas de boucle infinie
+
+Si vous avez utilisé `io.emit` au lieu de `socket.broadcast`, vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. L'émetteur reçoit une action, qu'il déclenche, ce qui l'a renvoie au serveur...
 
 Pour éviter cela, les actions Redux peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta).
 
