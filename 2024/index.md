@@ -71,7 +71,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 - 1 contrôle écrit (33%)
   - 90 minutes
   - 3 feuilles A4 de supports autorisées.
-  - [sujet de l'année 2019](../cours/TIW8-exam2019-session1.pdf)
+  - [sujet de l'année 2019](../2023/cours/TIW8-exam2019-session1.pdf)
 
 # Références
 
