@@ -35,11 +35,11 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 |          | 15/01 | _pas de CM que du TP_          |                                                                      |             |
 | CM 4     | 03/02 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
 |          | 05/02 | _pas de CM que du TP_          |                                                                      |             |
-| CM 5     | 10/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
-|          | 12/02 | _pas de CM que du TP_          |                                                                      |             |
+|          | 10/02 | _pas de CM que du TP_          |                                                                      |             |
+| CM 5     | 12/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
 | CM 6     | 03/03 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)                                   | A. Tabard   |
-|          | 05/03 | _pas de CM que du TP_          |                                                                      |             |
-| CM 7     | 10/03 | ? Performance ?                |                                                                      | A. Tabard   |
+|          | 05/03 |                                |                                                                      |             |
+|          | 10/03 |                                |                                                                      |             |
 |          | 12/03 | Examen                         |                                                                      |             |
 
 
@@ -53,13 +53,15 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 2.1](TP2/)                                                           | 13/01 | 1h30  | Introduction à React                      |         |
 | [TP 2.2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 15/01 | 3h    | State management + websockets             |         |
 | [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif)             | 03/02 | 1h30  | Distribution d'interface multi-dispositif |         |
-| [TP 2.4](TP2/#4-suite)                                                   | 05/02 | 3h    | Modalité d'entrée (gestes, stylet)        | rendu 1 |
-| [TP 3.1](TP3)                                                            | 10/02 | 1h30  | WebRTC: p2p data                          |         |
-| [TP 3.2](TP3/#tp32-webrtc-et-vidéo)                                      | 12/02 | 3h    |                                           |         |
-| TP 3 finalisation                                                        | 03/03 | 1h30  | WebRTC: audio et video                    |         |
-| TP 3 finalisation                                                        | 05/03 | 3h    |                                           | rendu 2 |
-| TP 4                                                                     | 10/03 | 1h30  |                                           |         |
-| Examen                                                                   | 12/03 | 1h30  |                                           |         |
+| [TP 2.4](TP2/#4-suite)                                                   | 05/02 | 3h    | Modalité d'entrée (gestes, stylet)        |         |
+| [TP 2 - Finalisation](TP2/)                                              | 10/02 | 1h30  |                                           | rendu 1 |
+| [Projet](TP3/#tp32-webrtc-et-vidéo)                                      | 12/02 | 3h    |                                           |         |
+| Projet                                                                   | 03/03 | 1h30  | Lancement projet                          |         |
+| Projet                                                                   | 05/03 | 1h30  |                                           |         |
+| Projet                                                                   | 10/03 | 3h    |                                           |         |
+| Examen                                                                   | 12/03 | 3h    |                                           |         |
+|                                                                          | 14/03 | —---  |                                           | rendu 2 |
+
 
 
 ## Evaluation
