@@ -9,6 +9,8 @@ Il s'agira de mettre la gestion de données et/ou le maximum de responsabilité 
 
 #### WebRTC
 
+On pourra s'appuyer sur [simple-peer](https://github.com/feross/simple-peer/) ou [peerjs](https://github.com/peers/peerjs)
+
 - Système de partage de fichier P2P - s'appuyant sur la partie data de WebRTC
 - Système de visio classique (Vidéo, audio) + chat
 - Système de visio "avancé" type [Gather](https://www.gather.town/)

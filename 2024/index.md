@@ -55,7 +55,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif)             | 03/02 | 1h30  | Distribution d'interface multi-dispositif |         |
 | [TP 2.4](TP2/#4-suite)                                                   | 05/02 | 3h    | Modalité d'entrée (gestes, stylet)        |         |
 | [TP 2 - Finalisation](TP2/)                                              | 10/02 | 1h30  |                                           | rendu 1 |
-| [Projet](TP3/#tp32-webrtc-et-vidéo)                                      | 12/02 | 3h    |                                           |         |
+| [Projet](Projet)                                      | 12/02 | 3h    |                                           |         |
 | Projet                                                                   | 03/03 | 1h30  | Lancement projet                          |         |
 | Projet                                                                   | 05/03 | 1h30  |                                           |         |
 | Projet                                                                   | 10/03 | 3h    |                                           |         |
