@@ -63,8 +63,8 @@ yarn add typescript ts-node express --dev
 # Ajoute les types d'un module à typescript
 yarn add @types/node @types/express
 
-# Installe le compilateur Typescript de façon globale
-npm i -g tsc
+# Installe le compilateur Typescript localement
+yarn add tsc
 
 # Créé un fichier de configuration pour Typescript
 tsc --init
@@ -125,7 +125,7 @@ const helloRouteur = express.Router();
 // before requesting secured API routes
 helloRouteur.use((request, response, next) => {
   process.stdout.write('HelloRouter Middleware\n');
-  if (request.ip.endsWith('127.0.0.1')) {
+  if (request.ip?.endsWith('127.0.0.1')) {
     process.stdout.write('Request from local IP\n');
     next();
   } else {
