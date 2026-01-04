@@ -1,0 +1,144 @@
+{
+  "events": [
+    {
+      "id": "evt_123456",
+      "name": "Game of Thrones Season 9 Preview Panel",
+      "description": "Live Q&A session with the cast and showrunners of Game of Thrones",
+      "startDate": "2025-01-15T09:00:00Z",
+      "endDate": "2025-01-15T17:00:00Z",
+      "timeZone": "UTC",
+      "status": "active",
+      "settings": {
+        "moderationEnabled": true,
+        "allowAnonymousQuestions": true,
+        "allowQuestionUpvoting": true,
+        "allowResponses": true,
+        "maxQuestionsPerUser": 5,
+        "profanityFilter": true,
+        "requireApproval": true
+      },
+      "questions": [
+        {
+          "id": "q_345678",
+          "type": "question",
+          "content": "Will we see more dragons in Season 9?",
+          "author": "usr_901234",
+          "metadata": {
+            "createdAt": "2025-01-15T09:35:00Z",
+            "updatedAt": "2025-01-15T09:35:00Z",
+            "status": "approved",
+            "position": 2,
+            "highlighted": false,
+            "answered": false
+          },
+          "isAnonymous": true,
+          "upvotes": 42,
+          "downvotes": 5
+        },
+        {
+          "id": "poll_123456",
+          "type": "poll",
+          "content": "Which House are you most excited to see in Season 9?",
+          "options": [
+            {
+              "id": "opt_1",
+              "text": "House Stark",
+              "votes": 45
+            },
+            {
+              "id": "opt_2",
+              "text": "House Targaryen",
+              "votes": 32
+            },
+            {
+              "id": "opt_3",
+              "text": "House Lannister",
+              "votes": 28
+            }
+          ],
+          "metadata": {
+            "createdAt": "2025-01-15T09:45:00Z",
+            "updatedAt": "2025-01-15T09:45:00Z",
+            "status": "approved",
+            "position": 1,
+            "highlighted": false,
+            "answered": false
+          },
+          "upvotes": 5,
+          "downvotes": 1
+        }
+      ],
+      "participants": [
+        {
+          "id": "usr_901234",
+          "name": "John Snow",
+          "email": "john.s@fanmail.com",
+          "role": "participant",
+          "questionsAsked": 1,
+          "votesGiven": 3
+        },
+        {
+          "id": "usr_901235",
+          "name": "Sarah Targaryen",
+          "email": "sarah.t@fanmail.com",
+          "role": "participant",
+          "questionsAsked": 2,
+          "votesGiven": 5
+        },
+        {
+          "id": "usr_901236",
+          "name": "Michael Lannister",
+          "email": "m.lannister@fanmail.com",
+          "role": "participant",
+          "questionsAsked": 0,
+          "votesGiven": 8
+        },
+        {
+          "id": "usr_901237",
+          "name": "Emma Greyjoy",
+          "email": "e.greyjoy@fanmail.com",
+          "role": "participant",
+          "questionsAsked": 3,
+          "votesGiven": 12
+        },
+        {
+          "id": "usr_901238",
+          "name": "Anonymous Fan",
+          "role": "participant",
+          "questionsAsked": 1,
+          "votesGiven": 2
+        }
+      ],
+      "moderators": [
+        {
+          "id": "usr_345678",
+          "name": "Alice Johnson",
+          "email": "alice.j@hbo.com",
+          "role": "moderator",
+          "permissions": ["approve", "reject", "highlight", "delete"]
+        },
+        {
+          "id": "usr_345679",
+          "name": "Robert Kim",
+          "email": "r.kim@hbo.com",
+          "role": "senior_moderator",
+          "permissions": [
+            "approve",
+            "reject",
+            "highlight",
+            "delete",
+            "ban_users",
+            "edit_questions"
+          ]
+        },
+        {
+          "id": "usr_345680",
+          "name": "Lisa Torres",
+          "email": "l.torres@hbo.com",
+          "role": "moderator",
+          "permissions": ["approve", "reject", "highlight", "delete"]
+        }
+      ]
+    }
+  ]
+}
