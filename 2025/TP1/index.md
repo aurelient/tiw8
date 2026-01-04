@@ -184,7 +184,7 @@ const HTML_FILE = path.join(DIST_DIR, "index.html");
 // TODO Modifier la route '/' pour qu'elle pointe sur HTML_FILE
 ```
 
-### CSS
+### CSS et Composants
 
 Nous allons maintenant incorporer [Tailwind CSS](https://tailwindcss.com/) et une bibliothèque de composants associés, par exemple [shadcn/ui](https://ui.shadcn.com/docs) ou des composants material design.
 
