@@ -318,7 +318,7 @@ Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et co
 
 Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un des critères n'est pas rempli c'est un RATE (=0):
 
-- Le rendu est effectué avant la deadline. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien gitlab pages).
+- Le rendu est effectué avant la deadline. Pensez à remplir les deux champs Tomuss associés au TP1 (lien forge pour clone, et lien vers le projet déployé sur la VM).
 - Les responsables de l'UE sont ajoutés au projet forge (ils/elles peuvent cloner le projet)
 - Le lien vers la forge fournit sur Tomuss permet un `git clone` sans aucune modification de l'url TESTEZ le clone
 - Le projet contient un README clair sur ce qui a été réalisé, les commandes disponibles (pour build, dev, tester, et toute autre commande utile)
