@@ -7,6 +7,8 @@
 - [Cours 2022-2023](2022)
 - [Cours 2023-2024](2023)
 - [Cours 2024-2025](2024)
+- [Cours 2025-2026](2025)
+
 
 
 ## Editer / corriger des erreurs
