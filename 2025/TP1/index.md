@@ -195,7 +195,7 @@ On placera ces composants dans un dossier `components`.
 
 ```js
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import Header from "./components/Header.tsx";
 import Content from "./components/Content.tsx";
 const Index = () => {
@@ -206,7 +206,9 @@ const Index = () => {
     </div>
   );
 };
-ReactDOM.render(<Index />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<Index />);
 ```
 
 ### React Developer Tools
@@ -314,7 +316,7 @@ Veillez à ce que les variables soient bien définies, et votre VM bien configur
 
 ### Rendu et évaluation
 
-Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour mercredi 8/01 à 20h.
+Le TP est individuel. **Il est évalué sur une base binaire REUSSI/RATE** et compte pour 10% de la note de Controle Continu (CC) totale. Il est à rendre pour mercredi 7/01 à 20h.
 
 Les critères d'évaluation sont les suivants pour avoir un REUSSI (=20), si un des critères n'est pas rempli c'est un RATE (=0):
 
