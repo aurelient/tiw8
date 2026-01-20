@@ -293,7 +293,7 @@ Match User gitlab-ci
 Redémarrer les service ssh:
 
 ```bash
-sudo systemctl restart sshd
+sudo systemctl restart ssh
 ```
 
 Testez la connection ssh depuis votre machine.
