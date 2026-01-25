@@ -21,9 +21,9 @@ Les points suivants seront abordés
 
 Ce TP s'étalera sur 4 séances et fera l'objet d'un rendu en binôme et d'une note. Voir les critères d'évaluation en bas de la page.
 
-<img style="width: 48%; margin-right: 2%; display: inline-block;" alt="vue desktop" height="200" src="composants.png"/>
+<img style="margin-right: 2%; display: inline-block;" alt="vue desktop" height="300" src="composants.png"/>
 
-<img style="width: 48%; display: inline-block;" alt="vue mobile" height="200" src="mobile.png"/>
+<img style="display: inline-block;" alt="vue mobile" height="300" src="mobile.png"/>
 
 
 Vous ferez le rendu sur la forge, créez un projet git dès maintenant.
