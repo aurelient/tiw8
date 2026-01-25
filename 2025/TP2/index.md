@@ -6,7 +6,7 @@
 
 #### Présentation du TP
 
-L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de gérer des sessions de questions/réponses, sondages en temps réel. Elle sera développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en Typescript.
+L'objectif du TP est de mettre en place une Single Page Application (SPA) permettant de gérer des tableaux de post-its. Elle sera développée principalement côté client avec React, avec un serveur Node/Express léger. Client et serveur seront codés en Typescript.
 
 Les points suivants seront abordés
 
@@ -20,6 +20,11 @@ Les points suivants seront abordés
 - Reconnaissance de gestes
 
 Ce TP s'étalera sur 4 séances et fera l'objet d'un rendu en binôme et d'une note. Voir les critères d'évaluation en bas de la page.
+
+<img style="border: none;" alt="vue desktop" width="400" src="composant.png"/>
+
+<img style="border: none;" alt="vue mobile" width="400" src="mobile.png"/>
+
 
 Vous ferez le rendu sur la forge, créez un projet git dès maintenant.
 
@@ -45,10 +50,8 @@ Lire l'[introduction à la structuration d'application React](https://react.dev/
 
 Nous allons commencer par créer un squelette d'application statique, nous rajouterons les parties dynamiques par la suite.
 
-L'application est composée de plusieurs événements, chacun composé de plusieurs questions/quizz. À évenement on peut ajouter des questions et réagir dessus.
-Les questions ont un certain nombre de propriétés : couleur, contenu (texte, image, dessin à la main), position, taille, auteur, ... Vous pourrez par exemple vous inspirer de [slido](https://www.slido.com/) ou de nombreux services équivalents.
-
-<img style="border: none;" alt="questions panel" width="400" src="slido-une.jpg"/>
+L'application est composée de plusieurs 'boards', chacun composé de plusieurs post-its. Chaque post-it a un certain nombre de propriétés : couleur, contenu (texte, image, dessin à la main), position, taille, auteur, ... 
+Vous pourrez par exemple vous inspirer de Figjam ou Mural.
 
 Imaginez que le serveur envoie [ce type de données](qa-data-structure.json) (qui peuvent être améliorées/modifiées selon vos besoins), voici une [version étendue](qa-expanded-data_2.json).
 
@@ -60,20 +63,25 @@ Pour démarrer voilà un `index.tsx` le reste des composants que vous allez cré
 
 ```tsx
 import { createRoot } from 'react-dom/client'
-import * as React from 'react'
+import React from 'react'
 import AppToolbar from './components/AppToolbar'
-import EventPanel from './components/EventPanel'
+import Board from './components/Board'
 
-const App = () => (
-    <div>
+const App: React.FC = () => (
+      <div>
         <AppToolbar />
-        <EventPanel />
+        <Board />
     </div>
 )
 
 const container = document.getElementById('root')!
-const root = createRoot(container)
-root.render(<App />)
+
+const root = createRoot(container);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
 ```
 
 Ce code est donné à titre indicatif vous pouvez reprendre ce que vous avez déjà créé dans le TP1, en faisant attention au typage des fonctions composant, de leurs paramètres (props). Commencez progressivement et testez régulièrement.
@@ -82,42 +90,38 @@ Créer des composants fonctionnels (on rajoutera de l'interaction par la suite).
 
 ### Gérer la logique de l'application
 
-La toolbar doit afficher le titre de l'événement et un menu permettant de naviguer entre tous les événements. Rajouter à l'état de l'App, une balise indiquant le événement courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un événement, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents).
+La toolbar doit afficher le nom du board et un menu permettant de naviguer entre tous les boards. Rajouter à l'état de l'App, une balise indiquant le board courant. Faites en sorte que l'état de App change lorsque vous sélectionnez un board, et que ce changement d'état soit reflété au niveau de l'application. Pour cela il va falloir ajouter un flux inverse (faire en sorte que le menu parle à des composants parents).
 Suivez les instructions et l'exemple de [Thinking in React](https://reactjs.org/docs/thinking-in-react.html#step-5-add-inverse-data-flow) sur les "Inverse Data Flow".
 
 Pour démarrer vous pouvez utiliser l'extension react dev tools, et modifier l'état à la main pour vérifier que la vue change bien.
 
 Voici à quoi ressemblerait la structure de `AppToolbar` :
-`PublicEvent` est définit comme une interface dans un fichier `models.d.ts` contenant les types / interfaces utilisées dans l'application que j'importe ici.
+`Board` est définit comme une interface dans un fichier `models.d.ts` contenant les types / interfaces utilisées dans l'application que j'importe ici.
 
 ```tsx
-TODO imports
-import { PublicEvent } from "../models";
+// TODO imports
 
 interface Props {
-  events: Array<PublicEvent>;
+    boards: Board[];
+    index: number
 }
 
-const AppToolbar: React.FC<Props> = (props): React.ReactElement => {
-    return (
-      <div>ma toolbar pour l'événement #{props.id}</div>
-    )
-}
+const AppToolbar = ({ boards, index }: Props) => {
+  return (
+    <div>ma toolbar pour le board numéro {index}</div>
+  );
+};
 
-export default AppToolbar
+export default AppToolbar;
 ```
 
 ### React Router
 
-Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu'il soit possible d'avoir deux chemins dédié à chaque Événement, l'un en mode admin, l'autre en mode participant.
-
-En complément d'avoir un état interne à l'application qui définit quel événement afficher, nous allons utiliser une route qui pointe vers l'événement en question. En chargeant cette route, l'état sera modifié.
+Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu’il soit possible d’avoir un chemin dédié à chaque mur (board)). En complément d’avoir un état interne à l’application qui définit quel board/post-its afficher, nous allons utiliser une route qui pointe vers le mur en question. En chargeant cette route, l’état sera modifié.
 
 Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à parcourir les tutoriels [sur cette page](https://reactrouter.com/en/main/start/tutorial).
 
-On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index, [https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3](voir un exemple ici, à adapter à vos besoins) ). L'idée est que charger un url de type [http://monsite.net/admin/event/eventID](http://monsite.net/admin/event/eventID) charge l'evenement donné.
-
-Importez bien `react-router-dom`.
+On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index, ([voir un exemple ici, à adapter à vos besoins](https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3)). L'idée est que charger un url de type : http://monsite.net/board/3 charge le board avec l'id '3'. 
 
 Vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params).
 
@@ -133,19 +137,19 @@ Vous pouvez utiliser le hook `useParams` pour récupérer des informations sur l
 ```
 -->
 
-Une fois la valeur de la route récupérée pour qu'elle corresponde à l'événement à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
+Une fois la valeur de la route récupérée pour qu'elle corresponde au board à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
 
 ### Nettoyage
 
 Déployez et testez sur mobile (faites les adaptations nécessaires).
 
-En anticipation du TP 2.3, vous pouvez déjà préparer la gestion d'une route de type `monappli.net/event/1/question/2` qui n'affiche que la question à l'id `2` de l'evenement `1`. Sur cette vue, vous pouvez rajouter des flèches `<` `>` à la toolbar (ou ailleurs) qui permettent de naviguer entre les questions d'un même événement.
+En anticipation du TP 2.3, vous pouvez déjà préparer la gestion d'une route de type `monappli.net/board/1/postit/2` qui n'affiche que le post-it à l'id `2` de l'evenement `1`. Sur cette vue, vous pouvez rajouter des flèches `<` `>` à la toolbar (ou ailleurs) qui permettent de naviguer entre les post-its d'un même board.
 
 ## TP2.2 Redux Toolkit
 
-Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux Toolkit et des Websockets. L'objectif est que vous puissiez changer l'état de votre application sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre la liste des questions à distance sur sa machine...)
+Nous allons maintenant gérer l'état de l'application sur plusieurs dispositifs en utilisant Redux Toolkit et des Websockets. L'objectif est que vous puissiez changer l'état de votre application sur un dispositif (ex: mobile), et que l'état de l'application soit mis à jour partout (ex: vidéo-projection, personne qui regarde votre la liste des post-its à distance sur sa machine...)
 
-Utilisez aussi [Redux DevTools](https://github.com/reduxjs/redux-devtools) pour Chrome ou Firefox, il nécessite quelques légères [modifications de votre code](https://github.com/zalmoxisus/redux-devtools-extension#usage). Rajoutez `redux-devtools-extension` au projet.
+Utilisez aussi [Redux DevTools](https://github.com/reduxjs/redux-devtools) pour Chrome ou Firefox, il nécessite quelques légères [modifications de votre code](https://github.com/reduxjs/redux-devtools/tree/main/extension#1-with-redux). Rajoutez `redux-devtools-extension` au projet.
 
 <!-- Nous allons gérer l'état qui comprend la liste des murs et le mur en cours.-->
 
@@ -158,25 +162,23 @@ Suivre le Quick Start de ReduxToolkit pour installer les dépendances, créer [l
 
 ```ts
 import { configureStore } from '@reduxjs/toolkit'
-import eventsReducer from "../slices/eventsSlice"; // chemin à adapter
+import boardReducer from "../slices/boardSlice"; // chemin à adapter
 
 export const store = configureStore({
   reducer: {
-    events: eventsReducer,
+    boards: boardReducer,
     // ...
   },
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 ```
 
 Vous pouvez vous référer au [guide suivant](https://redux.js.org/tutorials/essentials/part-2-app-structure) voir la structure d'une app React-ReduxToolkit
 
-
-On importe `configureStore` depuis redux-toolkit et aussi `eventsReducer` dont on verra juste en dessous la définition.
+On importe `configureStore` depuis redux-toolkit et aussi `boardReducer` dont on verra juste en dessous la définition.
 
 `configureStore` peut aussi prendre un état initial en entrée, mais c'est les reducers qui vont produire l'état de l'application (y compris l'état initial).
 
@@ -186,33 +188,33 @@ On va ensuite s'appuyer sur Redux Toolkit pour générer automatiquement les cr�
 
 1. Comme nous utilisons Typescript il faudra définir [les types associés aux hooks Redux](https://redux-toolkit.js.org/tutorials/typescript#define-typed-hooks).
 
-2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `eventSlice`. Cette slice aura plusieurs actions (à compléter) :
+2. En prenant example sur le compteur du [tutorial de redux toolkit](https://redux-toolkit.js.org/tutorials/typescript#define-slice-state-and-action-types), créez votre `boardSlice`. Cette slice aura plusieurs actions (à compléter) :
 
 ```js
 // TODO compléter en s'appuyant sur le tutoriel lié au dessus
 ...
-export const eventsSlice = createSlice({
-    name: 'qandaApp',
+export const boards = createSlice({
+    name: 'postitApp',
     // `createSlice` will infer the state type from the `initialState` argument
     initialState,
     reducers: {
         // Use the PayloadAction type to declare the contents of `action.payload`
-        setCurrentEvent: (state, action: PayloadAction<number>) => {
+        setCurrentBoard: (state, action: PayloadAction<number>) => {
             // TODO à adapter au besoin
-            state.currentEvent = action.payload
+            state.currentBoard = action.payload
         },
-        upvoteQuestion: (state, action: PayloadAction<string, string>) => {
-            // TODO incrementer les votes d'une question
+        setColorPostit: (state, action: PayloadAction<number, number, string>) => {
+            // TODO changer la couleur d'un postit
         },
-        createQuestion: (state, action: PayloadAction<Question>) => {
+        createPostit: (state, action: PayloadAction<Postit>) => {
             // TODO 
         },
-        // ...
+        // TODO likePostit, setAuthor, setVisibility...
     },
 })
 
-export const { setCurrentEvent, upvoteQuestion, createQuestion } = eventsSlice.actions
-export default eventsSlice.reducer
+export const { setCurrentBoard, setColorPostit, createPostit } = boardSlice.actions
+export default boardSlice.reducer
 ```
 
 #### Brancher l'application à Redux et au store
@@ -242,33 +244,33 @@ Et enveloppez votre application dans une balise :
 
 #### Lien React - Redux
 
-Maintenant on va tester que le flux d'information ce passe bien. Quand on clique sur le bouton upvote d'une question, on va modifier la propriété `votes` de la question.
+Maintenant on va tester que le flux d'information ce passe bien. Quand on change la couleur ou le texte d'un post-it, on va modifier les propriétés.
 
 Pour faire cela nous allons devoir modifier trois fichiers
 
-1. Le composant Question
-2. le composant d'affichage d'un transparent
+1. Le composant Board
+2. le composant d'affichage d'un post-it
 3. la slice qui gère l'état de l'application
 
-Ajoutez un bouton au composant Question si ce n'est déjà fait.
+Ajoutez un selecteur de couleur au composant Postit si ce n'est déjà fait.
 On va importer les éléments suivants dans le composant:
 
 ```js
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { upvoteQuestion } from "../slices/eventsSlice";
+import { setColorPostit } from "../slices/boardSlice";
 ```
 
-Lorsque l'on clique sur le bouton on va dispatcher une action :
+Lorsqu'on choisit une couleur sur le bouton on va dispatcher une action :
 
 ```js
   // dans votre composant on branche le dispatch au store :
   const dispatch = useDispatch<AppDispatch>()
   ...
   // lors du click sur le bouton
-  onClick={() => {
+  onClick={(/* a definir */) => {
       dispatch(
-          upvote(eventid, questionid) //on pourrait ne mettre que le questionid et parcourir toutes les questions de tous les événements jusqu'à trouver la bonne question. 
+          setColorPostit(postid, boardid, color) . 
       )
   }}
 ```
@@ -279,13 +281,13 @@ Nous allons maintenant travailler à la distribution de l'application sur plusie
 
 L'idée est de forcer la synchronisation de tous les dispositifs.
 
-Pour tester en local, il sera possible d'utiliser [sish](https://docs.ssi.sh/) pour vous connecter à un serveur local à votre machine dev en https depuis votre smartphone.
+Pour tester en local, il sera possible d'utiliser l'ip publique de liveserver ou [sish](https://docs.ssi.sh/) pour vous connecter à un serveur local à votre machine dev.
 
-Nous allons définir une route pour chaque question. Les questions seront éditables.
+Nous allons définir une route pour chaque board. Les postits et boards seront éditables.
 
-Les routes et vues dédiées à la réponse aux questions, peuvent être optimisées pour mobile.
+Les routes et vues dédiées à la réponse aux postits, peuvent être optimisées pour mobile.
 
-Les boutons `<` et `>` permettent de naviguer entre les questions. Le menu du haut pour naviguer entre les événements. Eventuellement un menu du bas pour parcourir les questions et naviguer directement sur l'une d'elles (optionnel).
+Les boutons `<` et `>` permettent de naviguer entre les postits. Le menu du haut pour naviguer entre les boards. Eventuellement un menu du bas pour parcourir les postsits et naviguer directement sur l'une d'elles (optionnel).
 
 ### Définition de nouvelles routes et des vues associées
 
@@ -299,7 +301,7 @@ Au besoin vous pouvez aussi vous appuyer sur des appels à `redirect` [(doc)](ht
 
 ### Gestion "à la main" des routes des Evenements
 
-Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer l'événement courant et la question courante dans notre état (`currentEvent` dans le store).
+Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le board courant et le postit courant dans notre état (`currentBoard` dans le store).
 `ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état (même si cela s'est bien amélioré avec la v6).
 Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
 
@@ -364,9 +366,9 @@ Et ajoutez le dans le tableau des middlewares qui était vide jusqu'à présent.
 
 ### Notre Middleware de diffusion des actions avec des websockets
 
-Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand on change d'événement, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur événement courant.
+Nous allons maintenant faire communiquer plusieurs navigateurs entre eux grâce à [socket.io](https://socket.io/). Pour cela nous allons rajouter un middleware dédié. Sur un navigateur, quand on change de board, un message sera envoyé aux autres navigateurs afin qu'ils changent eux aussi leur board courant.
 
-Pareil en mobile si on change d'événement.
+Pareil en mobile si on change de board.
 
 #### Socket.io côté serveur
 
@@ -388,7 +390,7 @@ NB: il y a deux méthodes permettant de [broadcaster aux clients](https://socket
 
 #### Synchronisation des changements de navigation entre les appareils
 
-Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setQuestion` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
+Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setCurrentBoard` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
 
 ```js
 import io from "socket.io-client";
@@ -421,14 +423,14 @@ socket.on("action", (msg) => {
   switch (
     msg.type // ajuster le msg.type pour qu'il corresponde bien à celui définit pour l'action de votre reducer
   ) {
-    case "set_question": // <- probablement autre chose cela dépend du 'type_de_message' définit dans votre emit ci-dessus
+    case "set_postit": // <- probablement autre chose cela dépend du 'type_de_message' définit dans votre emit ci-dessus
           // action à dispatcher
       break
   }
 });
 ```
 
-Pour changer la question courante, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
+Pour changer la post-it courante, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
 
 #### En cas de boucle infinie
 
@@ -438,7 +440,7 @@ Pour éviter cela, les actions Redux peuvent embarquer un information supplémen
 
 #### Synchronisation des actions entre les appareils
 
-Pour synchroniser votre store plus généralement (exemple: édition du titre d'un événement ou d'une question, ajout d'une question, etc.) nous allons diffuser les actions via le même middleware. Les actions vont ensuite être récupérées et dispatchées au store.
+Pour synchroniser votre store plus généralement (exemple: édition du titre d'un board ou d'un post-it, ajout d'un post-it, etc.) nous allons diffuser les actions via le même middleware. Les actions vont ensuite être récupérées et dispatchées au store.
 
 Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` callback [comme décrit ici](https://redux-toolkit.js.org/usage/usage-with-typescript#defining-action-contents-with-prepare-callbacks)
 
@@ -446,7 +448,7 @@ Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` c
 
 Vous avez maintenant le poc de votre application.
 
-Rajoutez des actions pour ajouter/supprimer des evenements, et des questions, et éditer leur titre.
+Rajoutez des actions pour ajouter/supprimer des 'boards', et des post-its, et éditer leur titre.
 
 Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
@@ -479,7 +481,7 @@ let clickDrag = new Array();
 let paint = false;
 
 // Cette ligne permet d'avoir accès à notre canvas après que le composant aie été rendu. Le canvas est alors disponible via refCanvas.current
-let refCanvas = useRef(null);
+let refCanvas = useRef<HTMLCanvasElement | null>(null);
 
 function addClick(x, y, dragging) {
   clickX.push(x);
@@ -488,7 +490,8 @@ function addClick(x, y, dragging) {
 }
 
 function redraw() {
-  let context = refCanvas.current.getContext("2d");
+  const context = refCanvas.current.getContext("2d")!; // getContext method has return type RenderingContext2D | null, 
+  // so the ! is needed here to assert that the result is not null. (Or you can check for null and handle that case.)
   let width = refCanvas.current.getBoundingClientRect().width;
   let height = refCanvas.current.getBoundingClientRect().height;
 
@@ -500,7 +503,7 @@ function redraw() {
   context.lineJoin = "round";
   context.lineWidth = 2;
 
-  for (var i = 0; i < clickX.length; i++) {
+  for (let i = 0; i < clickX.length; i++) {
     context.beginPath();
     if (clickDrag[i] && i) {
       context.moveTo(clickX[i - 1] * width, clickY[i - 1] * height);
@@ -519,8 +522,8 @@ function pointerDownHandler(ev) {
 
   let width = refCanvas.current.getBoundingClientRect().width;
   let height = refCanvas.current.getBoundingClientRect().height;
-  var mouseX = (ev.pageX - refCanvas.current.offsetLeft) / width;
-  var mouseY = (ev.pageY - refCanvas.current.offsetTop) / height;
+  let mouseX = (ev.pageX - refCanvas.current.offsetLeft) / width;
+  let mouseY = (ev.pageY - refCanvas.current.offsetTop) / height;
 
   paint = true;
   addClick(mouseX, mouseY, false);
@@ -552,8 +555,6 @@ Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évèn
 Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module TypeScript (ou JS) récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](../code/onedollar.js) dans le dossier `client/` pour qu'elle soit facilement bundlée par Vite.
 
 #### Gérer le recognizer
-
-Le recognizer est du bon vieux JS, on va échapper la vérification des types à ce stade (je suis preneur d'une version TS de $1 recognizer si l'envie vous prenait).
 
 Au niveau de votre composant, importer et initialiser votre le One Dollar Recognizer.
 
@@ -685,7 +686,7 @@ Vous devrez être **vigilant à convertir vos points pour être dans le référe
 
       context.beginPath();
       context.moveTo(gesturePoints[0][0]*width, gesturePoints[0][1]*height);
-      for(var i=1; i < gesturePoints.length; i++) {
+      for(let i=1; i < gesturePoints.length; i++) {
         context.lineTo(gesturePoints[i][0]*width-1, gesturePoints[i][1]*height);
       }
 
@@ -743,7 +744,7 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 
 ## Rendu
 
-À rendre pour le mardi 11/02 à 23h59.
+À rendre pour le mardi 24/02 à 23h59.
 
 1. Déployez votre code en local
 2. Pousser votre code sur la forge
@@ -757,7 +758,7 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 - Fichier `package.json` nettoyé ne contenant que les dépendances nécessaires.
 - Linting bien configuré et respecté
 - Types Typescript correctement définis
-- Déploiement jusqu'à la partie 2.2 inclue sur une VM de l'université.
+- Déploiement sur une VM de l'université.
 - Utilisation de composants fonctionnels
 - Store qui contient l'état de l'application
 - Le flux de données suit le flow React, des actions sont déclarées, et les changements d'états passent par des actions unitaires qui modifient le store.
@@ -766,8 +767,8 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 - Gestions des routes pour les boards et post-its
 - Suivant/precedent change l'URI. Changer la route dans la barre d'URL du navigateur change l'état de l'application.
 - Implémentation des Websockets côté client et serveur
-- Synchronisation des questions affichées entre les dispositifs s'appuyant sur un middleware
-- Synchronisation des changements sur une question s'appuyant sur un middleware.
+- Synchronisation des post-its affichées entre les dispositifs s'appuyant sur un middleware
+- Synchronisation des changements sur un post-it s'appuyant sur un middleware.
 - Adaptation du contenu au dispositif (routage selon le dispositif) et affichage des bons composants.
 - Gestion du plein écran.
 <!-- - Gestion différenciée des pointer-events. -->
@@ -778,6 +779,4 @@ Vérifier que l'action est bien distribuée sur tous les dispositifs connectés.
 - Les commandes associées aux gestes sont bien propagées et permettent de contrôler un dispositif à distance.
 - Qualité globale du rendu (= application qui ressemble à quelque chose, un minimum de mise en page, orthographe propre, composants s'appuyant sur des librairies CSS ou stylés à la main).
 
-Points bonus :
 
-- Si le TP est déployé jusqu'à la partie 2.4
