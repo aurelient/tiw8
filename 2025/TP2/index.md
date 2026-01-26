@@ -174,9 +174,9 @@ export default AppToolbar;
 
 Pour terminer ce TP nous allons rajouter la gestion de routes, pour qu’il soit possible d’avoir un chemin dédié à chaque mur (board)). En complément d’avoir un état interne à l’application qui définit quel board/post-its afficher, nous allons utiliser une route qui pointe vers le mur en question. En chargeant cette route, l’état sera modifié.
 
-Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à parcourir les tutoriels [sur cette page](https://reactrouter.com/en/main/start/tutorial).
+Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en comprendre la logique (et les différences avec d'autres outils de routing), je vous invite à parcourir les tutoriels [sur cette page (le dernier tuto publié est pour React-router 6 alors que la dernière version est la 7...)](https://reactrouter.com/en/main/start/tutorial).
 
-On va utiliser `BrowserRouter` qui demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index, ([voir un exemple ici, à adapter à vos besoins](https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3)). L'idée est que charger un url de type : http://monsite.net/board/3 charge le board avec l'id '3'. 
+On va utiliser un `RouterProvider` qui est une forme de routeur générique. Ce dernier s'appuiera sur `createBrowserRouter` qui permet de gérer les routes côté client. Cela demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index, ([voir un exemple ici, à adapter à vos besoins](https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3)). L'idée est que charger un url de type : http://monsite.net/board/3 charge le board avec l'id '3'. 
 
 Vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params).
 
