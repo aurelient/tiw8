@@ -66,6 +66,7 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
         title: "TP 1",
         text: "Le TP porte sur des rappels de developpement Web",
         visible: false,
+        like: "0",
         color: "#CCC",
       },
       {
@@ -74,6 +75,7 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
         title: "TP 2",
         text: "Le TP porte sur la creation d'un outil de presentation HTML",
         visible: true,
+        like: "3",
         color: "#00E",
       },
       {
@@ -90,6 +92,7 @@ Imaginez que le serveur envoie ce type de données (qui peuvent être amélioré
         title: "TP 4",
         text: "Le TP 4",
         visible: true,
+        like: "4",
         color: "#0E0",
       },
     ]},

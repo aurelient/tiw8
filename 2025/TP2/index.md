@@ -53,7 +53,62 @@ Nous allons commencer par créer un squelette d'application statique, nous rajou
 L'application est composée de plusieurs 'boards', chacun composé de plusieurs post-its. Chaque post-it a un certain nombre de propriétés : couleur, contenu (texte, image, dessin à la main), position, taille, auteur, ... 
 Vous pourrez par exemple vous inspirer de Figjam ou Mural.
 
-Imaginez que le serveur envoie [ce type de données](qa-data-structure.json) (qui peuvent être améliorées/modifiées selon vos besoins), voici une [version étendue](qa-expanded-data_2.json).
+Imaginez que le serveur envoie ce type de données (qui peuvent être améliorées/modifiées selon vos besoins) :
+
+```javascript
+[
+  {
+    type: "board",
+    id: "1",
+    title: "TIW 8",
+    notes: "",
+    postits:[
+      {
+        type: "postit",
+        board: "1",
+        title: "TP 1",
+        text: "Le TP porte sur des rappels de developpement Web",
+        visible: false,
+        like: "0",
+        color: "#CCC",
+      },
+      {
+        type: "postit",
+        board: "1",
+        title: "TP 2",
+        text: "Le TP porte sur la creation d'un outil de presentation HTML",
+        visible: true,
+        like: "3",
+        color: "#00E",
+      },
+      {
+        type: "postit",
+        board: "1",
+        title: "TP 3",
+        text: "Le TP 3",
+        visible: true,
+        like: "0",
+        color: "#00E",
+      },
+      {
+        type: "postit",
+        board: "1",
+        title: "TP 4",
+        text: "Le TP 4",
+        visible: true,
+        like: "0",
+        color: "#0E0",
+      },
+    ]},
+  {
+    type: "board",
+    id: "2",
+    title: "Courses",
+    notes: "",
+    postits: [],
+  },
+]
+```
 
 ### Créer des composants passifs
 
