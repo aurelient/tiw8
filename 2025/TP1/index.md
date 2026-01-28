@@ -306,6 +306,58 @@ scp -r client/dist/* gitlab-ci@VOTRE_IP:/var/www/tp1
 
 Corrigez au besoin votre configuration ngninx, ou votre processus de build pour que serveur et client soient bien trouvés.
 
+#### Environnements de dev et de prod
+
+Généralement on va configurer un environnement de développement (ici local), et un de production (la VM). 
+
+Vite propose des outils pour faciliter ça, voir les pages "[Building for Production](https://vite.dev/guide/build)" et "[Env Variables and Modes](https://vite.dev/guide/env-and-mode)".
+
+
+```
+import { defineConfig, loadEnv } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  
+  return {
+    plugins: [react()],
+    // permet de s'assurer que les assets sont chargés depuis le chemin tp1
+    base: mode === 'production' ? '/tp1/' : '/',
+    server: {
+      port: 3000,
+    }
+  }
+})
+
+```
+
+Vous pouvez définir des fichiers d'environnement par exemple 
+
+`.env.development`:
+```
+VITE_APP_TITLE=Mon application
+VITE_BASE_PATH=/
+```
+
+`.env.production`:
+```
+VITE_APP_TITLE=Mon application
+VITE_BASE_PATH=/tp1/
+```
+
+Ces variables d'environnement sont aussi accessible en React de la façon suivante, ce n'est pas React mais vite qui se chargera de remplacer la valeur (il faut que les variables soit préfixée par `VITE_`) : 
+```
+const siteTitle = import.meta.env.VITE_APP_TITLE;
+```
+
+
+Par défaut, le serveur de développement (`vite dev`) est associée au mode `development` et la commande `vide build` est associée au mode production. Vous pouvez surcharger ce comportement ou charger d'autres mode avec `vite build --mode xxx`. 
+
+Par exemple: `vite build --mode staging`
+
+
+
 #### Déployez votre projet sur votre VM avec la CI de gitlab
 
 Créer un GitLab CI pour votre utilisateur qui reprenne [ces grandes lignes](https://forge.univ-lyon1.fr/snippets/75)
