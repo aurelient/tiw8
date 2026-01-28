@@ -455,19 +455,13 @@ export const propagateSocketMiddleware: Middleware<Dispatch> =
 Toujours dans le middleware, configurez la socket pour qu'à la réception des messages les actions soient dispatchées au store, ou pour que vous naviguiez à la bonne route.
 
 ```js
-socket.on("action", (msg) => {
-  console.log("action", msg);
-  switch (
-    msg.type // ajuster le msg.type pour qu'il corresponde bien à celui définit pour l'action de votre reducer
-  ) {
-    case "set_postit": // <- probablement autre chose cela dépend du 'type_de_message' définit dans votre emit ci-dessus
-          // action à dispatcher
-      break
-  }
+socket.on("action", (action: SocketAction) => {
+  console.log("socket.on action", action);
+  store.dispatch({ ...action, fromServer: true });
 });
 ```
 
-Pour changer la post-it courante, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
+Pour changer le board courant, le mieux est de ne pas modifier l'état, mais de naviguer sur la route attendue, ce qui aura pour effet de change l'état.
 
 #### En cas de boucle infinie
 
