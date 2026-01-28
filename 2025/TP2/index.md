@@ -178,19 +178,7 @@ Nous allons utiliser [react-router](https://reactrouter.com/en/main). Pour en co
 
 On va utiliser un `RouterProvider` qui est une forme de routeur générique. Ce dernier s'appuiera sur `createBrowserRouter` qui permet de gérer les routes côté client. Cela demande une configuration côté serveur (toutes les requêtes doivent être redirigées sur l'index, ([voir un exemple ici, à adapter à vos besoins](https://dev.to/nburgess/creating-a-react-app-with-react-router-and-an-express-backend-33l3)). L'idée est que charger un url de type : http://monsite.net/board/3 charge le board avec l'id '3'. 
 
-Vous pouvez utiliser le hook `useParams` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params).
-
-<!-- Vous pouvez aussi passer cette information with `routeProps`, du côté du composant parent [voir la documentation ici](https://reactrouter.com/web/api/Route/render-func).
-
-```jsx
-<Switch>
-  <Route
-    path="/:id"
-    render={(routeProps) => <Board boards={boards} match={routeProps.match} />}
-  />
-</Switch>
-```
--->
+Vous pouvez utiliser le hook `useParams` ou `useLocation` pour récupérer des informations sur la route. [Voir la doc ici](https://reactrouter.com/en/main/hooks/use-params).
 
 Une fois la valeur de la route récupérée pour qu'elle corresponde au board à afficher. Vous remarquerez que la gestion de l'état courant est maintenant distribuée entre l'url et le state de React.
 
@@ -348,17 +336,16 @@ Les boutons `<` et `>` permettent de naviguer entre les postits. Le menu du haut
 
 Il n'existe pas de bibliothèque à l'heure actuelle pour gérer de manière simple de la distribution d'interface, nous allons donc devoir le faire "à la main".
 
-À la création du `BrowserRouter` faites une redirection vers une route en fonction du dispositif utilisé et de son état.
+À la création du `BrowserRouter` faites une redirection vers une route en fonction du dispositif utilisé et de son état. Par exemple en créant une route dédiée au mobile `monappli.net/mobile/board/:id/...`
 
 Vous pouvez utiliser `react-device-detect` [(doc)](https://www.npmjs.com/package/react-device-detect) pour détecter le dispositif (mobile ou non). Et la `fullscreen API` [(doc)](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API/Guide) pour contrôler le plein écran.
 
-Au besoin vous pouvez aussi vous appuyer sur des appels à `redirect` [(doc)](https://reactrouter.com/en/main/fetch/redirect) à la racine de votre application pour
+Au besoin vous pouvez aussi vous appuyer sur des appels à `useNavigate()` [(doc)](https://reactrouter.com/start/declarative/navigating#usenavigate) à la racine de votre application pour naviguer vers la route de votre choix. 
 
 ### Gestion "à la main" des routes des Evenements
 
 Nous allons maintenant préparer la synchronisation des dispositifs. Pour cela nous allons devoir gérer le board courant et le postit courant dans notre état (`currentBoard` dans le store).
 `ReactRouter` n'est pas conçu pour bien gérer le lien entre route et état (même si cela s'est bien amélioré avec la v6).
-Et les routeur alternatifs (type `connected-react-router`) ont aussi des limites. Nous allons donc gérer cette partie de la route à la main.
 
 Nous allons nous appuyer sur des middleware pour cela.
 
@@ -366,11 +353,6 @@ Nous allons nous appuyer sur des middleware pour cela.
 
 Lors d'un changement de route. Vous pouvez utiliser [`useLocation()`](https://api.reactrouter.com/v7/functions/react_router.useLocation.html) de react-router.
 
-Le type `Location` peut être importé comme ceci (à vérifier selon la version de react-router utilisée):
-
-```js
-import { Location } from "history";
-```
 
 <!-- d'event, plutôt que d'utiliser `<Link to={`/event/${i}`}>` créer un listener. -->
 
@@ -445,7 +427,7 @@ NB: il y a deux méthodes permettant de [broadcaster aux clients](https://socket
 
 #### Synchronisation des changements de navigation entre les appareils
 
-Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec yarn). Le middleware devra, dès qu'il intercepte une action (`setCurrentBoard` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
+Passons à la création de notre propre Middleware dans lequel on importera `socket.io-client` (installez le avec npm ou yarn). Le middleware devra, dès qu'il intercepte une action (`setCurrentBoard` ou autre) la propager au serveur via un websocket par un message adéquat, avant de faire appel à `next(action)`.
 
 ```js
 import io from "socket.io-client";
@@ -499,13 +481,6 @@ Pour synchroniser votre store plus généralement (exemple: édition du titre d'
 
 Comme nous utilisons ReduxToolkit et TypeScript, il faut utiliser un `prepare` callback [comme décrit ici](https://redux-toolkit.js.org/usage/usage-with-typescript#defining-action-contents-with-prepare-callbacks)
 
-### Finalisation
-
-Vous avez maintenant le poc de votre application.
-
-Rajoutez des actions pour ajouter/supprimer des 'boards', et des post-its, et éditer leur titre.
-
-Vous pouvez maintenant tester, nettoyer le code, et rendre.
 
 ### Gestion de modalités d'entrée
 
