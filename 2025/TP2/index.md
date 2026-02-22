@@ -398,7 +398,7 @@ export default loggerMiddleware;
 Et ajoutez le dans le tableau des middlewares qui était vide jusqu'à présent.
 
 - La fonction externe est le middleware lui-même, elle reçoit un objet de type `MiddlewareAPI` qui contient les fonctions {dispatch, getState} du store.
-- La fonction centrale reçoit une fonction `next` comme argument, qui appellera le prochain middleware du pipeline. S'il c'est le dernier (ou l'unique), alors la fonction `store.dispatch`
+- La fonction centrale reçoit une fonction `next` comme argument, qui appellera le prochain middleware du pipeline. Si c'est le dernier (ou l'unique), alors la fonction `store.dispatch`
 - La fonction interne reçoit l'action courante en argument et sera appelée à chaque fois qu'une action est dispatchée.
 
 ### Notre Middleware de diffusion des actions avec des websockets
@@ -465,7 +465,7 @@ Pour changer le board courant, le mieux est de ne pas modifier l'état, mais de 
 
 #### En cas de boucle infinie
 
-Si vous avez utilisé `io.emit` au lieu de `socket.broadcast`, vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. L'émetteur reçoit une action, qu'il déclenche, ce qui l'a renvoie au serveur...
+Si vous avez utilisé `io.emit` au lieu de `socket.broadcast`, vous remarquerez sans doute qu'au point où nous en sommes nous allons provoquer une boucle infinie d'émissions de messages. L'émetteur reçoit une action, qu'il déclenche, ce qui la renvoie au serveur...
 
 Pour éviter cela, les actions Redux peuvent embarquer un information supplémentaire grâce [la propriété `meta`](https://github.com/redux-utilities/flux-standard-action#meta).
 
@@ -577,6 +577,8 @@ function pointerUpEvent(ev) {
 Pour terminer, nous allons effectuer de la reconnaissance de geste lors d'évènements touch.
 
 Pour ce faire nous allons utiliser le [$1 recognizer](http://depts.washington.edu/acelab/proj/dollar/index.html) vu en cours. Nous allons utiliser une version modifiée de [OneDollar.js](https://github.com/nok/onedollar-unistroke-coffee) pour fonctionner avec React. Il n'y a pas de module TypeScript (ou JS) récent pour cette bibliothèque. Nous devrions donc le créer, mais pour plus de simplicité nous allons placer directement [la bibliothèque](../code/onedollar.js) dans le dossier `client/` pour qu'elle soit facilement bundlée par Vite.
+
+Voici une version [typescript du OneDollar recognizer](../code/OneDollar.ts)
 
 #### Gérer le recognizer
 
