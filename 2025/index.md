@@ -54,7 +54,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 2.2](TP2/#tp22-redux-middleware-websockets-pour-le-multi-dispositif) | 28/01 | 3h    | State management + websockets             |         |
 | [TP 2.3](TP2/#tp23-distribution-dinterface-multi-dispositif)             | 02/02 | 1h30  | Distribution d'interface multi-dispositif |         |
 | [TP 2.4](TP2/#4-suite)                                                   | 04/02 | 3h    | Modalité d'entrée (gestes, stylet)        |         |
-| [TP 2 - Finalisation](TP2/)                                              | 23/02 | 1h30  |                                           | rendu 2 |
+| [TP 2 - Finalisation](TP2/)                                              | 23/02 | 1h30  | rendu 24/02                               | rendu 2 |
 | [Projet](Projet)                                                         | 25/02 | 1h30  | Lancement projet                          |         |
 | Projet                                                                   | 02/03 | 3h    |                                           |         |
 | Projet                                                                   | 04/03 | 3h    |                                           |         |
