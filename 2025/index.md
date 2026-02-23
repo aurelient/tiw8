@@ -35,15 +35,13 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 |          | 28/01 | _pas de CM que du TP_          |                                                                      |             |
 | CM 4     | 02/02 | Design adaptatif & Gestes      | [pdf](cours/cm3-designAdaptatifetGestes.pdf)                         | A. Tabard   |
 |          | 04/02 | _pas de cours_                 |                                                                      |             |
-|          | 23/02 | _pas de CM que du TP_          |                                                                      |             |
-| CM 5     | 25/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
-| CM 6     | 02/03 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)                                   | A. Tabard   |
-|          | 04/03 |                                |                                                                      |             |
+| CM 5     | 23/02 | WebRTC - Temps réel            | [pdf](cours/cm4-collaboration.pdf)                                   | A. Tabard   |
+| CM 6     | 25/02 | Algorithmes de synchronisation | [pdf](cours/cm5-sharedediting.pdf)                                   | A. Tabard   |
+| Projet   | 02/03 |                                |                                                                      |             |
 | Projet   | 04/03 |                                |                                                                      |             |
 | Projet   | 23/03 |                                |                                                                      |             |
 | Projet   | 30/03 |                                |                                                                      |             |
-|          | 12/03 | Examen                         |                                                                      |             |
-
+| Examen   | 01/04 |                                |                                                                      |             |
 
 
 ## TP
@@ -58,11 +56,11 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | [TP 2.4](TP2/#4-suite)                                                   | 04/02 | 3h    | Modalité d'entrée (gestes, stylet)        |         |
 | [TP 2 - Finalisation](TP2/)                                              | 23/02 | 1h30  |                                           | rendu 2 |
 | [Projet](Projet)                                                         | 25/02 | 1h30  | Lancement projet                          |         |
-| Projet                                                                   | 02/03 | 1h30  |                                           |         |
+| Projet                                                                   | 02/03 | 3h    |                                           |         |
 | Projet                                                                   | 04/03 | 3h    |                                           |         |
 | Projet                                                                   | 23/03 | 3h    |                                           |         |
 | Projet                                                                   | 30/03 | 3h    |                                           | rendu 3 |
-| Examen                                                                   | 01/04 | 3h    |                                           |         |
+| Examen                                                                   | 01/04 | 1h30  |                                           |         |
 
 
 
