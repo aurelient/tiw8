@@ -36,6 +36,8 @@ On pourra s'appuyer sur [simple-peer](https://github.com/feross/simple-peer/) ou
 
 Le projet pourra être réalisé en équipe de 3 (de préférence) ou 4 pour équilibrer.
 
-Le rendu se fera sur la forge avec le dernier commit vendredi 14/03.
+Présentation du projet de 6 minutes + 3 minutes de questions le 30/03.
+
+Le rendu se fera sur la forge avec le dernier commit vendredi 03/04.
 
 Le projet devra être déployé sur la VM.
