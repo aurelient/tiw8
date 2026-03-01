@@ -59,7 +59,7 @@ D’un point de vue technique, nous mettrons en place une “stack” JavaScript
 | Projet                                                                   | 02/03 | 3h    |                                           |         |
 | Projet                                                                   | 04/03 | 3h    |                                           |         |
 | Projet                                                                   | 23/03 | 3h    |                                           |         |
-| Projet                                                                   | 30/03 | 3h    |                                           | rendu 3 |
+| Projet                                                                   | 30/03 | 3h    | Soutenance projet                         | rendu 3 |
 | Examen                                                                   | 01/04 | 1h30  |                                           |         |
 
 
