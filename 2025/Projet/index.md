@@ -36,8 +36,34 @@ On pourra s'appuyer sur [simple-peer](https://github.com/feross/simple-peer/) ou
 
 Le projet pourra être réalisé en équipe de 3 (de préférence) ou 4 pour équilibrer.
 
-Présentation du projet de 6 minutes + 3 minutes de questions le 30/03.
+Présentation du projet de 7 minutes + 3 à 5 minutes de questions le 30/03.
+
+La présentation aura les attendus suivants :
+
+- présentation du projet (très rapide)
+- démo
+- présentation de l'architecture et des choix techniques
+- limites, problèmes rencontrés, et pistes d'amélioration
 
 Le rendu se fera sur la forge avec le dernier commit vendredi 03/04.
+Entre le 30 et le 03, aucune nouvelle fonctionnalité ne peut être ajouté, le temps restant peut servir à nettoyer le code, améliorer la documentation, corriger des bugs, améliorer le déploiement.
 
-Le projet devra être déployé sur la VM.
+Le projet devra être déployé sur la VM ou un serveur dédié (fonctionnant jusqu'à juin).
+
+Ordre de passage :
+- 14:00 PrTiw8
+- 14:13 zolpidem
+- 14:26 discord-2
+- 14:30 SLPRD1 + SLPRD2 + SLPRD3 2 minutes d'intro générale puis 4/5 minutes par groupe (18 minutes max) + 10 minutes de questions
+- pause
+- 15:00 echo
+- 15:13 mathématisons
+- 15:26 p2p
+- pause
+- 15:50 sync.wav
+- 16:03 gris-bouillie
+- 16:16 GBN
+- pause
+- 16:40 SauceFighter
+- 16:53 codraft
+- 17:06 TP3_solo
